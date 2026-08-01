@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sipariş Takip | Zirve E-İmza</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M5 16 c3-6 5 -2 7 -7 c1.5 3 2 5 3.5 2' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">İçeriğe geç</a>
+<div class="mesh-bg" aria-hidden="true"></div>
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z"/></svg></span>
+      <span>Zirve E-İmza<small>Sipariş Takip</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Ana menü">
+        <a href="/index.html">Ana Sayfa</a>
+        <a href="/takip.html" aria-current="page">Sipariş Takip</a>
+        <a href="/iletisim.html">İletişim</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/index.html" class="btn btn-ghost btn-sm">← Geri</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow"><span class="dot"></span> Sipariş Takip</span>
+    <h1>Siparişinizi <span class="grad-text">takip edin</span></h1>
+    <p class="hero-lead">Takip kodunuzu girerek siparişinizin durumunu ve kurye konumunu canlı olarak görüntüleyin.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="card glass reveal">
+      <form id="searchForm" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <input 
+          type="text" 
+          id="trackingCode" 
+          placeholder="Takip kodunuzu girin (örn: ZE-2024-1001)" 
+          required
+          style="flex:1;min-width:250px;padding:14px 20px;background:rgba(255,255,255,0.05);border:1px solid var(--border,rgba(255,255,255,0.12));border-radius:10px;color:var(--text,#f3f4f8);font-size:1rem;"
+        >
+        <button type="submit" class="btn btn-primary">
+          🔍 Sorgula
+        </button>
+      </form>
+      
+      <div id="searchMessage" style="margin-top:16px;"></div>
+    </div>
+
+    <div id="trackingResult" style="display:none;margin-top:24px;">
+      <div class="card glass reveal">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px;flex-wrap:wrap;gap:16px;">
+          <div>
+            <div style="color:var(--text-muted,#7d81a0);font-size:0.9rem;margin-bottom:4px;">Takip Kodu</div>
+            <div style="font-size:1.3rem;font-weight:700;color:var(--primary,#4f46e5);" id="orderCode"></div>
+          </div>
+          <div id="orderStatus"></div>
+        </div>
+
+        <div id="orderInfo" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:24px;"></div>
+
+        <div id="queueInfo"></div>
+
+        <div id="timeline" style="margin-top:24px;"></div>
+      </div>
+
+      <div id="mapSection" style="display:none;margin-top:24px;">
+        <div class="card glass reveal">
+          <h3 style="margin-bottom:16px;">📍 Kurye Konumu <span style="color:var(--success,#22c55e);font-size:0.9rem;">(Canlı)</span></h3>
+          <div id="map" style="height:500px;border-radius:12px;background:#1a1f35;"></div>
+          <div id="distanceInfo" style="margin-top:16px;text-align:center;color:var(--text-muted,#7d81a0);"></div>
+        </div>
+      </div>
+
+      <div id="courierSection" style="display:none;margin-top:24px;">
+        <div class="card glass reveal">
+          <h3 style="margin-bottom:16px;">👤 Kurye Bilgileri</h3>
+          <div style="display:flex;gap:16px;align-items:center;">
+            <div id="courierAvatar" style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--primary,#4f46e5),var(--secondary,#7c3aed));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;">K</div>
+            <div>
+              <h4 id="courierName" style="font-size:1.1rem;margin-bottom:4px;">-</h4>
+              <p id="courierPhone" style="color:var(--text-muted,#7d81a0);font-size:0.9rem;">-</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div style="text-align:center;padding:40px 20px;">
+      <p style="color:var(--text-muted,#7d81a0);">© 2024 Zirve E-İmza. Tüm hakları saklıdır.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="/assets/js/tracking.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

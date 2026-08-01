@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>E-Ýmza Baþvuru Takip | Zirve E-Ýmza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M5 16 c3-6 5 -2 7 -7 c1.5 3 2 5 3.5 2' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  /* ========== Deðiþkenler (Site ile uyumlu) ========== */
+  :root {
+    --ink-950: #0b0e1a;
+    --ink-900: #10142a;
+    --ink-800: #161b36;
+    
+    --indigo-500: #4f46e5;
+    --indigo-400: #6366f1;
+    --violet-500: #7c3aed;
+    --violet-400: #a78bfa;
+    --amber-500: #e8a33d;
+    --amber-400: #f2b955;
+    --emerald-500: #22c55e;
+    --emerald-400: #4ade80;
+    --cyan-500: #06b6d4;
+    --fuchsia-500: #d946ef;
+    
+    --gradient-brand: linear-gradient(135deg, var(--indigo-500) 0%, var(--violet-500) 55%, #a855f7 100%);
+    
+    --surface: rgba(255,255,255,0.055);
+    --surface-strong: rgba(255,255,255,0.09);
+    --surface-border: rgba(255,255,255,0.12);
+    --text-primary: #f3f4f8;
+    --text-secondary: #b6bad0;
+    --text-muted: #7d81a0;
+    
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --ease: cubic-bezier(.22,.9,.32,1);
+  }
+  
+  /* ========== Reset & Base ========== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink-950);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+    padding: 32px 20px;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* ========== Mesh Background (Site ile ayný) ========== */
+  .mesh-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: 
+      radial-gradient(circle at 12% 18%, rgba(79,70,229,0.35), transparent 40%),
+      radial-gradient(circle at 85% 12%, rgba(124,58,237,0.30), transparent 45%),
+      radial-gradient(circle at 70% 80%, rgba(232,163,61,0.16), transparent 45%),
+      radial-gradient(circle at 15% 85%, rgba(99,102,241,0.22), transparent 40%);
+    background-color: var(--ink-950);
+    animation: meshDrift 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  
+  @keyframes meshDrift {
+    0%   { filter: hue-rotate(0deg) saturate(1); }
+    50%  { filter: hue-rotate(8deg) saturate(1.08); }
+    100% { filter: hue-rotate(-6deg) saturate(0.98); }
+  }
+  
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: .035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  
+  /* ========== Container ========== */
+  .wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 680px;
+    animation: fadeUp .8s var(--ease) both;
+  }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ========== Card Container (Site glass efekti) ========== */
+  .card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    padding: 40px 36px 36px;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-brand);
+    opacity: 0.8;
+  }
+  
+  /* ========== Eyebrow (Site ile ayný stil) ========== */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--emerald-400);
+    margin-bottom: 20px;
+    letter-spacing: .04em;
+  }
+  
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--emerald-500);
+    box-shadow: 0 0 0 4px rgba(34,197,94,.18);
+    animation: pulseDot 1.8s ease-in-out infinite;
+  }
+  
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .45; }
+  }
+  
+  /* ========== Title ========== */
+  h1 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.5vw, 2rem);
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    margin-bottom: 32px;
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  /* ========== SVG Route ========== */
+  .route {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+    margin-bottom: 8px;
+  }
+  
+  .base-route {
+    opacity: 0;
+    animation: fadeSvg .4s ease .2s forwards;
+  }
+  
+  @keyframes fadeSvg {
+    to { opacity: 1; }
+  }
+  
+  .progress-line {
+    stroke-dasharray: 100 100;
+    stroke-dashoffset: 100;
+    animation: 
+      draw 1.2s cubic-bezier(.4,0,.2,1) .6s forwards,
+      hueShift 8s ease-in-out 1.8s infinite;
+  }
+  
+  @keyframes draw {
+    to { stroke-dashoffset: 47; }
+  }
+  
+  @keyframes hueShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(15deg); }
+  }
+  
+  .chase {
+    stroke-dasharray: 2.5 10;
+    opacity: 0;
+    animation: 
+      chaseIn 0s 1.8s forwards,
+      chase 2.8s linear 1.8s infinite;
+  }
+  
+  @keyframes chaseIn {
+    to { opacity: .6; }
+  }
+  
+  @keyframes chase {
+    to { stroke-dashoffset: -100; }
+  }
+  
+  .marker {
+    opacity: 0;
+    transform: scale(.5);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pop .5s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  
+  @keyframes pop {
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .m-done { animation-delay: .3s; }
+  .m-active { animation-delay: 1.8s; }
+  .m-pending { animation-delay: 2.1s; }
+  
+  /* ========== Route Labels ========== */
+  .route-labels {
+    display: flex;
+    margin-bottom: 28px;
+  }
+  
+  .rl {
+    flex: 1;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: .82rem;
+    line-height: 1.35;
+    opacity: 0;
+    transform: translateY(5px);
+    animation: rlIn .5s ease forwards;
+  }
+  
+  @keyframes rlIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .rl:first-child {
+    text-align: left;
+    color: var(--emerald-400);
+    animation-delay: .3s;
+  }
+  
+  .rl:nth-child(2) {
+    text-align: center;
+    color: var(--text-primary);
+    animation-delay: 1.8s;
+  }
+  
+  .rl:last-child {
+    text-align: right;
+    color: var(--text-muted);
+    animation-delay: 2.1s;
+  }
+  
+  /* ========== Stats (Site ile uyumlu) ========== */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 24px;
+    opacity: 0;
+    animation: rlIn .6s ease 2.4s forwards;
+  }
+  
+  .stat {
+    padding: 0 8px;
+    text-align: center;
+  }
+  
+  .stat + .stat {
+    border-left: 1px solid var(--surface-border);
+  }
+  
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: block;
+    line-height: 1;
+  }
+  
+  .stat-label {
+    font-size: .84rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 6px;
+    display: block;
+  }
+  
+  /* ========== Reduced Motion ========== */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+    .chase, .progress-line, .pulse, .base-route, .marker, .rl, .stats {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .progress-line {
+      stroke-dashoffset: 47;
+    }
+  }
+  
+  /* ========== Mobile Responsive ========== */
+  @media (max-width: 640px) {
+    body {
+      padding: 24px 16px;
+    }
+    
+    .card {
+      padding: 32px 24px 28px;
+    }
+    
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 28px;
+    }
+    
+    .eyebrow {
+      font-size: .75rem;
+      padding: 6px 14px;
+      margin-bottom: 16px;
+    }
+    
+    .rl {
+      font-size: .75rem;
+    }
+    
+    .route-labels {
+      margin-bottom: 24px;
+    }
+    
+    .stats {
+      padding-top: 20px;
+    }
+    
+    .stat {
+      padding: 0 6px;
+    }
+    
+    .stat-val {
+      font-size: 1.8rem;
+    }
+    
+    .stat-label {
+      font-size: .8rem;
+      margin-top: 4px;
+    }
+  }
+  
+  @media (max-width: 420px) {
+    body {
+      padding: 20px 12px;
+    }
+    
+    .card {
+      padding: 28px 20px 24px;
+      border-radius: 22px;
+    }
+    
+    h1 {
+      font-size: 1.35rem;
+      margin-bottom: 24px;
+    }
+    
+    .eyebrow {
+      font-size: .7rem;
+      padding: 5px 12px;
+    }
+    
+    .rl {
+      font-size: .7rem;
+      line-height: 1.3;
+    }
+    
+    .stats {
+      padding-top: 18px;
+      gap: 0;
+    }
+    
+    .stat {
+      padding: 0 4px;
+    }
+    
+    .stat-val {
+      font-size: 1.6rem;
+    }
+    
+    .stat-label {
+      font-size: .75rem;
+      line-height: 1.3;
+    }
+  }
+  
+  /* Overflow kontrolü */
+  * {
+    max-width: 100%;
+  }
+  
+  html, body, .wrap, .card {
+    overflow-x: hidden;
+  }
+  
+  /* ========== Link to Main Site ========== */
+  .back-link {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    color: var(--text-secondary);
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .3s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .back-link:hover {
+    background: var(--surface-strong);
+    color: var(--text-primary);
+    transform: translateX(-3px);
+  }
+  
+  .back-link svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  @media (max-width: 640px) {
+    .back-link {
+      top: 14px;
+      left: 14px;
+      padding: 8px 14px;
+      font-size: .8rem;
+    }
+    
+    .back-link svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="mesh-bg" aria-hidden="true"></div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+  
+  <a href="site/index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5m6-6-6 6 6 6"/>
+    </svg>
+    Ana Sayfa
+  </a>
+  
+  <div class="wrap">
+    <div class="card">
+      <div class="eyebrow">
+        <span class="dot"></span>
+        Canlý Takip
+      </div>
+      
+      <h1>E-Ýmza baþvurunuz yolda</h1>
+      
+      <svg class="route" viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Baþvuru onaylandý, e-imza hazýrlanýyor, kurye yolda">
+        <defs>
+          <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#22c55e"/>
+            <stop offset="55%" stop-color="#7c3aed"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+          
+          <radialGradient id="activeGrad" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#c4b5fd"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </radialGradient>
+          
+          <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge>
+              <feMergeNode in="b"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        <!-- Base route -->
+        <path class="base-route" d="M40,65 C140,5 200,125 300,65 C400,5 460,125 560,65" pathLength="100"
+              fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1.4 4"/>
+        
+        <!-- Progress line -->
+        <path class="progress-line" d="M40,65 C140,5 200,125 300,65 C400,5 460,125 560,65" pathLength="100"
+              fill="none" stroke="url(#routeGrad)" stroke-width="3.6" stroke-linecap="round" filter="url(#glow)"/>
+        
+        <!-- Chase effect -->
+        <path class="chase" d="M40,65 C140,5 200,125 300,65" pathLength="100"
+              fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        
+        <!-- Marker: Done -->
+        <g class="marker m-done">
+          <circle cx="40" cy="65" r="9" fill="#22c55e"/>
+          <path d="M35,65 L38.5,69 L45,60" stroke="#053321" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        
+        <!-- Marker: Active (with pulse) -->
+        <g class="marker m-active">
+          <circle cx="300" cy="65" r="12" fill="url(#activeGrad)" filter="url(#glow)"/>
+          <circle class="pulse" cx="300" cy="65" r="12" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0.7;0" keyTimes="0;0.02;1" dur="2.4s" begin="1.8s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="12;12;24" keyTimes="0;0.02;1" dur="2.4s" begin="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle class="pulse" cx="300" cy="65" r="12" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0.7;0" keyTimes="0;0.02;1" dur="2.4s" begin="3s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="12;12;24" keyTimes="0;0.02;1" dur="2.4s" begin="3s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+        
+        <!-- Marker: Pending -->
+        <g class="marker m-pending">
+          <circle cx="560" cy="65" r="9" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="2" stroke-dasharray="3 3"/>
+        </g>
+      </svg>
+      
+      <div class="route-labels">
+        <div class="rl">Baþvuru<br>Onaylandý</div>
+        <div class="rl">E-Ýmza<br>Hazýrlanýyor</div>
+        <div class="rl">Kurye<br>Yolda</div>
+      </div>
+      
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-val">45 dk</span>
+          <span class="stat-label">Ortalama teslim süresi</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val">39 ilçe</span>
+          <span class="stat-label">Hizmet verilen bölge</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

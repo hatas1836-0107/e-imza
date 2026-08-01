@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Güvenli e-imza altyapýsý</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050308;
+    --violet:#8B5CF6;
+    --fuchsia:#EC4899;
+    --cyan:#22D3EE;
+    --emerald:#2EDF9B;
+    --text-1:#F5F3FF;
+    --text-2:#A79FC4;
+    --text-3:#5C5578;
+    --border:rgba(255,255,255,0.09);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:var(--bg);font-family:'Inter',sans-serif;padding:28px 16px;overflow-x:hidden;
+  }
+  .wrap{position:relative;width:100%;max-width:1080px;}
+
+  .hero{
+    position:relative;border-radius:30px;overflow:hidden;
+    background:linear-gradient(150deg,#150C29,#0A0614 60%,#0A0614);
+    border:1px solid var(--border);
+    padding:52px 48px;
+    animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  .aurora{position:absolute;inset:0;z-index:0;filter:blur(60px);opacity:.55;pointer-events:none;}
+  .aurora span{position:absolute;border-radius:50%;mix-blend-mode:screen;}
+  .aurora span:nth-child(1){width:32vmax;height:32vmax;top:-14vmax;left:-10vmax;background:radial-gradient(circle,var(--violet),transparent 65%);animation:ski1 15s ease-in-out infinite;}
+  .aurora span:nth-child(2){width:26vmax;height:26vmax;bottom:-12vmax;right:4vmax;background:radial-gradient(circle,var(--cyan),transparent 65%);animation:ski2 18s ease-in-out infinite;}
+  @keyframes ski1{0%,100%{transform:translate(0,0);}50%{transform:translate(4vmax,5vmax);}}
+  @keyframes ski2{0%,100%{transform:translate(0,0);}50%{transform:translate(-4vmax,-4vmax);}}
+  @media (prefers-reduced-motion:reduce){.aurora span{animation:none;}}
+
+  .grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+
+  .badge{
+    display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;
+    background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.3);
+    font-size:12.5px;font-weight:600;color:#C4B5FD;letter-spacing:.02em;
+    opacity:0;animation:rise .5s ease .1s forwards;margin-bottom:18px;
+  }
+  h1{
+    font-family:'Sora',sans-serif;font-weight:800;letter-spacing:-.015em;
+    font-size:clamp(28px,4vw,40px);line-height:1.12;
+    background:linear-gradient(90deg,var(--text-1),var(--violet) 45%,var(--text-1));
+    background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:textflow 7s linear infinite,rise .55s ease .2s both;
+    margin-bottom:16px;
+  }
+  @keyframes textflow{to{background-position:220% center;}}
+
+  .sub{
+    font-size:15.5px;color:var(--text-2);line-height:1.6;max-width:46ch;
+    opacity:0;animation:rise .5s ease .32s forwards;margin-bottom:30px;
+  }
+
+  .features{display:flex;flex-direction:column;gap:12px;}
+  .feature{
+    display:flex;align-items:center;gap:14px;
+    background:rgba(255,255,255,0.035);border:1px solid var(--border);border-radius:14px;
+    padding:14px 18px;opacity:0;animation:rise .5s ease forwards;
+    transition:background .25s,transform .25s;
+  }
+  .feature:hover{background:rgba(255,255,255,0.06);transform:translateX(3px);}
+  .feature:nth-child(1){animation-delay:.46s;}
+  .feature:nth-child(2){animation-delay:.58s;}
+  .feature:nth-child(3){animation-delay:.7s;}
+  .f-icon{
+    width:36px;height:36px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(34,211,238,.2));
+  }
+  .f-icon svg{width:17px;height:17px;stroke:#C4B5FD;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .f-label{font-family:'Sora',sans-serif;font-size:14.5px;font-weight:700;color:var(--text-1);}
+
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  .badge,.sub,.feature{transform:translateY(8px);}
+  h1{transform:translateY(6px);}
+
+  .visual{position:relative;display:flex;align-items:center;justify-content:center;min-height:280px;}
+  .ringwrap{position:relative;width:290px;height:290px;opacity:0;animation:rise .6s ease .25s forwards;}
+  .glow{position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.35),transparent 70%);filter:blur(20px);}
+
+  .panel{
+    position:absolute;inset:6%;border-radius:50%;
+    background:linear-gradient(160deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01));
+    border:1px solid var(--border);backdrop-filter:blur(10px);
+  }
+  .bits{position:absolute;font-family:monospace;font-size:10px;color:rgba(196,181,253,0.35);animation:bitfloat 6s linear infinite;}
+  .bits:nth-child(1){left:20%;top:70%;animation-delay:0s;}
+  .bits:nth-child(2){left:70%;top:75%;animation-delay:1.6s;}
+  .bits:nth-child(3){left:45%;top:80%;animation-delay:3.2s;}
+  .bits:nth-child(4){left:60%;top:68%;animation-delay:4.6s;}
+  @keyframes bitfloat{0%{transform:translateY(0);opacity:0;}15%{opacity:1;}85%{opacity:1;}100%{transform:translateY(-160px);opacity:0;}}
+
+  .ring{position:absolute;inset:0;animation:spin 22s linear infinite;transform-box:fill-box;transform-origin:center;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .sigsvg{position:absolute;inset:0;overflow:visible;}
+  .sigline{
+    stroke-dasharray:100 100;stroke-dashoffset:100;
+    animation:draw 1.3s cubic-bezier(.4,0,.2,1) .55s forwards;
+  }
+  @keyframes draw{to{stroke-dashoffset:0;}}
+  .sigchase{
+    stroke-dasharray:3 12;opacity:0;
+    animation:chaseIn 0s 1.85s forwards,chase 3s linear 1.85s infinite;
+  }
+  @keyframes chaseIn{to{opacity:.7;}}
+  @keyframes chase{to{stroke-dashoffset:-115;}}
+  .pentip{opacity:0;animation:penshow 0s .55s forwards,penfade .4s ease 1.85s forwards;}
+  @keyframes penshow{to{opacity:1;}}
+  @keyframes penfade{to{opacity:0;}}
+
+  @media (prefers-reduced-motion:reduce){
+    .ring,.sigline,.sigchase,.bits,.pentip{animation:none !important;}
+    .sigline{stroke-dashoffset:0;}
+    .pentip{opacity:0 !important;}
+  }
+
+  @media (max-width:860px){
+    .hero{padding:38px 26px;}
+    .grid{grid-template-columns:1fr;gap:36px;}
+    .visual{order:-1;min-height:220px;}
+    .ringwrap{width:220px;height:220px;}
+    h1{font-size:clamp(24px,7vw,30px);}
+  }
+
+  /* CTA Butonlarý */
+  .cta-row{display:flex;gap:16px;margin-top:32px;opacity:0;animation:rise .5s ease .85s forwards;}
+  .cta-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    padding:14px 26px;border-radius:14px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;
+    text-decoration:none;border:1.5px solid;transition:all .25s;cursor:pointer;
+  }
+  .cta-primary{
+    background:linear-gradient(135deg,var(--violet),var(--fuchsia));
+    border-color:transparent;color:#fff;
+  }
+  .cta-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(139,92,246,.35);}
+  .cta-secondary{
+    background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.4);color:var(--cyan);
+  }
+  .cta-secondary:hover{background:rgba(34,211,238,.2);transform:translateX(3px);}
+  @media (max-width:600px){
+    .cta-row{flex-direction:column;}
+    .cta-btn{width:100%;justify-content:center;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="aurora"><span></span><span></span></div>
+    <div class="grid">
+      <div class="content">
+        <span class="badge">Teknoloji</span>
+        <h1>Güvenli e-imza altyapýsý</h1>
+        <p class="sub">5070 sayýlý kanuna uygun, þifreli ve güvenli elektronik imza süreçleri.</p>
+
+        <div class="features">
+          <div class="feature">
+            <div class="f-icon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></div>
+            <div class="f-label">256-bit þifreleme</div>
+          </div>
+          <div class="feature">
+            <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"></path><polyline points="9 12 11.5 14.5 15 10"></polyline></svg></div>
+            <div class="f-label">Kanuni güvence</div>
+          </div>
+          <div class="feature">
+            <div class="f-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5v5l3.2 2"></path></svg></div>
+            <div class="f-label">7/24 aktif</div>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a href="site/iletisim.html" class="cta-btn cta-primary">Teklif Formu
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </a>
+          <a href="https://wa.me/905000000000?text=Merhaba%2C%20e-imza%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="cta-btn cta-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.1-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm4.64 14.06c-.24-.12-1.44-.71-1.66-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19a7.24 7.24 0 0 1-1.34-1.66c-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
+            WhatsApp'tan Yaz
+          </a>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="ringwrap">
+          <div class="glow"></div>
+          <div class="panel"></div>
+          <span class="bits">01</span><span class="bits">10</span><span class="bits">01</span><span class="bits">11</span>
+
+          <svg class="ring" viewBox="0 0 290 290">
+            <circle cx="145" cy="145" r="128" fill="none" stroke="url(#ringGrad)" stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#22D3EE"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <svg class="sigsvg" viewBox="0 0 290 290">
+            <defs>
+              <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2EDF9B"/>
+                <stop offset="50%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+              <filter id="sglow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="3" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path class="sigline" pathLength="100" d="M75,168 C92,102 108,206 130,150 C146,110 166,190 188,132 C202,96 220,138 236,124 C254,108 240,152 216,145 C200,140 208,116 228,120"
+                  fill="none" stroke="url(#sigGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#sglow)"/>
+            <path class="sigchase" pathLength="100" d="M75,168 C92,102 108,206 130,150 C146,110 166,190 188,132 C202,96 220,138 236,124 C254,108 240,152 216,145 C200,140 208,116 228,120"
+                  fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <circle class="pentip" cx="228" cy="120" r="4.5" fill="#fff" filter="url(#sglow)">
+              <animateMotion dur="1.3s" begin="0.55s" fill="freeze"
+                path="M75,168 C92,102 108,206 130,150 C146,110 166,190 188,132 C202,96 220,138 236,124 C254,108 240,152 216,145 C200,140 208,116 228,120"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

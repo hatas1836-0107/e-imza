@@ -1,0 +1,22 @@
+# Firebase Admin Keys (GİZLİ - ASLA GITHUB'A YÜKLEME!)
+*-firebase-adminsdk-*.json
+e-imza-4c867-firebase-adminsdk-fbsvc-fa3d0863ee.json
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local

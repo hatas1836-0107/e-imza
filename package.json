@@ -1,0 +1,25 @@
+{
+  "name": "zirve-eimza",
+  "version": "1.0.0",
+  "description": "Zirve E-İmza - İstanbul E-İmza Kurye Hizmeti",
+  "type": "module",
+  "scripts": {
+    "start": "npx http-server -p 8000 -c-1",
+    "dev": "npx http-server -p 8000 -c-1 -o",
+    "admin": "npx http-server -p 8000 -c-1 -o /site/admin/"
+  },
+  "keywords": [
+    "e-imza",
+    "elektronik-imza",
+    "istanbul",
+    "kurye"
+  ],
+  "author": "Zirve E-İmza",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^12.17.0"
+  },
+  "devDependencies": {
+    "firebase-admin": "^14.2.0"
+  }
+}
