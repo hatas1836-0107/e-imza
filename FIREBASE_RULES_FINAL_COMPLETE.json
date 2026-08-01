@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "products": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'hüseyinataş@gmail.com' || auth.token.email == '3sthillman@gmail.com' || auth.token.email == '2sthillman@gmail.com' || auth.token.email == 'admin@zirveeimza.com')",
+      ".indexOn": ["status", "price", "createdAt", "category", "popular"]
+    },
+    "orders": {
+      ".read": true,
+      ".write": "auth != null",
+      "$orderId": {
+        ".indexOn": ["status", "createdAt", "customerPhone", "customerEmail", "courier/email"]
+      }
+    },
+    "couriers": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$courierId": {
+        "location": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "activeOrders": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        },
+        ".indexOn": ["email", "name", "createdAt"]
+      }
+    },
+    "locations": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}

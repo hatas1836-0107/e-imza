@@ -6,7 +6,7 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObjec
 // Firebase config'i import et
 import { firebaseConfig } from './firebase-config.js';
 
-console.log('🔥 Firebase başlatılıyor...');
+console.log('Firebase başlatılıyor...');
 console.log('Config:', firebaseConfig);
 
 // Firebase'i başlat
@@ -15,7 +15,7 @@ const auth = getAuth(app);
 const database = getDatabase(app);
 const storage = getStorage(app);
 
-console.log('✅ Firebase başlatıldı');
+console.log('Firebase başlatıldı');
 
 // Google Provider
 const googleProvider = new GoogleAuthProvider();
@@ -25,17 +25,75 @@ let currentUser = null;
 let products = {};
 let selectedImage = null;
 
-console.log('👀 Auth durumu kontrol ediliyor...');
+// Admin emails
+const ADMIN_EMAILS = [
+  'huseyinatas@gmail.com',
+  'hüseyinataş@gmail.com',
+  '2sthillman@gmail.com',
+  'admin@zirveeimza.com'
+];
+
+console.log('Auth durumu kontrol ediliyor...');
+
+// Başlangıçta loading göster
+document.getElementById('dashboard').style.display = 'none';
+document.getElementById('loginScreen').style.display = 'none';
+
+// Auth pending check
+const authPending = sessionStorage.getItem('authPending');
+if (authPending) {
+  console.log('⏳ Auth bekleniyor, sessionStorage temizleniyor...');
+  sessionStorage.removeItem('authPending');
+}
 
 // Auth state listener
 onAuthStateChanged(auth, (user) => {
+  console.log('🔥 Auth state changed:', user ? user.email : 'No user');
+  console.log('🔥 Auth state - Full user object:', user);
+  
   if (user) {
     currentUser = user;
-    showDashboard();
+    console.log('✅ Kullanıcı oturum açmış:', user.email);
+    console.log('✅ User UID:', user.uid);
+    console.log('✅ Email verified:', user.emailVerified);
+    console.log('📊 Dashboard gösteriliyor...');
+    
+    // Login ekranını gizle
+    document.getElementById('loginScreen').style.display = 'none';
+    
+    // Dashboard'ı göster
+    const dashboard = document.getElementById('dashboard');
+    dashboard.style.display = 'block';
+    dashboard.classList.add('active');
+    console.log('✅ Dashboard display:', window.getComputedStyle(dashboard).display);
+    
+    // Kullanıcı bilgilerini göster
+    document.getElementById('userEmail').textContent = user.email;
+    
+    if (user.photoURL) {
+      const avatar = document.getElementById('userAvatar');
+      avatar.src = user.photoURL;
+      avatar.style.display = 'block';
+    }
+    
+    // Verileri yükle
+    console.log('📦 Ürünler yükleniyor...');
     loadProducts();
+    console.log('📋 Siparişler yükleniyor...');
+    loadOrders();
+    console.log('🚚 Kuryeler yükleniyor...');
+    loadCouriers();
   } else {
     currentUser = null;
-    showLogin();
+    console.log('❌ Kullanıcı oturum açmamış');
+    
+    // Dashboard'ı gizle
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('dashboard').classList.remove('active');
+    
+    // Giriş sayfasına yönlendir
+    console.log('🔐 Giriş sayfasına yönlendiriliyor...');
+    window.location.href = '/site/giris.html';
   }
 });
 
@@ -108,13 +166,31 @@ window.logout = async () => {
 
 // Show/Hide screens
 function showLogin() {
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('dashboard').classList.remove('active');
+  console.log('👉 showLogin() çağrıldı');
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboard = document.getElementById('dashboard');
+  
+  console.log('loginScreen element:', loginScreen);
+  console.log('dashboard element:', dashboard);
+  
+  loginScreen.style.display = 'flex';
+  dashboard.classList.remove('active');
+  console.log('✅ Giriş ekranı gösterildi');
 }
 
 function showDashboard() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('dashboard').classList.add('active');
+  console.log('👉 showDashboard() çağrıldı');
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboard = document.getElementById('dashboard');
+  
+  console.log('loginScreen element:', loginScreen);
+  console.log('dashboard element:', dashboard);
+  
+  loginScreen.style.display = 'none';
+  dashboard.classList.add('active');
+  
+  console.log('Dashboard classList:', dashboard.classList);
+  console.log('Dashboard display:', window.getComputedStyle(dashboard).display);
   
   // Kullanıcı bilgilerini göster
   document.getElementById('userEmail').textContent = currentUser.email;
@@ -124,16 +200,23 @@ function showDashboard() {
     avatar.src = currentUser.photoURL;
     avatar.style.display = 'block';
   }
+  
+  console.log('✅ Dashboard gösterildi');
 }
 
 // Load products
 function loadProducts() {
+  console.log('📦 Ürünler yükleniyor...');
   const productsRef = ref(database, 'products');
   
   onValue(productsRef, (snapshot) => {
+    console.log('📦 Firebase products snapshot:', snapshot.val());
     products = snapshot.val() || {};
+    console.log('📦 Products:', Object.keys(products).length, 'ürün');
     renderProducts();
     updateStats();
+  }, (error) => {
+    console.error('❌ Products yükleme hatası:', error);
   });
 }
 
@@ -162,7 +245,7 @@ function renderProducts() {
     
     const imageHTML = product.imageUrl 
       ? `<img src="${product.imageUrl}" alt="${product.name}">`
-      : '📦';
+      : '<div style="font-size:2rem;opacity:0.3;">IMG</div>';
     
     const featuresList = (product.features || [])
       .slice(0, 3)
@@ -181,8 +264,8 @@ function renderProducts() {
         ${product.description ? `<p style="font-size:0.85rem;color:var(--text-muted);margin:4px 0;">${product.description}</p>` : ''}
         ${featuresList ? `<ul class="product-features">${featuresList}</ul>` : ''}
         <div class="product-actions">
-          <button class="btn btn-secondary" onclick="editProduct('${product.id}')">✏️ Düzenle</button>
-          <button class="btn btn-danger" onclick="deleteProduct('${product.id}', '${product.name}')">🗑️ Sil</button>
+          <button class="btn btn-secondary" onclick="editProduct('${product.id}')">Düzenle</button>
+          <button class="btn btn-danger" onclick="deleteProduct('${product.id}', '${product.name}')">Sil</button>
         </div>
       </div>
     `;
@@ -368,7 +451,7 @@ document.getElementById('productForm')?.addEventListener('submit', async (e) => 
       // Update existing product
       const productRef = ref(database, `products/${productId}`);
       await update(productRef, productData);
-      showMessage(messageDiv, '✅ Ürün başarıyla güncellendi!', 'success');
+      showMessage(messageDiv, 'Ürün başarıyla güncellendi!', 'success');
     } else {
       // Add new product
       const productsRef = ref(database, 'products');
@@ -377,7 +460,7 @@ document.getElementById('productForm')?.addEventListener('submit', async (e) => 
         ...productData,
         createdAt: new Date().toISOString()
       });
-      showMessage(messageDiv, '✅ Ürün başarıyla eklendi!', 'success');
+      showMessage(messageDiv, 'Ürün başarıyla eklendi!', 'success');
     }
     
     selectedImage = null;
@@ -388,9 +471,9 @@ document.getElementById('productForm')?.addEventListener('submit', async (e) => 
     
   } catch (error) {
     console.error('Save error:', error);
-    showMessage(messageDiv, '❌ Bir hata oluştu: ' + error.message, 'error');
+    showMessage(messageDiv, 'Bir hata oluştu: ' + error.message, 'error');
   } finally {
-    btnText.textContent = '💾 Kaydet';
+    btnText.textContent = 'Kaydet';
   }
 });
 
@@ -412,10 +495,10 @@ window.deleteProduct = async (productId, productName) => {
     const productRef = ref(database, `products/${productId}`);
     await remove(productRef);
     
-    alert('✅ Ürün başarıyla silindi!');
+    alert('Ürün başarıyla silindi!');
   } catch (error) {
     console.error('Delete error:', error);
-    alert('❌ Silme işlemi başarısız: ' + error.message);
+    alert('Silme işlemi başarısız: ' + error.message);
   }
 };
 
@@ -432,12 +515,12 @@ async function createInitialAdmin() {
   
   try {
     await createUserWithEmailAndPassword(auth, adminEmail, adminPassword);
-    console.log('✅ Admin kullanıcı oluşturuldu:', adminEmail);
+    console.log('Admin kullanıcı oluşturuldu:', adminEmail);
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
-      console.log('ℹ️ Admin kullanıcı zaten mevcut');
+      console.log('Admin kullanıcı zaten mevcut');
     } else {
-      console.error('❌ Admin oluşturma hatası:', error);
+      console.error('Admin oluşturma hatası:', error);
     }
   }
 }
@@ -604,7 +687,20 @@ function renderOrders(ordersData) {
     cancelled: { text: 'İptal', class: 'badge-danger', bg: 'rgba(244,63,94,0.2)', color: '#fb7185' }
   };
   
-  let html = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">';
+  let html = `
+    <div style="margin-bottom:24px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;">
+      <div id="adminLocationStatus" style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;">
+        <div id="adminLocationDot" style="width:12px;height:12px;border-radius:50%;background:var(--text-muted);"></div>
+        <span id="adminLocationText" style="font-size:0.9rem;color:var(--text-muted);">Konum Paylaşımı Kapalı</span>
+      </div>
+      <button id="adminStartDeliveryBtn" class="start-delivery-btn">
+        <div class="progress"></div>
+        <div class="text">Yola Çıkıyorum (Basılı Tut)</div>
+      </button>
+    </div>
+  `;
+  
+  html += '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">';
   html += `
     <thead>
       <tr style="border-bottom:1px solid var(--border);">
@@ -641,6 +737,9 @@ function renderOrders(ordersData) {
   
   html += '</tbody></table></div>';
   container.innerHTML = html;
+  
+  // Re-attach event listeners after rendering
+  setTimeout(initAdminDeliveryButton, 100);
 }
 
 // View order details
@@ -686,18 +785,18 @@ window.updateOrderModal = async (trackingCode) => {
     if (courierEmail) {
       try {
         await assignCourier(trackingCode, courierEmail);
-        alert('✅ Kurye atandı ve sipariş yola çıktı!');
+        alert('Kurye atandı ve sipariş yola çıktı!');
       } catch (error) {
-        alert('❌ Hata: ' + error.message);
+        alert('Hata: ' + error.message);
       }
     }
   } else {
     const note = prompt('Not eklemek ister misiniz? (İsteğe bağlı)');
     try {
       await updateOrderStatus(trackingCode, newStatus, note || '');
-      alert('✅ Sipariş durumu güncellendi!');
+      alert('Sipariş durumu güncellendi!');
     } catch (error) {
-      alert('❌ Hata: ' + error.message);
+      alert('Hata: ' + error.message);
     }
   }
 };
@@ -772,11 +871,11 @@ function renderCouriers(couriersData) {
           </div>
         </div>
         <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">
-          📞 ${courier.phone}<br>
-          🚚 Aktif Teslimat: ${activeOrders}<br>
+          ${courier.phone}<br>
+          Aktif Teslimat: ${activeOrders}<br>
           ${isActive ? 
-            '<span style="color:var(--success);">● Konum Aktif</span>' : 
-            '<span style="color:var(--text-muted);">○ Konum Pasif</span>'}
+            '<span style="color:var(--success);">Konum Aktif</span>' : 
+            '<span style="color:var(--text-muted);">Konum Pasif</span>'}
         </div>
         <button class="btn btn-danger" style="width:100%;padding:8px;font-size:0.85rem;" onclick="deleteCourier('${courier.id}', '${courier.name}')">Sil</button>
       </div>
@@ -826,13 +925,13 @@ async function addCourier(name, email, phone, password) {
       activeOrders: {}
     });
     
-    alert('✅ Kurye başarıyla eklendi!\n\nGiriş Bilgileri:\nE-posta: ' + email + '\nŞifre: ' + password);
+    alert('Kurye başarıyla eklendi!\n\nGiriş Bilgileri:\nE-posta: ' + email + '\nŞifre: ' + password);
   } catch (error) {
     console.error('Add courier error:', error);
     if (error.code === 'auth/email-already-in-use') {
-      alert('❌ Bu e-posta adresi zaten kullanımda!');
+      alert('Bu e-posta adresi zaten kullanımda!');
     } else {
-      alert('❌ Hata: ' + error.message);
+      alert('Hata: ' + error.message);
     }
   }
 }
@@ -846,10 +945,10 @@ window.deleteCourier = async (courierId, courierName) => {
   try {
     const courierRef = ref(database, `couriers/${courierId}`);
     await remove(courierRef);
-    alert('✅ Kurye silindi!');
+    alert('Kurye silindi!');
   } catch (error) {
     console.error('Delete courier error:', error);
-    alert('❌ Hata: ' + error.message);
+    alert('Hata: ' + error.message);
   }
 };
 
@@ -884,19 +983,13 @@ window.openAddOrderModal = () => {
   };
   
   createOrder(orderData).then(trackingCode => {
-    alert(`✅ Sipariş oluşturuldu!\n\nTakip Kodu: ${trackingCode}\n\nMüşteriye bu kodu gönderin.`);
+    alert(`Sipariş oluşturuldu!\n\nTakip Kodu: ${trackingCode}\n\nMüşteriye bu kodu gönderin.`);
   }).catch(error => {
-    alert('❌ Hata: ' + error.message);
+    alert('Hata: ' + error.message);
   });
 };
 
-// Initialize orders and couriers loading
-setTimeout(() => {
-  if (currentUser) {
-    loadOrders();
-    loadCouriers();
-  }
-}, 2000);
+// Initialize orders and couriers loading - removed, now called from onAuthStateChanged
 
 
 // ==================== MODAL FUNCTIONS ====================
@@ -945,7 +1038,7 @@ document.getElementById('orderForm')?.addEventListener('submit', async (e) => {
   
   try {
     const trackingCode = await createOrder(orderData);
-    messageDiv.innerHTML = `<div class="alert alert-success">✅ Sipariş oluşturuldu!<br><strong>Takip Kodu: ${trackingCode}</strong><br>Bu kodu müşteriye gönderin.</div>`;
+    messageDiv.innerHTML = `<div class="alert alert-success">Sipariş oluşturuldu!<br><strong>Takip Kodu: ${trackingCode}</strong><br>Bu kodu müşteriye gönderin.</div>`;
     
     setTimeout(() => {
       closeOrderModal();
@@ -953,9 +1046,9 @@ document.getElementById('orderForm')?.addEventListener('submit', async (e) => {
     }, 3000);
   } catch (error) {
     console.error('Order creation error:', error);
-    messageDiv.innerHTML = `<div class="alert alert-error">❌ Hata: ${error.message}</div>`;
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${error.message}</div>`;
   } finally {
-    btnText.textContent = '📦 Sipariş Oluştur';
+    btnText.textContent = 'Sipariş Oluştur';
   }
 });
 
@@ -978,33 +1071,12 @@ window.openUpdateOrderModal = async (trackingCode) => {
   document.getElementById('updateOrderNote').value = '';
   document.getElementById('updateOrderMessage').innerHTML = '';
   
-  // Kurye dropdown'ını doldur
-  const courierSelect = document.getElementById('updateOrderCourier');
-  const couriersRef = ref(database, 'couriers');
-  const couriersSnap = await get(couriersRef);
-  const couriersData = couriersSnap.val() || {};
-  
-  courierSelect.innerHTML = '<option value="">Kurye seçin</option>';
-  Object.values(couriersData).forEach(courier => {
-    courierSelect.innerHTML += `<option value="${courier.email}">${courier.name} - ${courier.phone}</option>`;
-  });
-  
   modal.classList.add('active');
 };
 
 window.closeUpdateOrderModal = () => {
   document.getElementById('updateOrderModal').classList.remove('active');
 };
-
-// Show/hide courier select based on status
-document.getElementById('updateOrderStatus')?.addEventListener('change', (e) => {
-  const courierDiv = document.getElementById('courierSelectDiv');
-  if (e.target.value === 'shipped') {
-    courierDiv.style.display = 'block';
-  } else {
-    courierDiv.style.display = 'none';
-  }
-});
 
 // Update Order Form Submit
 document.getElementById('updateOrderForm')?.addEventListener('submit', async (e) => {
@@ -1020,60 +1092,9 @@ document.getElementById('updateOrderForm')?.addEventListener('submit', async (e)
   messageDiv.innerHTML = '';
   
   try {
-    if (newStatus === 'shipped') {
-      const courierEmail = document.getElementById('updateOrderCourier').value;
-      if (!courierEmail) {
-        throw new Error('Lütfen kurye seçin!');
-      }
-      
-      const queuePosition = parseInt(document.getElementById('updateQueuePosition').value) || 1;
-      
-      // Get courier info
-      const courierRef = ref(database, `couriers/${courierEmail.replace(/[.@]/g, '_')}`);
-      const courierSnap = await get(courierRef);
-      
-      if (!courierSnap.exists()) {
-        throw new Error('Kurye bulunamadı!');
-      }
-      
-      const courier = courierSnap.val();
-      
-      // Update order
-      const orderRef = ref(database, `orders/${trackingCode}`);
-      const orderSnap = await get(orderRef);
-      const order = orderSnap.val();
-      const history = order.history || [];
-      
-      history.push({
-        status: 'Yola Çıktı',
-        timestamp: new Date().toISOString(),
-        note: note || `${courier.name} tarafından teslimat başlatıldı.`
-      });
-      
-      await update(orderRef, {
-        status: 'shipped',
-        courier: {
-          email: courierEmail,
-          name: courier.name,
-          phone: courier.phone
-        },
-        queuePosition: queuePosition,
-        updatedAt: new Date().toISOString(),
-        history
-      });
-      
-      // Add to courier's active orders
-      const courierOrderRef = ref(database, `couriers/${courierEmail.replace(/[.@]/g, '_')}/activeOrders/${trackingCode}`);
-      await set(courierOrderRef, {
-        trackingCode,
-        assignedAt: new Date().toISOString()
-      });
-      
-    } else {
-      await updateOrderStatus(trackingCode, newStatus, note);
-    }
+    await updateOrderStatus(trackingCode, newStatus, note);
     
-    messageDiv.innerHTML = '<div class="alert alert-success">✅ Sipariş durumu güncellendi!</div>';
+    messageDiv.innerHTML = '<div class="alert alert-success">Sipariş durumu güncellendi!</div>';
     
     setTimeout(() => {
       closeUpdateOrderModal();
@@ -1081,9 +1102,9 @@ document.getElementById('updateOrderForm')?.addEventListener('submit', async (e)
     
   } catch (error) {
     console.error('Update error:', error);
-    messageDiv.innerHTML = `<div class="alert alert-error">❌ Hata: ${error.message}</div>`;
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${error.message}</div>`;
   } finally {
-    btnText.textContent = '💾 Güncelle';
+    btnText.textContent = 'Güncelle';
   }
 });
 
@@ -1128,7 +1149,7 @@ document.getElementById('courierForm')?.addEventListener('submit', async (e) => 
       activeOrders: {}
     });
     
-    messageDiv.innerHTML = `<div class="alert alert-success">✅ Kurye eklendi!<br><strong>Email:</strong> ${email}<br><strong>Şifre:</strong> ${password}</div>`;
+    messageDiv.innerHTML = `<div class="alert alert-success">Kurye eklendi!<br><strong>Email:</strong> ${email}<br><strong>Şifre:</strong> ${password}</div>`;
     
     setTimeout(() => {
       closeCourierModal();
@@ -1140,9 +1161,9 @@ document.getElementById('courierForm')?.addEventListener('submit', async (e) => 
     if (error.code === 'auth/email-already-in-use') {
       errorMsg = 'Bu e-posta adresi zaten kullanımda!';
     }
-    messageDiv.innerHTML = `<div class="alert alert-error">❌ Hata: ${errorMsg}</div>`;
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${errorMsg}</div>`;
   } finally {
-    btnText.textContent = '👤 Kurye Ekle';
+    btnText.textContent = 'Kurye Ekle';
   }
 });
 
@@ -1151,4 +1172,365 @@ window.updateOrderModal = (trackingCode) => {
   openUpdateOrderModal(trackingCode);
 };
 
-console.log('✅ Tüm modal fonksiyonları yüklendi');
+console.log('Tüm modal fonksiyonları yüklendi');
+
+
+// ==================== ADMIN DELIVERY SYSTEM ====================
+
+let adminWatchId = null;
+let adminWakeLock = null;
+let adminLocationInterval = null;
+let isAdminTracking = false;
+
+let adminHoldTimer = null;
+let adminHoldProgress = 0;
+
+function initAdminDeliveryButton() {
+  const adminStartBtn = document.getElementById('adminStartDeliveryBtn');
+  if (!adminStartBtn) return;
+  
+  const adminProgress = adminStartBtn.querySelector('.progress');
+  const adminBtnText = adminStartBtn.querySelector('.text');
+  
+  // Remove old listeners
+  adminStartBtn.replaceWith(adminStartBtn.cloneNode(true));
+  const newBtn = document.getElementById('adminStartDeliveryBtn');
+  const newProgress = newBtn.querySelector('.progress');
+  const newBtnText = newBtn.querySelector('.text');
+  
+  newBtn.addEventListener('mousedown', (e) => startAdminHolding(e, newBtn, newProgress, newBtnText));
+  newBtn.addEventListener('touchstart', (e) => startAdminHolding(e, newBtn, newProgress, newBtnText));
+  newBtn.addEventListener('mouseup', (e) => stopAdminHolding(e, newProgress));
+  newBtn.addEventListener('mouseleave', (e) => stopAdminHolding(e, newProgress));
+  newBtn.addEventListener('touchend', (e) => stopAdminHolding(e, newProgress));
+  newBtn.addEventListener('touchcancel', (e) => stopAdminHolding(e, newProgress));
+  
+  // Restore state if tracking
+  if (isAdminTracking) {
+    newBtn.classList.add('tracking');
+    newBtnText.textContent = 'Konum Paylaşılıyor (Durdurmak için bas)';
+    newProgress.style.width = '100%';
+  }
+}
+
+function startAdminHolding(e, btn, progress, btnText) {
+  e.preventDefault();
+  
+  if (isAdminTracking) {
+    stopAdminLocationTracking();
+    return;
+  }
+  
+  adminHoldProgress = 0;
+  adminHoldTimer = setInterval(() => {
+    adminHoldProgress += 2;
+    progress.style.width = adminHoldProgress + '%';
+    
+    if (adminHoldProgress >= 100) {
+      clearInterval(adminHoldTimer);
+      activateAdminTracking(btn, btnText, progress);
+    }
+  }, 20);
+}
+
+function stopAdminHolding(e, progress) {
+  if (adminHoldTimer) {
+    clearInterval(adminHoldTimer);
+    adminHoldTimer = null;
+  }
+  
+  if (!isAdminTracking) {
+    progress.style.width = '0%';
+  }
+}
+
+async function activateAdminTracking(btn, btnText, progress) {
+  isAdminTracking = true;
+  btn.classList.add('tracking');
+  btnText.textContent = 'Konum Paylaşılıyor (Durdurmak için bas)';
+  progress.style.width = '100%';
+  
+  updateAdminLocationUI();
+  await startAdminLocationTracking(currentUser.email);
+}
+
+function updateAdminLocationUI() {
+  const statusDiv = document.getElementById('adminLocationStatus');
+  const dot = document.getElementById('adminLocationDot');
+  const text = document.getElementById('adminLocationText');
+  
+  if (!statusDiv || !dot || !text) return;
+  
+  if (isAdminTracking) {
+    statusDiv.style.borderColor = 'var(--success)';
+    statusDiv.style.background = 'rgba(34, 197, 94, 0.1)';
+    dot.style.background = 'var(--success)';
+    dot.style.animation = 'pulse 2s ease-in-out infinite';
+    text.textContent = 'Konum Paylaşımı Aktif - Müşteriler konumunuzu görebilir';
+    text.style.color = 'var(--success)';
+  } else {
+    statusDiv.style.borderColor = 'var(--border)';
+    statusDiv.style.background = 'rgba(255,255,255,0.03)';
+    dot.style.background = 'var(--text-muted)';
+    dot.style.animation = 'none';
+    text.textContent = 'Konum Paylaşımı Kapalı';
+    text.style.color = 'var(--text-muted)';
+  }
+}
+
+async function startAdminLocationTracking(email) {
+  console.log('Admin konum takibi başlatılıyor:', email);
+  
+  if (!('geolocation' in navigator)) {
+    alert('Tarayıcınız konum servisleri desteklemiyor!');
+    return;
+  }
+  
+  // Konum izni kontrolü
+  try {
+    const permission = await navigator.permissions.query({ name: 'geolocation' });
+    
+    if (permission.state === 'denied') {
+      alert('❌ Konum izni reddedildi!\n\n📍 Tarayıcı ayarlarından konum iznini açmanız gerekiyor.\n\n🔧 Ayarlar → Site Ayarları → Konum → İzin Ver');
+      isAdminTracking = false;
+      stopAdminLocationTracking();
+      return;
+    }
+    
+    console.log('✓ Konum izin durumu:', permission.state);
+  } catch (err) {
+    console.warn('Permission API desteklenmiyor:', err);
+  }
+  
+  // Wake Lock - Ekran kilitliyken bile konum alsın
+  try {
+    if ('wakeLock' in navigator) {
+      adminWakeLock = await navigator.wakeLock.request('screen');
+      console.log('✓ Wake Lock aktif - Arka planda konum alınacak');
+      
+      adminWakeLock.addEventListener('release', () => {
+        console.log('⚠ Wake Lock serbest bırakıldı');
+        // Otomatik yeniden başlat
+        if (isAdminTracking && 'wakeLock' in navigator) {
+          navigator.wakeLock.request('screen').then(wl => {
+            adminWakeLock = wl;
+            console.log('✓ Wake Lock yeniden başlatıldı');
+          }).catch(err => console.warn('Wake Lock yeniden başlatılamadı:', err));
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('⚠ Wake Lock başarısız:', err);
+  }
+  
+  const options = {
+    enableHighAccuracy: true, // GPS kullan
+    maximumAge: 0, // Cache kullanma, her zaman yeni konum al
+    timeout: 15000 // 15 saniye timeout
+  };
+  
+  // İlk konum
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      updateAdminLocationToFirebase(email, position);
+      console.log('✓ İlk konum alındı');
+    },
+    (error) => {
+      console.error('❌ İlk konum alınamadı:', error.message);
+      handleLocationError(error);
+    },
+    options
+  );
+  
+  // Sürekli izleme (watchPosition)
+  adminWatchId = navigator.geolocation.watchPosition(
+    (position) => {
+      updateAdminLocationToFirebase(email, position);
+    },
+    (error) => {
+      console.error('❌ Konum hatası:', error.message);
+      handleLocationError(error);
+    },
+    options
+  );
+  
+  // Manuel güncelleme (backup) - Her 5 saniyede bir
+  adminLocationInterval = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        updateAdminLocationToFirebase(email, position);
+      },
+      (error) => {
+        console.error('⚠ Manuel güncelleme başarısız:', error.message);
+      },
+      options
+    );
+  }, 5000);
+  
+  console.log('✓ Admin konum takibi aktif (Watch ID:', adminWatchId, ')');
+}
+
+function handleLocationError(error) {
+  let errorMsg = '';
+  
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      errorMsg = '❌ Konum izni reddedildi!\n\n📍 Lütfen tarayıcı ayarlarından konum iznini açın.';
+      alert(errorMsg);
+      stopAdminLocationTracking();
+      break;
+    case error.POSITION_UNAVAILABLE:
+      errorMsg = '⚠ Konum bilgisi alınamıyor.';
+      console.warn(errorMsg);
+      break;
+    case error.TIMEOUT:
+      errorMsg = '⏱ Konum alma zaman aşımına uğradı.';
+      console.warn(errorMsg);
+      break;
+    default:
+      errorMsg = '❌ Bilinmeyen bir konum hatası oluştu.';
+      console.error(errorMsg);
+  }
+}
+
+async function startAdminLocationTracking(email) {
+  console.log('Admin konum takibi başlatılıyor:', email);
+  
+  if (!('geolocation' in navigator)) {
+    alert('Tarayıcınız konum servisleri desteklemiyor!');
+    return;
+  }
+  
+  try {
+    const permission = await navigator.permissions.query({ name: 'geolocation' });
+    
+    if (permission.state === 'denied') {
+      alert('Konum izni reddedildi!\n\nTarayıcı ayarlarından konum iznini açmanız gerekiyor.');
+      isAdminTracking = false;
+      updateAdminLocationUI();
+      return;
+    }
+  } catch (err) {
+    console.warn('Permission API desteklenmiyor');
+  }
+  
+  try {
+    if ('wakeLock' in navigator) {
+      adminWakeLock = await navigator.wakeLock.request('screen');
+      console.log('Admin Wake Lock aktif');
+      
+      adminWakeLock.addEventListener('release', () => {
+        console.log('Admin Wake Lock serbest bırakıldı');
+      });
+    }
+  } catch (err) {
+    console.warn('Wake Lock başarısız:', err);
+  }
+  
+  const options = {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 15000
+  };
+  
+  navigator.geolocation.getCurrentPosition(
+    (position) => updateAdminLocationToFirebase(email, position),
+    (error) => console.error('İlk konum alınamadı:', error.message),
+    options
+  );
+  
+  adminWatchId = navigator.geolocation.watchPosition(
+    (position) => updateAdminLocationToFirebase(email, position),
+    (error) => console.error('Konum hatası:', error.message),
+    options
+  );
+  
+  adminLocationInterval = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => updateAdminLocationToFirebase(email, position),
+      (error) => console.error('Manuel güncelleme başarısız:', error.message),
+      options
+    );
+  }, 5000);
+  
+  console.log('Admin konum takibi aktif');
+}
+
+function updateAdminLocationToFirebase(email, position) {
+  const locationData = {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+    accuracy: position.coords.accuracy,
+    speed: position.coords.speed || 0,
+    heading: position.coords.heading || 0,
+    timestamp: new Date().toISOString(),
+    lastUpdate: Date.now()
+  };
+  
+  const emailKey = email.replace(/[.@]/g, '_');
+  const locationRef = ref(database, `locations/${emailKey}`);
+  
+  set(locationRef, locationData).then(() => {
+    console.log('Admin konum güncellendi');
+  }).catch((error) => {
+    console.error('Admin konum kaydetme hatası:', error);
+  });
+}
+
+function stopAdminLocationTracking() {
+  isAdminTracking = false;
+  
+  const adminStartBtn = document.getElementById('adminStartDeliveryBtn');
+  if (adminStartBtn) {
+    adminStartBtn.classList.remove('tracking');
+    const btnText = adminStartBtn.querySelector('.text');
+    const progress = adminStartBtn.querySelector('.progress');
+    if (btnText) btnText.textContent = 'Yola Çıkıyorum (Basılı Tut)';
+    if (progress) progress.style.width = '0%';
+  }
+  
+  if (adminWatchId !== null) {
+    navigator.geolocation.clearWatch(adminWatchId);
+    adminWatchId = null;
+  }
+  
+  if (adminLocationInterval) {
+    clearInterval(adminLocationInterval);
+    adminLocationInterval = null;
+  }
+  
+  if (adminWakeLock) {
+    adminWakeLock.release().then(() => {
+      adminWakeLock = null;
+    });
+  }
+  
+  updateAdminLocationUI();
+  console.log('Admin konum takibi durduruldu');
+}
+
+console.log('Admin teslimat sistemi yüklendi');
+
+// Page visibility change - Arka planda bile konum alsın
+document.addEventListener('visibilitychange', async () => {
+  if (document.hidden) {
+    console.log('📱 Sayfa arka planda - konum tracking devam ediyor');
+  } else {
+    console.log('📱 Sayfa ön planda');
+    
+    // Eğer tracking aktifse ve watchId yoksa yeniden başlat
+    if (isAdminTracking && adminWatchId === null) {
+      console.log('🔄 Tracking yeniden başlatılıyor');
+      await startAdminLocationTracking(currentUser.email);
+    }
+  }
+});
+
+// Page unload - Tracking aktifse durdurma
+window.addEventListener('beforeunload', (e) => {
+  if (isAdminTracking) {
+    // Kullanıcıyı uyar
+    e.preventDefault();
+    e.returnValue = 'Konum paylaşımı aktif! Sayfayı kapatırsanız müşteriler konumunuzu göremeyecek.';
+  }
+});

@@ -270,11 +270,11 @@ h1 {
   <form id="loginForm" novalidate>
     <div class="form-group">
       <label>E-posta</label>
-      <input type="text" id="email" required placeholder="huseyinatas@gmail.com" value="huseyinatas@gmail.com">
+      <input type="text" id="email" required placeholder="huseyinatas@gmail.com">
     </div>
     <div class="form-group">
       <label>Şifre</label>
-      <input type="password" id="password" required placeholder="••••••••" value="admin123456">
+      <input type="password" id="password" required placeholder="••••••••">
     </div>
     <button type="submit" class="btn btn-primary">
       <span id="loginBtnText">Giriş Yap</span>
@@ -304,8 +304,6 @@ console.log('✅ Firebase initialized');
 // ADMIN EMAIL LISTESI
 const ADMIN_EMAILS = [
   'huseyinatas@gmail.com',
-  'hüseyinataş@gmail.com',  // Firebase'de bu şekilde kayıtlı
-  '2sthillman@gmail.com',
   'admin@zirveeimza.com'
 ];
 
@@ -346,7 +344,6 @@ async function checkUserRole(email) {
     return 'admin';
   }
   
-  // Courier kontrolünü dene, hata olursa admin olmadığını döndür
   try {
     const courierKey = email.replace(/[.@]/g, '_');
     const courierRef = ref(database, `couriers/${courierKey}`);
@@ -356,25 +353,20 @@ async function checkUserRole(email) {
       return 'courier';
     }
   } catch (error) {
-    // Permission denied veya başka hata - admin değilse null döndür
-    console.warn('Courier check failed (expected for non-couriers):', error.code);
+    console.warn('Courier check failed:', error);
   }
   
-  // Admin değilse ve courier değilse
   return null;
 }
 
 // Redirect user
-async function redirectUser(role) {
+function redirectUser(role) {
   if (role === 'admin') {
-    // MODERN admin paneline yönlendir
-    window.location.href = 'admin/index-modern.html';
+    window.location.href = '/site/admin/index.html';
   } else if (role === 'courier') {
-    // Kurye paneline yönlendir
-    window.location.href = 'admin/kurye.html';
+    window.location.href = '/site/admin/kurye.html';
   } else {
     showMessage('❌ Yetkisiz erişim! Bu sistemi kullanma yetkiniz yok.', 'error');
-    await auth.signOut();
   }
 }
 
@@ -393,8 +385,8 @@ document.getElementById('googleBtn').addEventListener('click', async () => {
     const role = await checkUserRole(result.user.email);
     
     if (role) {
-      // HEMEN yönlendir (bekleme yok)
-      redirectUser(role);
+      showMessage('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+      setTimeout(() => redirectUser(role), 1000);
     } else {
       showMessage('❌ Yetkisiz erişim!', 'error');
       btn.disabled = false;
@@ -427,36 +419,28 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   const btnText = document.getElementById('loginBtnText');
   const btn = e.target.querySelector('button[type="submit"]');
   
-  console.log('🔐 Giriş denemesi:', email);
+  // Normalize email
+  email = normalizeEmail(email);
   
   btn.disabled = true;
   btnText.innerHTML = '<div class="loading"></div> Giriş yapılıyor...';
   
   try {
-    console.log('📡 Firebase signInWithEmailAndPassword çağrılıyor...');
     const result = await signInWithEmailAndPassword(auth, email, password);
     console.log('✅ Email login success:', result.user.email);
-    console.log('✅ User UID:', result.user.uid);
     
-    console.log('🔍 Rol kontrol ediliyor...');
     const role = await checkUserRole(result.user.email);
-    console.log('✅ Kullanıcı rolü:', role);
     
     if (role) {
-      console.log('✅ Yönlendirme yapılıyor:', role);
-      // HEMEN yönlendir (bekleme yok)
-      redirectUser(role);
+      showMessage('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+      setTimeout(() => redirectUser(role), 1000);
     } else {
-      console.log('❌ Rol bulunamadı!');
       showMessage('❌ Yetkisiz erişim!', 'error');
-      await auth.signOut();
       btn.disabled = false;
       btnText.textContent = 'Giriş Yap';
     }
   } catch (error) {
     console.error('❌ Email login error:', error);
-    console.error('❌ Error code:', error.code);
-    console.error('❌ Error message:', error.message);
     
     let msg = 'Giriş başarısız!';
     if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -465,8 +449,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       msg = 'Geçersiz e-posta veya şifre!';
     } else if (error.code === 'auth/too-many-requests') {
       msg = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
-    } else {
-      msg = 'Giriş başarısız: ' + error.message;
     }
     
     showMessage(msg, 'error');

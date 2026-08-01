@@ -11,12 +11,12 @@ initializeApp({
 
 const db = getDatabase();
 
-// Güvenlik kuralları
+// Güvenlik kuralları - Admin kullanıcıların yazmasına izin ver
 const rules = {
   "rules": {
     "products": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'hüseyinataş@gmail.com' || auth.token.email == 'admin@zirveeimza.com')",
       ".indexOn": ["status", "price"]
     },
     "orders": {

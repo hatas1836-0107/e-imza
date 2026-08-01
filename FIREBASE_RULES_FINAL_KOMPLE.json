@@ -1,0 +1,101 @@
+{
+  "rules": {
+    "products": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'admin@zirveeimza.com')",
+      ".indexOn": ["status", "price", "createdAt", "category", "popular"]
+    },
+    "orders": {
+      ".read": true,
+      "$orderId": {
+        ".write": true,
+        "id": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0)"
+        },
+        "customerName": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 2)"
+        },
+        "customerPhone": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length >= 10)"
+        },
+        "customerEmail": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i))"
+        },
+        "productName": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "address": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "district": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "city": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "status": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().matches(/^(pending|confirmed|preparing|ready|shipped|delivered|cancelled)$/))"
+        },
+        "createdAt": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "updatedAt": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "history": {
+          ".validate": "!newData.exists() || newData.hasChildren()"
+        },
+        "notes": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "deliveryType": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "location": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "courier": {
+          ".validate": "!newData.exists() || newData.hasChildren(['email', 'name', 'phone'])"
+        },
+        "queuePosition": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        ".indexOn": ["status", "createdAt", "customerPhone", "customerEmail", "district"]
+      }
+    },
+    "couriers": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$courierId": {
+        "location": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "activeOrders": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        },
+        ".indexOn": ["email", "name"]
+      }
+    },
+    "locations": {
+      ".read": true,
+      "$email": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['latitude', 'longitude', 'timestamp'])",
+        "latitude": {
+          ".validate": "newData.isNumber()"
+        },
+        "longitude": {
+          ".validate": "newData.isNumber()"
+        },
+        "timestamp": {
+          ".validate": "newData.isString()"
+        },
+        "accuracy": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        }
+      }
+    }
+  }
+}

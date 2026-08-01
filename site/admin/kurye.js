@@ -1,245 +1,433 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getDatabase, ref, set, update, onValue, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
+import { getDatabase, ref, get, update, onValue, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 import { firebaseConfig } from './firebase-config.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
-let currentCourier = null;
-let locationWatchId = null;
-let isLocationSharing = false;
-let activeOrders = [];
+let currentUser = null;
+let watchId = null;
+let wakeLock = null;
+let locationUpdateInterval = null;
+let isTracking = false;
+let myActiveOrders = [];
 
-// Auth check
-onAuthStateChanged(auth, async (user) => {
+const ADMIN_EMAILS = [
+  'huseyinatas@gmail.com',
+  'hüseyinataş@gmail.com',
+  '2sthillman@gmail.com',
+  'admin@zirveeimza.com'
+];
+
+// Auth state listener
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    // Check if user is courier
-    const courierRef = ref(database, `couriers/${user.email.replace(/[.@]/g, '_')}`);
-    const snapshot = await get(courierRef);
-    
-    if (snapshot.exists()) {
-      currentCourier = { email: user.email, ...snapshot.val() };
-      document.getElementById('courierName').textContent = currentCourier.name;
-      loadActiveOrders();
-    } else {
-      alert('Bu hesap kurye hesabı değil!');
-      await signOut(auth);
-      window.location.href = 'index.html';
-    }
+    currentUser = user;
+    showDashboard();
+    loadOrders();
   } else {
-    window.location.href = 'index.html';
+    currentUser = null;
+    showLogin();
+  }
+});
+
+// Login
+document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const btnText = document.getElementById('loginBtnText');
+  const messageDiv = document.getElementById('loginMessage');
+  
+  btnText.innerHTML = '<div class="loading"></div>';
+  messageDiv.innerHTML = '';
+  
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error('Login error:', error);
+    let errorMessage = 'Giriş başarısız!';
+    
+    if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+      errorMessage = 'E-posta veya şifre hatalı!';
+    } else if (error.code === 'auth/invalid-credential') {
+      errorMessage = 'Geçersiz e-posta veya şifre!';
+    }
+    
+    messageDiv.innerHTML = `<div class="alert alert-error">${errorMessage}</div>`;
+    btnText.textContent = 'Giriş Yap';
   }
 });
 
 // Logout
 window.logout = async () => {
   if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-    if (isLocationSharing) {
-      stopLocationSharing();
-    }
+    stopLocationTracking();
     await signOut(auth);
   }
 };
 
-// Toggle location sharing
-window.toggleLocationSharing = () => {
-  if (isLocationSharing) {
-    stopLocationSharing();
-  } else {
-    startLocationSharing();
-  }
-};
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashboard').classList.remove('active');
+}
 
-// Start location sharing
-function startLocationSharing() {
-  if (!navigator.geolocation) {
-    alert('Tarayıcınız konum paylaşımını desteklemiyor!');
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('active');
+  document.getElementById('userEmail').textContent = currentUser.email;
+}
+
+// "Yola Çıkıyorum" button with hold-to-activate
+const startBtn = document.getElementById('startDeliveryBtn');
+const progress = startBtn?.querySelector('.progress');
+const btnText = startBtn?.querySelector('.text');
+
+let holdTimer = null;
+let holdProgress = 0;
+
+startBtn?.addEventListener('mousedown', startHolding);
+startBtn?.addEventListener('touchstart', startHolding);
+startBtn?.addEventListener('mouseup', stopHolding);
+startBtn?.addEventListener('mouseleave', stopHolding);
+startBtn?.addEventListener('touchend', stopHolding);
+startBtn?.addEventListener('touchcancel', stopHolding);
+
+function startHolding(e) {
+  e.preventDefault();
+  
+  if (isTracking) {
+    // Already tracking, stop it
+    stopLocationTracking();
     return;
+  }
+  
+  holdProgress = 0;
+  holdTimer = setInterval(() => {
+    holdProgress += 2;
+    progress.style.width = holdProgress + '%';
+    
+    if (holdProgress >= 100) {
+      clearInterval(holdTimer);
+      activateTracking();
+    }
+  }, 20); // 2% every 20ms = 1 second total
+}
+
+function stopHolding() {
+  if (holdTimer) {
+    clearInterval(holdTimer);
+    holdTimer = null;
+  }
+  
+  if (!isTracking) {
+    progress.style.width = '0%';
+  }
+}
+
+async function activateTracking() {
+  if (myActiveOrders.length === 0) {
+    alert('Lütfen önce bir sipariş alın!');
+    progress.style.width = '0%';
+    return;
+  }
+  
+  isTracking = true;
+  startBtn.classList.add('tracking');
+  btnText.textContent = 'Konum Paylaşılıyor (Durdurmak için bas)';
+  progress.style.width = '100%';
+  
+  updateLocationUI();
+  await startLocationTracking(currentUser.email);
+}
+
+function updateLocationUI() {
+  const statusDiv = document.getElementById('locationStatus');
+  const dot = statusDiv.querySelector('.location-dot');
+  const text = statusDiv.querySelector('span');
+  
+  if (isTracking) {
+    statusDiv.classList.add('active');
+    dot.classList.add('active');
+    text.textContent = 'Konum Paylaşımı Aktif - Konumunuz müşteri ile paylaşılıyor';
+  } else {
+    statusDiv.classList.remove('active');
+    dot.classList.remove('active');
+    text.textContent = 'Konum Paylaşımı Kapalı';
+  }
+}
+
+// Start location tracking
+async function startLocationTracking(email) {
+  console.log('Konum takibi başlatılıyor:', email);
+  
+  if (!('geolocation' in navigator)) {
+    alert('Tarayıcınız konum servisleri desteklemiyor!');
+    return;
+  }
+  
+  try {
+    const permission = await navigator.permissions.query({ name: 'geolocation' });
+    
+    if (permission.state === 'denied') {
+      alert('Konum izni reddedildi!\n\nTarayıcı ayarlarından konum iznini açmanız gerekiyor.');
+      isTracking = false;
+      updateLocationUI();
+      return;
+    }
+  } catch (err) {
+    console.warn('Permission API desteklenmiyor');
+  }
+  
+  // Wake Lock
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('Wake Lock aktif - arka planda bile konum alınacak');
+      
+      wakeLock.addEventListener('release', () => {
+        console.log('Wake Lock serbest bırakıldı');
+      });
+    }
+  } catch (err) {
+    console.warn('Wake Lock başarısız:', err);
   }
   
   const options = {
     enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
+    maximumAge: 0,
+    timeout: 15000
   };
   
-  const messageDiv = document.getElementById('locationMessage');
-  messageDiv.innerHTML = '<div class="alert alert-success">📍 Konum izni isteniyor...</div>';
-  
-  locationWatchId = navigator.geolocation.watchPosition(
-    (position) => {
-      const location = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        accuracy: position.coords.accuracy,
-        timestamp: new Date().toISOString()
-      };
-      
-      updateCourierLocation(location);
-      
-      if (!isLocationSharing) {
-        isLocationSharing = true;
-        updateLocationUI();
-        messageDiv.innerHTML = '<div class="alert alert-success">✅ Konum paylaşımı aktif! Müşteriler konumunuzu görebilir.</div>';
-      }
-    },
-    (error) => {
-      console.error('Location error:', error);
-      let errorMsg = 'Konum alınamadı!';
-      
-      if (error.code === 1) {
-        errorMsg = 'Konum izni reddedildi. Lütfen tarayıcı ayarlarından izin verin.';
-      } else if (error.code === 2) {
-        errorMsg = 'Konum bilgisi alınamıyor. GPS aktif mi kontrol edin.';
-      }
-      
-      messageDiv.innerHTML = `<div class="alert alert-error">❌ ${errorMsg}</div>`;
-      isLocationSharing = false;
-      updateLocationUI();
-    },
+  // İlk konum
+  navigator.geolocation.getCurrentPosition(
+    (position) => updateLocationToFirebase(email, position),
+    (error) => console.error('İlk konum alınamadı:', error.message),
     options
   );
+  
+  // Sürekli izleme
+  watchId = navigator.geolocation.watchPosition(
+    (position) => updateLocationToFirebase(email, position),
+    (error) => console.error('Konum hatası:', error.message),
+    options
+  );
+  
+  // Manuel güncelleme (backup)
+  locationUpdateInterval = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => updateLocationToFirebase(email, position),
+      (error) => console.error('Manuel güncelleme başarısız:', error.message),
+      options
+    );
+  }, 5000); // 5 saniyede bir
+  
+  console.log('Konum takibi aktif');
 }
 
-// Stop location sharing
-function stopLocationSharing() {
-  if (locationWatchId) {
-    navigator.geolocation.clearWatch(locationWatchId);
-    locationWatchId = null;
-  }
+// Update location to Firebase
+function updateLocationToFirebase(email, position) {
+  const locationData = {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+    accuracy: position.coords.accuracy,
+    speed: position.coords.speed || 0,
+    heading: position.coords.heading || 0,
+    timestamp: new Date().toISOString(),
+    lastUpdate: Date.now()
+  };
   
-  isLocationSharing = false;
-  updateLocationUI();
+  const emailKey = email.replace(/[.@]/g, '_');
+  const locationRef = ref(database, `locations/${emailKey}`);
   
-  // Clear location from database
-  if (currentCourier) {
-    const courierRef = ref(database, `couriers/${currentCourier.email.replace(/[.@]/g, '_')}/location`);
-    set(courierRef, null);
-    
-    // Also clear from all active orders
-    activeOrders.forEach(order => {
-      const orderRef = ref(database, `orders/${order.trackingCode}/courier/location`);
-      set(orderRef, null);
-    });
-  }
-  
-  document.getElementById('locationMessage').innerHTML = '<div class="alert alert-error">Konum paylaşımı durduruldu.</div>';
-}
-
-// Update courier location in database
-async function updateCourierLocation(location) {
-  if (!currentCourier) return;
-  
-  try {
-    // Update courier's location
-    const courierRef = ref(database, `couriers/${currentCourier.email.replace(/[.@]/g, '_')}/location`);
-    await set(courierRef, location);
-    
-    // Update location in all active orders
-    activeOrders.forEach(async (order) => {
-      const orderRef = ref(database, `orders/${order.trackingCode}/courier/location`);
-      await set(orderRef, location);
-    });
-  } catch (error) {
-    console.error('Update location error:', error);
-  }
-}
-
-// Update location UI
-function updateLocationUI() {
-  const statusEl = document.getElementById('locationStatus');
-  const btnEl = document.getElementById('toggleLocationBtn');
-  
-  if (isLocationSharing) {
-    statusEl.textContent = '✅ Konum Paylaşımı Aktif';
-    statusEl.className = 'location-status active';
-    btnEl.textContent = '⏸️ Konum Paylaşımını Durdur';
-    btnEl.className = 'btn btn-danger';
-  } else {
-    statusEl.textContent = '❌ Konum Paylaşımı Kapalı';
-    statusEl.className = 'location-status inactive';
-    btnEl.textContent = '📍 Konum Paylaşımını Başlat';
-    btnEl.className = 'btn btn-success';
-  }
-}
-
-// Load active orders
-function loadActiveOrders() {
-  if (!currentCourier) return;
-  
-  const courierOrdersRef = ref(database, `couriers/${currentCourier.email.replace(/[.@]/g, '_')}/activeOrders`);
-  
-  onValue(courierOrdersRef, async (snapshot) => {
-    const ordersData = snapshot.val() || {};
-    const orderPromises = Object.keys(ordersData).map(async (trackingCode) => {
-      const orderRef = ref(database, `orders/${trackingCode}`);
-      const orderSnap = await get(orderRef);
-      if (orderSnap.exists()) {
-        return { trackingCode, ...orderSnap.val() };
-      }
-      return null;
-    });
-    
-    activeOrders = (await Promise.all(orderPromises)).filter(o => o !== null && o.status !== 'delivered');
-    renderOrders();
+  set(locationRef, locationData).then(() => {
+    console.log('✓ Konum güncellendi:', 
+      Math.round(locationData.latitude * 10000) / 10000,
+      Math.round(locationData.longitude * 10000) / 10000
+    );
+  }).catch((error) => {
+    console.error('Konum kaydetme hatası:', error);
   });
 }
 
-// Render orders
-function renderOrders() {
+// Stop location tracking
+function stopLocationTracking() {
+  isTracking = false;
+  startBtn.classList.remove('tracking');
+  btnText.textContent = 'Yola Çıkıyorum (Basılı Tut)';
+  progress.style.width = '0%';
+  
+  if (watchId !== null) {
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+  }
+  
+  if (locationUpdateInterval) {
+    clearInterval(locationUpdateInterval);
+    locationUpdateInterval = null;
+  }
+  
+  if (wakeLock) {
+    wakeLock.release().then(() => {
+      wakeLock = null;
+    });
+  }
+  
+  updateLocationUI();
+  console.log('Konum takibi durduruldu');
+}
+
+// Load orders
+function loadOrders() {
+  const ordersRef = ref(database, 'orders');
+  
+  onValue(ordersRef, (snapshot) => {
+    const ordersData = snapshot.val() || {};
+    const ordersArray = Object.entries(ordersData).map(([id, data]) => ({ id, ...data }));
+    
+    // Bekleyen siparişler (courier atanmamış veya hazır)
+    const pendingOrders = ordersArray.filter(o => 
+      ['confirmed', 'preparing', 'ready'].includes(o.status) && !o.courier
+    );
+    
+    // Benim siparişlerim
+    myActiveOrders = ordersArray.filter(o => 
+      o.courier && o.courier.email === currentUser.email && o.status === 'shipped'
+    );
+    
+    renderOrders(pendingOrders);
+    renderMyOrders(myActiveOrders);
+  });
+}
+
+// Render pending orders
+function renderOrders(orders) {
   const container = document.getElementById('ordersContainer');
   
-  if (activeOrders.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center;padding:40px;color:var(--text-muted);">
-        <p>Şu anda aktif teslimat yok.</p>
-      </div>
-    `;
+  if (orders.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px;">Şu anda bekleyen sipariş yok.</p>';
     return;
   }
   
-  // Sort by queue position
-  activeOrders.sort((a, b) => (a.queuePosition || 999) - (b.queuePosition || 999));
-  
-  let html = '<div class="orders-list">';
-  
-  activeOrders.forEach((order, index) => {
+  let html = '';
+  orders.forEach(order => {
     html += `
       <div class="order-card">
-        <div class="order-header">
-          <div class="order-code">${order.trackingCode}</div>
-          <div style="background:${index === 0 ? 'var(--success)' : 'var(--warning)'};color:white;padding:4px 12px;border-radius:999px;font-size:0.85rem;">
-            ${index === 0 ? '🎯 Şu an' : `Sıra ${index + 1}`}
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+          <div>
+            <strong style="font-size:1.1rem;color:var(--primary);">${order.id}</strong>
+            <span class="badge-new" style="margin-left:8px;">YENİ</span>
           </div>
+          <span style="font-size:0.85rem;color:var(--text-muted);">${formatDate(order.createdAt)}</span>
         </div>
-        <div class="order-info">
-          <strong>${order.customerName}</strong><br>
-          📞 ${order.customerPhone}<br>
-          📦 ${order.productName}<br>
-          📍 ${order.address}
+        <div style="margin-bottom:12px;">
+          <strong style="font-size:0.95rem;">${order.customerName}</strong><br>
+          <span style="color:var(--text-muted);font-size:0.9rem;">${order.customerPhone}</span>
         </div>
-        <div class="order-actions">
-          <button class="btn btn-success" onclick="completeDelivery('${order.trackingCode}')">
-            ✅ Teslim Edildi
-          </button>
-          <button class="btn" style="background:var(--surface);color:var(--text);" onclick="openNavigation('${order.latitude}', '${order.longitude}')">
-            🗺️ Yol Tarifi
-          </button>
+        <div style="margin-bottom:12px;font-size:0.9rem;">
+          <strong>Ürün:</strong> ${order.productName}
         </div>
+        <div style="margin-bottom:16px;color:var(--text-muted);font-size:0.9rem;">
+          <strong>Adres:</strong> ${order.address}
+        </div>
+        <button class="btn btn-primary btn-block" onclick="takeOrder('${order.id}')">
+          Siparişi Al
+        </button>
       </div>
     `;
   });
   
-  html += '</div>';
   container.innerHTML = html;
 }
 
+// Render my orders
+function renderMyOrders(orders) {
+  const section = document.getElementById('myOrders');
+  const container = document.getElementById('myOrdersContainer');
+  
+  if (orders.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  section.style.display = 'block';
+  
+  let html = '';
+  orders.forEach(order => {
+    html += `
+      <div class="order-card active">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+          <strong style="font-size:1.1rem;color:var(--success);">${order.id}</strong>
+          <span style="color:var(--success);font-weight:600;">Teslimat Yapılıyor</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          <strong style="font-size:0.95rem;">${order.customerName}</strong><br>
+          <span style="color:var(--text-muted);font-size:0.9rem;">${order.customerPhone}</span>
+        </div>
+        <div style="margin-bottom:12px;color:var(--text-muted);font-size:0.9rem;">
+          ${order.address}
+        </div>
+        <button class="btn btn-success btn-block" onclick="completeDelivery('${order.id}')">
+          Teslim Edildi
+        </button>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+// Take order
+window.takeOrder = async (trackingCode) => {
+  if (!confirm('Bu siparişi almak istediğinize emin misiniz?')) {
+    return;
+  }
+  
+  try {
+    const orderRef = ref(database, `orders/${trackingCode}`);
+    const snapshot = await get(orderRef);
+    
+    if (!snapshot.exists()) {
+      alert('Sipariş bulunamadı!');
+      return;
+    }
+    
+    const order = snapshot.val();
+    const history = order.history || [];
+    
+    const courierName = ADMIN_EMAILS.includes(currentUser.email) ? 'Admin' : currentUser.displayName || currentUser.email;
+    
+    history.push({
+      status: 'Yola Çıktı',
+      timestamp: new Date().toISOString(),
+      note: `${courierName} tarafından sipariş alındı ve teslimat başlatıldı.`
+    });
+    
+    await update(orderRef, {
+      status: 'shipped',
+      courier: {
+        email: currentUser.email,
+        name: courierName,
+        phone: currentUser.phoneNumber || '-'
+      },
+      queuePosition: 1,
+      updatedAt: new Date().toISOString(),
+      history
+    });
+    
+    alert('Sipariş üzerinize alındı!\n\n"Yola Çıkıyorum" butonuna basılı tutarak konum paylaşımını başlatın.');
+  } catch (error) {
+    console.error('Take order error:', error);
+    alert('Hata: ' + error.message);
+  }
+};
+
 // Complete delivery
 window.completeDelivery = async (trackingCode) => {
-  if (!confirm('Bu teslimatı tamamlandı olarak işaretlemek istediğinize emin misiniz?')) {
+  if (!confirm('Teslimatı tamamlamak istediğinize emin misiniz?')) {
     return;
   }
   
@@ -258,76 +446,62 @@ window.completeDelivery = async (trackingCode) => {
     history.push({
       status: 'Teslim Edildi',
       timestamp: new Date().toISOString(),
-      note: `${currentCourier.name} tarafından teslim edildi.`
+      note: 'Sipariş başarıyla teslim edildi.'
     });
     
     await update(orderRef, {
       status: 'delivered',
-      deliveredAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString(),
       history
     });
     
-    // Remove from courier's active orders
-    const courierOrderRef = ref(database, `couriers/${currentCourier.email.replace(/[.@]/g, '_')}/activeOrders/${trackingCode}`);
-    await set(courierOrderRef, null);
+    alert('Teslimat tamamlandı!');
     
-    // Update queue positions for remaining orders
-    await updateQueuePositions();
+    // Eğer başka aktif sipariş yoksa tracking'i durdur
+    setTimeout(() => {
+      if (myActiveOrders.length <= 1) {
+        stopLocationTracking();
+      }
+    }, 1000);
     
-    alert('✅ Teslimat tamamlandı!');
   } catch (error) {
     console.error('Complete delivery error:', error);
-    alert('❌ Bir hata oluştu: ' + error.message);
+    alert('Hata: ' + error.message);
   }
 };
 
-// Update queue positions
-async function updateQueuePositions() {
-  const remaining = activeOrders.filter(o => o.status !== 'delivered');
-  
-  for (let i = 0; i < remaining.length; i++) {
-    const orderRef = ref(database, `orders/${remaining[i].trackingCode}`);
-    await update(orderRef, {
-      queuePosition: i + 1
-    });
+// Format date
+function formatDate(timestamp) {
+  if (!timestamp) return '-';
+  const date = new Date(timestamp);
+  return date.toLocaleString('tr-TR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Page visibility change
+document.addEventListener('visibilitychange', async () => {
+  if (document.hidden) {
+    console.log('Sayfa arka planda - konum tracking devam ediyor');
+  } else {
+    console.log('Sayfa ön planda');
+    
+    if (isTracking && watchId === null) {
+      console.log('Tracking yeniden başlatılıyor');
+      await startLocationTracking(currentUser.email);
+    }
   }
-}
-
-// Open navigation
-window.openNavigation = (lat, lng) => {
-  const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-  window.open(url, '_blank');
-};
-
-// Auto-start location sharing if was active before
-const wasSharing = localStorage.getItem('locationSharing') === 'true';
-if (wasSharing) {
-  setTimeout(() => {
-    startLocationSharing();
-  }, 1000);
-}
-
-// Save location sharing state
-window.addEventListener('beforeunload', () => {
-  localStorage.setItem('locationSharing', isLocationSharing.toString());
 });
 
-// Keep screen awake (optional, requires Wake Lock API)
-let wakeLock = null;
-
-async function requestWakeLock() {
-  try {
-    if ('wakeLock' in navigator) {
-      wakeLock = await navigator.wakeLock.request('screen');
-      console.log('Screen wake lock active');
-    }
-  } catch (err) {
-    console.log('Wake lock error:', err);
+// Page unload
+window.addEventListener('beforeunload', () => {
+  if (isTracking && myActiveOrders.length > 0) {
+    // Don't stop tracking if there are active orders
+    return;
   }
-}
-
-// Request wake lock when location sharing starts
-if (isLocationSharing) {
-  requestWakeLock();
-}
+  stopLocationTracking();
+});

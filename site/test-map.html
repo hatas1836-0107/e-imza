@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harita Test</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""/>
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: sans-serif;
+  background: #1a1f35;
+}
+#map {
+  width: 100%;
+  height: 600px;
+  border: 3px solid #10b981;
+  background: #f0f0f0;
+}
+h1 {
+  color: white;
+}
+#status {
+  color: white;
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<h1>🗺️ Harita Test</h1>
+<div id="map"></div>
+<div id="status"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script>
+const statusDiv = document.getElementById('status');
+
+try {
+  statusDiv.innerHTML = '<strong>Test Adımları:</strong><br>';
+  statusDiv.innerHTML += '1. Leaflet yüklendi: ' + (typeof L !== 'undefined' ? '✅ EVET' : '❌ HAYIR') + '<br>';
+  
+  if (typeof L === 'undefined') {
+    statusDiv.innerHTML += '<br><strong style="color:red;">❌ LEAFLET YÜKLENEMEDİ!</strong>';
+    throw new Error('Leaflet kütüphanesi yüklenemedi');
+  }
+  
+  const map = L.map('map').setView([41.0082, 28.9784], 13);
+  statusDiv.innerHTML += '2. Map objesi oluşturuldu ✅<br>';
+  
+  // Temiz ve minimal tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20
+  }).addTo(map);
+  statusDiv.innerHTML += '3. Tile layer eklendi (CartoDB Light) ✅<br>';
+  
+  L.marker([41.0082, 28.9784]).addTo(map)
+    .bindPopup('📍 İstanbul')
+    .openPopup();
+  statusDiv.innerHTML += '4. Marker eklendi ✅<br>';
+  
+  setTimeout(() => {
+    map.invalidateSize();
+    statusDiv.innerHTML += '5. Map boyutu güncellendi ✅<br>';
+  }, 200);
+  
+  statusDiv.innerHTML += '<br><strong style="color:#10b981;font-size:18px;">🎉 BAŞARILI!</strong><br>';
+  statusDiv.innerHTML += 'Harita yukarıda görünüyor mu? Eğer gri ekran görüyorsanız:<br>';
+  statusDiv.innerHTML += '- İnternet bağlantınızı kontrol edin<br>';
+  statusDiv.innerHTML += '- Tarayıcı console\'unda hata var mı bakın (F12)<br>';
+  statusDiv.innerHTML += '- Tile sunucuları erişilebilir mi kontrol edin<br>';
+  
+} catch (error) {
+  statusDiv.innerHTML += '<br><strong style="color:red;font-size:18px;">❌ HATA: ' + error.message + '</strong>';
+  console.error('Harita hatası:', error);
+}
+</script>
+
+</body>
+</html>

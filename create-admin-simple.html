@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Kullanıcı Oluştur</title>
+<style>
+body { font-family: sans-serif; padding: 40px; background: #1a1a2e; color: #fff; }
+.container { max-width: 500px; margin: 0 auto; }
+button { padding: 12px 24px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+button:hover { background: #4338ca; }
+pre { background: #0f0f1e; padding: 12px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Admin Kullanıcı Oluştur</h1>
+<p>Bu sayfa admin kullanıcısını Firebase'de oluşturur.</p>
+
+<button onclick="createAdmin()">Admin Kullanıcısını Oluştur</button>
+
+<div id="output"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.createAdmin = async function() {
+  const output = document.getElementById('output');
+  output.innerHTML = '<pre>İşlem yapılıyor...</pre>';
+  
+  const email = 'huseyinatas@gmail.com';
+  const password = 'Admin123456';
+  
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    output.innerHTML = `
+      <pre style="color: #10b981;">
+✅ Başarılı!
+
+Email: ${email}
+Şifre: ${password}
+
+Artık giriş yapabilirsiniz!
+      </pre>
+    `;
+  } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      output.innerHTML = `
+        <pre style="color: #f59e0b;">
+ℹ️ Kullanıcı zaten mevcut!
+
+Email: ${email}
+Şifre: ${password}
+
+Direkt giriş yapabilirsiniz.
+        </pre>
+      `;
+    } else {
+      output.innerHTML = `
+        <pre style="color: #ef4444;">
+❌ Hata oluştu!
+
+Kod: ${error.code}
+Mesaj: ${error.message}
+        </pre>
+      `;
+    }
+  }
+};
+</script>
+</body>
+</html>

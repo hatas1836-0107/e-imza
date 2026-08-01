@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "products": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'admin@zirveeimza.com')",
+      ".indexOn": ["status", "price", "createdAt", "category", "popular"]
+    },
+    "orders": {
+      ".read": true,
+      ".write": true
+    },
+    "couriers": {
+      ".read": true,
+      ".write": true
+    },
+    "locations": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

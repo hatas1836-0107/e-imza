@@ -743,7 +743,7 @@
 })();
 
 
-// ========== Testimonials Carousel - Otomatik Geçiş ==========
+// ========== Testimonials Carousel - Smooth Infinite Loop ==========
 (function() {
   const carousel = document.querySelector('.testimonials-carousel');
   if (!carousel) return;
@@ -751,12 +751,20 @@
   const track = carousel.querySelector('.carousel-track');
   const cards = Array.from(track.querySelectorAll('.testi-card'));
   const indicatorsContainer = carousel.querySelector('.carousel-indicators');
+  const prevBtn = carousel.querySelector('.carousel-arrow.prev');
+  const nextBtn = carousel.querySelector('.carousel-arrow.next');
   
   if (cards.length === 0) return;
   
   let currentIndex = 0;
   let autoplayInterval = null;
   let isTransitioning = false;
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  // Mobil kontrolü
+  const isMobile = window.innerWidth <= 768;
+  const autoplayDelay = isMobile ? 4000 : 5000; // Mobilde daha hızlı
   
   // Indicator'ları oluştur
   cards.forEach((_, index) => {
@@ -765,14 +773,17 @@
     dot.setAttribute('aria-label', `Yorum ${index + 1}`);
     if (index === 0) dot.classList.add('active');
     dot.addEventListener('click', () => {
-      if (!isTransitioning) goToSlide(index);
+      if (!isTransitioning) {
+        goToSlide(index);
+        resetAutoplay();
+      }
     });
     indicatorsContainer.appendChild(dot);
   });
   
   const dots = Array.from(indicatorsContainer.querySelectorAll('.carousel-dot'));
   
-  function goToSlide(index) {
+  function goToSlide(index, direction = 'next') {
     if (isTransitioning || index === currentIndex) return;
     isTransitioning = true;
     
@@ -781,31 +792,60 @@
     prevCard.classList.remove('active');
     prevCard.classList.add('exiting');
     
+    // Yöne göre transform ayarla
+    if (direction === 'next') {
+      prevCard.style.transform = 'translateX(-120px) scale(0.92)';
+    } else {
+      prevCard.style.transform = 'translateX(120px) scale(0.92)';
+    }
+    
     // Yeni index'i güncelle
     currentIndex = index;
     
-    // Yeni kartı göster
+    // Yeni kartı hazırla
+    const nextCard = cards[currentIndex];
+    if (direction === 'next') {
+      nextCard.style.transform = 'translateX(120px) scale(0.92)';
+    } else {
+      nextCard.style.transform = 'translateX(-120px) scale(0.92)';
+    }
+    nextCard.style.opacity = '0';
+    nextCard.style.visibility = 'visible';
+    
+    // Animasyonu başlat
     setTimeout(() => {
       prevCard.classList.remove('exiting');
-      cards[currentIndex].classList.add('active');
+      prevCard.style.opacity = '0';
+      prevCard.style.visibility = 'hidden';
+      
+      nextCard.classList.add('active');
+      nextCard.style.transform = 'translateX(0) scale(1)';
+      nextCard.style.opacity = '1';
       
       // Indicator'ları güncelle
       dots.forEach((dot, i) => {
         dot.classList.toggle('active', i === currentIndex);
       });
       
-      isTransitioning = false;
-    }, 300);
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 700);
+    }, 50);
   }
   
   function nextSlide() {
     const nextIndex = (currentIndex + 1) % cards.length;
-    goToSlide(nextIndex);
+    goToSlide(nextIndex, 'next');
+  }
+  
+  function prevSlide() {
+    const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+    goToSlide(prevIndex, 'prev');
   }
   
   function startAutoplay() {
     if (autoplayInterval) return;
-    autoplayInterval = setInterval(nextSlide, 4500);
+    autoplayInterval = setInterval(nextSlide, autoplayDelay);
   }
   
   function stopAutoplay() {
@@ -815,34 +855,169 @@
     }
   }
   
+  function resetAutoplay() {
+    stopAutoplay();
+    setTimeout(startAutoplay, isMobile ? 6000 : 10000);
+  }
+  
   // İlk kartı göster
   cards[currentIndex].classList.add('active');
+  cards[currentIndex].style.transform = 'translateX(0) scale(1)';
+  cards[currentIndex].style.opacity = '1';
+  
+  // Diğer kartları gizle
+  cards.forEach((card, index) => {
+    if (index !== currentIndex) {
+      card.style.opacity = '0';
+      card.style.visibility = 'hidden';
+      card.style.transform = 'translateX(120px) scale(0.92)';
+    }
+  });
   
   // Otomatik geçişi başlat
-  startAutoplay();
+  setTimeout(() => {
+    startAutoplay();
+  }, 2000); // 2 saniye bekle, sonra başlat
   
-  // Hover'da durdur, çıkınca devam et
-  carousel.addEventListener('mouseenter', stopAutoplay);
-  carousel.addEventListener('mouseleave', startAutoplay);
+  // Buton event listeners
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (!isTransitioning) {
+        nextSlide();
+        resetAutoplay();
+      }
+    });
+  }
   
-  // Touch için - dokunulduğunda dur, 3 saniye sonra devam et
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (!isTransitioning) {
+        prevSlide();
+        resetAutoplay();
+      }
+    });
+  }
+  
+  // Hover'da durdur (sadece desktop)
+  if (!isMobile) {
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+  }
+  
+  // Klavye kontrolleri (sadece desktop)
+  if (!isMobile) {
+    document.addEventListener('keydown', (e) => {
+      const rect = carousel.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (!isInViewport || isTransitioning) return;
+      
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+        resetAutoplay();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextSlide();
+        resetAutoplay();
+      }
+    });
+  }
+  
+  // Touch/Swipe desteği - Gelişmiş
   let touchTimeout;
-  carousel.addEventListener('touchstart', () => {
+  let touchMoved = false;
+  
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchMoved = false;
     stopAutoplay();
     if (touchTimeout) clearTimeout(touchTimeout);
-  });
+  }, { passive: true });
   
-  carousel.addEventListener('touchend', () => {
+  track.addEventListener('touchmove', (e) => {
+    touchMoved = true;
+    const currentX = e.touches[0].clientX;
+    const diff = touchStartX - currentX;
+    
+    // Canlı feedback - aktif kartı hafifçe kaydır
+    if (Math.abs(diff) > 10 && !isTransitioning) {
+      const activeCard = cards[currentIndex];
+      const translateX = -diff * 0.3; // Resistance effect
+      activeCard.style.transform = `translateX(${translateX}px) scale(1)`;
+    }
+  }, { passive: true });
+  
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    
+    // Aktif kartı eski haline getir
+    const activeCard = cards[currentIndex];
+    activeCard.style.transform = 'translateX(0) scale(1)';
+    
+    if (touchMoved) {
+      handleSwipe();
+    }
+    
+    // Otomatik geçişi kısa süre sonra başlat
     touchTimeout = setTimeout(startAutoplay, 3000);
-  });
+  }, { passive: true });
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) < swipeThreshold) return;
+    
+    if (!isTransitioning) {
+      if (diff > 0) {
+        // Sola kaydırma - sonraki slide (sağdan sola)
+        nextSlide();
+      } else {
+        // Sağa kaydırma - önceki slide (soldan sağa)
+        prevSlide();
+      }
+    }
+  }
+  
+  // Intersection Observer - Görünür olunca başlat
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (!autoplayInterval) {
+          startAutoplay();
+        }
+      } else {
+        stopAutoplay();
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  observer.observe(carousel);
   
   // Sayfa focus dışına çıktığında durdur
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       stopAutoplay();
     } else {
-      startAutoplay();
+      const rect = carousel.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isInViewport) {
+        startAutoplay();
+      }
     }
+  });
+  
+  // Window resize - mobil/desktop geçişinde yeniden başlat
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const newIsMobile = window.innerWidth <= 768;
+      if (newIsMobile !== isMobile) {
+        location.reload(); // Mobil/desktop arası geçişte reload
+      }
+    }, 300);
   });
 })();
 

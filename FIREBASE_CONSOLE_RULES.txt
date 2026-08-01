@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "products": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["status", "price", "createdAt"]
+    },
+    "orders": {
+      ".read": true,
+      ".write": true,
+      "$orderId": {
+        ".indexOn": ["status", "createdAt", "customerPhone"]
+      }
+    },
+    "couriers": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$courierId": {
+        "location": {
+          ".read": true
+        },
+        ".indexOn": ["email"]
+      }
+    }
+  }
+}

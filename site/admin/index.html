@@ -27,12 +27,40 @@ body {
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Mesh Background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: 
+    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.35), transparent 40%),
+    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.30), transparent 45%),
+    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.16), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.22), transparent 40%);
+  pointer-events: none;
+}
+
+/* Grain Overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Header */
@@ -201,6 +229,23 @@ body {
   font-family: inherit;
 }
 
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237d81a0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.form-group select option {
+  background: var(--bg);
+  color: var(--text);
+  padding: 10px;
+}
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
@@ -284,7 +329,8 @@ body {
 .products-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  overflow-x: hidden;
 }
 
 .product-card {
@@ -296,6 +342,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .product-card:hover {
@@ -361,10 +410,13 @@ body {
 }
 
 .product-features li::before {
-  content: '✓';
-  color: var(--success);
-  font-weight: bold;
+  content: '';
+  width: 16px;
+  height: 16px;
+  background: var(--success);
+  border-radius: 50%;
   flex-shrink: 0;
+  margin-top: 4px;
 }
 
 .product-actions {
@@ -566,6 +618,87 @@ body {
   to { transform: rotate(360deg); }
 }
 
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pulse-courier {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.7), 0 2px 8px rgba(0,0,0,0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.9), 0 4px 12px rgba(0,0,0,0.3);
+    transform: scale(1.05);
+  }
+}
+
+/* Start Delivery Button */
+.start-delivery-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  color: white;
+  padding: 18px 40px;
+  border-radius: 50px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.35);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.start-delivery-btn .progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: width 0.02s linear;
+  pointer-events: none;
+  border-radius: 50px;
+}
+
+.start-delivery-btn .text {
+  position: relative;
+  z-index: 1;
+}
+
+.start-delivery-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(79, 70, 229, 0.5);
+}
+
+.start-delivery-btn:active {
+  transform: scale(0.98);
+}
+
+.start-delivery-btn.tracking {
+  background: linear-gradient(135deg, var(--success), #16a34a);
+  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.start-delivery-btn.tracking:hover {
+  box-shadow: 0 8px 28px rgba(34, 197, 94, 0.6);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4), 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4), 0 0 0 12px rgba(34, 197, 94, 0.15);
+  }
+}
+
 /* Tabs */
 .tabs {
   display: flex;
@@ -623,7 +756,16 @@ body {
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-card .value {
+    font-size: 1.5rem;
   }
   
   .section {
@@ -635,12 +777,33 @@ body {
     align-items: flex-start;
   }
   
+  .section-header h2 {
+    font-size: 1.25rem;
+  }
+  
   .section-header .btn {
     width: 100%;
   }
   
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .product-card {
+    padding: 12px;
+  }
+  
+  .product-image {
+    height: 120px;
+  }
+  
+  .product-name {
+    font-size: 0.95rem;
+  }
+  
+  .product-price {
+    font-size: 1.2rem;
   }
   
   .login-box {
@@ -655,9 +818,31 @@ body {
     padding: 8px 16px;
     font-size: 0.85rem;
   }
+  
+  .tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-btn {
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
   .product-actions {
     flex-direction: column;
   }
@@ -670,10 +855,10 @@ body {
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="loginScreen" class="login-container">
+<!-- Login Screen - Hidden by default, giris.html handles login -->
+<div id="loginScreen" class="login-container" style="display:none;">
   <div class="login-box">
-    <h2>🔐 Admin Girişi</h2>
+    <h2>Admin Girişi</h2>
     <div id="loginMessage"></div>
     
     <!-- Google Login -->
@@ -702,9 +887,9 @@ body {
 </div>
 
 <!-- Dashboard -->
-<div id="dashboard" class="dashboard">
+<div id="dashboard" class="dashboard" style="display:none;">
   <header class="header">
-    <h1>⚡ Zirve E-İmza Admin</h1>
+    <h1>Zirve E-İmza Admin</h1>
     <div class="user-info">
       <img id="userAvatar" class="user-avatar" alt="User" style="display:none;">
       <span class="user-email" id="userEmail"></span>
@@ -735,15 +920,15 @@ body {
 
     <!-- Tab Navigation -->
     <div class="tabs" style="margin-bottom:24px;">
-      <button class="tab-btn active" onclick="switchTab('products')">📦 Ürünler</button>
-      <button class="tab-btn" onclick="switchTab('orders')">🚚 Siparişler</button>
-      <button class="tab-btn" onclick="switchTab('couriers')">👤 Kuryeler</button>
+      <button class="tab-btn active" onclick="switchTab('products')">Ürünler</button>
+      <button class="tab-btn" onclick="switchTab('orders')">Siparişler</button>
+      <button class="tab-btn" onclick="switchTab('couriers')">Kuryeler</button>
     </div>
 
     <!-- Products Section -->
     <div class="section tab-content" id="productsTab">
       <div class="section-header">
-        <h2>📦 Ürün Yönetimi</h2>
+        <h2>Ürün Yönetimi</h2>
         <button class="btn btn-primary" onclick="openAddProductModal()">+ Yeni Ürün Ekle</button>
       </div>
       
@@ -758,7 +943,7 @@ body {
     <!-- Orders Section -->
     <div class="section tab-content" id="ordersTab" style="display:none;">
       <div class="section-header">
-        <h2>🚚 Sipariş Yönetimi</h2>
+        <h2>Sipariş Yönetimi</h2>
         <button class="btn btn-primary" onclick="openAddOrderModal()">+ Yeni Sipariş</button>
       </div>
       
@@ -773,7 +958,7 @@ body {
     <!-- Couriers Section -->
     <div class="section tab-content" id="couriersTab" style="display:none;">
       <div class="section-header">
-        <h2>👤 Kurye Yönetimi</h2>
+        <h2>Kurye Yönetimi</h2>
         <button class="btn btn-primary" onclick="openAddCourierModal()">+ Yeni Kurye Ekle</button>
       </div>
       
@@ -811,7 +996,7 @@ body {
         </div>
         <div class="file-input-wrapper">
           <input type="file" id="productImage" accept="image/*">
-          <label for="productImage" class="file-input-label">📷 Görsel Seç / Değiştir</label>
+          <label for="productImage" class="file-input-label">Görsel Seç / Değiştir</label>
         </div>
         <input type="hidden" id="productImageUrl">
       </div>
@@ -851,7 +1036,7 @@ body {
       
       <div style="display:flex;gap:12px;margin-top:24px;">
         <button type="submit" class="btn btn-primary" style="flex:1;">
-          <span id="saveBtnText">💾 Kaydet</span>
+          <span id="saveBtnText">Kaydet</span>
         </button>
         <button type="button" class="btn btn-secondary" onclick="closeProductModal()">İptal</button>
       </div>
@@ -883,7 +1068,7 @@ body {
         </div>
         <div class="file-input-wrapper">
           <input type="file" id="productImage" accept="image/*">
-          <label for="productImage" class="file-input-label">📷 Görsel Seç / Değiştir</label>
+          <label for="productImage" class="file-input-label">Görsel Seç / Değiştir</label>
         </div>
         <input type="hidden" id="productImageUrl">
       </div>
@@ -923,7 +1108,7 @@ body {
       
       <div style="display:flex;gap:12px;margin-top:24px;">
         <button type="submit" class="btn btn-primary" style="flex:1;">
-          <span id="saveBtnText">💾 Kaydet</span>
+          <span id="saveBtnText">Kaydet</span>
         </button>
         <button type="button" class="btn btn-secondary" onclick="closeProductModal()">İptal</button>
       </div>
@@ -983,7 +1168,7 @@ body {
       
       <div style="display:flex;gap:12px;margin-top:24px;">
         <button type="submit" class="btn btn-primary" style="flex:1;">
-          <span id="orderSaveBtnText">📦 Sipariş Oluştur</span>
+          <span id="orderSaveBtnText">Sipariş Oluştur</span>
         </button>
         <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">İptal</button>
       </div>
@@ -1012,27 +1197,15 @@ body {
       <div class="form-group">
         <label>Yeni Durum *</label>
         <select id="updateOrderStatus" required>
-          <option value="confirmed">✅ Onaylandı</option>
-          <option value="preparing">📦 Hazırlanıyor</option>
-          <option value="ready">✔️ Teslimata Hazır</option>
-          <option value="shipped">🚚 Yola Çıktı</option>
-          <option value="delivered">🎉 Teslim Edildi</option>
-          <option value="cancelled">❌ İptal Edildi</option>
+          <option value="confirmed">Onaylandı</option>
+          <option value="preparing">Hazırlanıyor</option>
+          <option value="ready">Teslimata Hazır</option>
+          <option value="delivered">Teslim Edildi</option>
+          <option value="cancelled">İptal Edildi</option>
         </select>
-      </div>
-      
-      <div id="courierSelectDiv" style="display:none;">
-        <div class="form-group">
-          <label>Kurye Seç *</label>
-          <select id="updateOrderCourier">
-            <option value="">Kurye seçin</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label>Sıra Numarası</label>
-          <input type="number" id="updateQueuePosition" min="1" value="1">
-        </div>
+        <small style="color:var(--text-muted);font-size:0.85rem;margin-top:4px;display:block;">
+          Not: Kuryeler "Teslimata Hazır" siparişleri kurye panelinden alabilir.
+        </small>
       </div>
       
       <div class="form-group">
@@ -1042,7 +1215,7 @@ body {
       
       <div style="display:flex;gap:12px;margin-top:24px;">
         <button type="submit" class="btn btn-primary" style="flex:1;">
-          <span id="updateOrderBtnText">💾 Güncelle</span>
+          <span id="updateOrderBtnText">Güncelle</span>
         </button>
         <button type="button" class="btn btn-secondary" onclick="closeUpdateOrderModal()">İptal</button>
       </div>
@@ -1083,7 +1256,7 @@ body {
       
       <div style="display:flex;gap:12px;margin-top:24px;">
         <button type="submit" class="btn btn-primary" style="flex:1;">
-          <span id="courierSaveBtnText">👤 Kurye Ekle</span>
+          <span id="courierSaveBtnText">Kurye Ekle</span>
         </button>
         <button type="button" class="btn btn-secondary" onclick="closeCourierModal()">İptal</button>
       </div>
@@ -1091,6 +1264,879 @@ body {
   </div>
 </div>
 
-<script type="module" src="admin.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getDatabase, ref, set, get, update, remove, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+console.log('Firebase başlatılıyor...');
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+const storage = getStorage(app);
+
+// Global state
+let currentUser = null;
+let products = {};
+let selectedImage = null;
+
+// Auth check
+onAuthStateChanged(auth, (user) => {
+  console.log('🔥 Auth state:', user ? user.email : 'No user');
+  
+  if (user) {
+    currentUser = user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('dashboard').classList.add('active');
+    document.getElementById('userEmail').textContent = user.email;
+    
+    if (user.photoURL) {
+      const avatar = document.getElementById('userAvatar');
+      avatar.src = user.photoURL;
+      avatar.style.display = 'block';
+    }
+    
+    loadProducts();
+  } else {
+    window.location.href = '/site/giris.html';
+  }
+});
+
+// Logout
+window.logout = async () => {
+  if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+    await signOut(auth);
+  }
+};
+
+// Load products
+function loadProducts() {
+  const productsRef = ref(database, 'products');
+  
+  onValue(productsRef, (snapshot) => {
+    products = snapshot.val() || {};
+    renderProducts();
+    updateStats();
+  });
+}
+
+// Render products
+function renderProducts() {
+  const container = document.getElementById('productsContainer');
+  
+  if (Object.keys(products).length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <p>Henüz ürün eklenmemiş.</p>
+        <button class="btn btn-primary" onclick="openAddProductModal()" style="margin-top:16px;">İlk Ürünü Ekle</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const productsArray = Object.entries(products).map(([id, data]) => ({ id, ...data }));
+  
+  let html = '<div class="products-grid">';
+  
+  productsArray.forEach(product => {
+    const statusBadge = product.status === 'active' 
+      ? '<span class="badge badge-success">Aktif</span>' 
+      : '<span class="badge badge-warning">Pasif</span>';
+    
+    const imageHTML = product.imageUrl 
+      ? `<img src="${product.imageUrl}" alt="${product.name}">`
+      : '<div style="font-size:2rem;opacity:0.3;">IMG</div>';
+    
+    const featuresList = (product.features || [])
+      .slice(0, 3)
+      .map(f => `<li>${f}</li>`)
+      .join('');
+    
+    html += `
+      <div class="product-card">
+        <div class="product-image">${imageHTML}</div>
+        <div class="product-name">${product.name}</div>
+        <div class="product-price">${product.price}₺ <span style="font-size:0.7rem;color:var(--text-muted);">+KDV</span></div>
+        <div class="product-meta">
+          <span>⏱ ${product.duration}</span>
+          <span>${statusBadge}</span>
+        </div>
+        ${product.description ? `<p style="font-size:0.85rem;color:var(--text-muted);margin:4px 0;">${product.description}</p>` : ''}
+        ${featuresList ? `<ul class="product-features">${featuresList}</ul>` : ''}
+        <div class="product-actions">
+          <button class="btn btn-secondary" onclick="editProduct('${product.id}')">Düzenle</button>
+          <button class="btn btn-danger" onclick="deleteProduct('${product.id}', '${product.name}')">Sil</button>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// Update stats
+function updateStats() {
+  const productsArray = Object.values(products);
+  const total = productsArray.length;
+  const active = productsArray.filter(p => p.status === 'active').length;
+  const revenue = productsArray.reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+  
+  document.getElementById('totalProducts').textContent = total;
+  document.getElementById('activeProducts').textContent = active;
+  document.getElementById('totalRevenue').textContent = revenue.toLocaleString('tr-TR') + '₺';
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// Image Preview
+document.getElementById('productImage')?.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Görsel boyutu çok büyük! Maksimum 5MB olmalıdır.');
+    e.target.value = '';
+    return;
+  }
+  
+  selectedImage = file;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+    preview.classList.add('has-image');
+  };
+  reader.readAsDataURL(file);
+});
+
+// Upload Image
+async function uploadProductImage(file, productId) {
+  if (!file) return null;
+  
+  try {
+    const imageRef = storageRef(storage, `products/${productId}/${Date.now()}_${file.name}`);
+    const snapshot = await uploadBytes(imageRef, file);
+    return await getDownloadURL(snapshot.ref);
+  } catch (error) {
+    console.error('Image upload error:', error);
+    throw error;
+  }
+}
+
+// Delete Image
+async function deleteProductImage(imageUrl) {
+  if (!imageUrl || !imageUrl.includes('firebase')) return;
+  
+  try {
+    const imageRef = storageRef(storage, imageUrl);
+    await deleteObject(imageRef);
+  } catch (error) {
+    console.error('Image delete error:', error);
+  }
+}
+
+// Open add product modal
+window.openAddProductModal = () => {
+  document.getElementById('modalTitle').textContent = 'Yeni Ürün Ekle';
+  document.getElementById('productForm').reset();
+  document.getElementById('productId').value = '';
+  document.getElementById('productImageUrl').value = '';
+  document.getElementById('modalMessage').innerHTML = '';
+  
+  const preview = document.getElementById('imagePreview');
+  preview.innerHTML = `
+    <div class="image-placeholder">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      <div>Görsel seçin</div>
+    </div>
+  `;
+  preview.classList.remove('has-image');
+  selectedImage = null;
+  
+  document.getElementById('productModal').classList.add('active');
+};
+
+// Edit product
+window.editProduct = (productId) => {
+  const product = products[productId];
+  if (!product) return;
+  
+  document.getElementById('modalTitle').textContent = 'Ürünü Düzenle';
+  document.getElementById('productId').value = productId;
+  document.getElementById('productName').value = product.name;
+  document.getElementById('productPrice').value = product.price;
+  document.getElementById('productDuration').value = product.duration;
+  document.getElementById('productDescription').value = product.description || '';
+  document.getElementById('productFeatures').value = (product.features || []).join('\n');
+  document.getElementById('productStatus').value = product.status;
+  document.getElementById('productImageUrl').value = product.imageUrl || '';
+  document.getElementById('modalMessage').innerHTML = '';
+  
+  const preview = document.getElementById('imagePreview');
+  if (product.imageUrl) {
+    preview.innerHTML = `<img src="${product.imageUrl}" alt="${product.name}">`;
+    preview.classList.add('has-image');
+  } else {
+    preview.innerHTML = `
+      <div class="image-placeholder">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <div>Görsel seçin</div>
+      </div>
+    `;
+    preview.classList.remove('has-image');
+  }
+  
+  selectedImage = null;
+  document.getElementById('productModal').classList.add('active');
+};
+
+// Close product modal
+window.closeProductModal = () => {
+  document.getElementById('productModal').classList.remove('active');
+  document.getElementById('productForm').reset();
+  selectedImage = null;
+};
+
+// Save product
+document.getElementById('productForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const productId = document.getElementById('productId').value;
+  const name = document.getElementById('productName').value.trim();
+  const price = parseFloat(document.getElementById('productPrice').value);
+  const duration = document.getElementById('productDuration').value.trim();
+  const description = document.getElementById('productDescription').value.trim();
+  const features = document.getElementById('productFeatures').value
+    .split('\n')
+    .map(f => f.trim())
+    .filter(f => f.length > 0);
+  const status = document.getElementById('productStatus').value;
+  const oldImageUrl = document.getElementById('productImageUrl').value;
+  
+  const btnText = document.getElementById('saveBtnText');
+  const messageDiv = document.getElementById('modalMessage');
+  
+  btnText.innerHTML = '<div class="loading"></div>';
+  
+  try {
+    let imageUrl = oldImageUrl;
+    
+    if (selectedImage) {
+      const tempId = productId || `temp_${Date.now()}`;
+      imageUrl = await uploadProductImage(selectedImage, tempId);
+      
+      if (oldImageUrl) {
+        await deleteProductImage(oldImageUrl);
+      }
+    }
+    
+    const productData = {
+      name,
+      price,
+      duration,
+      description,
+      features,
+      status,
+      imageUrl: imageUrl || '',
+      updatedAt: new Date().toISOString()
+    };
+    
+    if (productId) {
+      const productRef = ref(database, `products/${productId}`);
+      await update(productRef, productData);
+      messageDiv.innerHTML = '<div class="alert alert-success">Ürün başarıyla güncellendi!</div>';
+    } else {
+      const productsRef = ref(database, 'products');
+      const newProductRef = push(productsRef);
+      await set(newProductRef, {
+        ...productData,
+        createdAt: new Date().toISOString()
+      });
+      messageDiv.innerHTML = '<div class="alert alert-success">Ürün başarıyla eklendi!</div>';
+    }
+    
+    selectedImage = null;
+    
+    setTimeout(() => {
+      closeProductModal();
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Save error:', error);
+    messageDiv.innerHTML = '<div class="alert alert-error">Bir hata oluştu: ' + error.message + '</div>';
+  } finally {
+    btnText.textContent = 'Kaydet';
+  }
+});
+
+// Delete product
+window.deleteProduct = async (productId, productName) => {
+  if (!confirm(`"${productName}" ürününü silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz!`)) {
+    return;
+  }
+  
+  try {
+    const product = products[productId];
+    
+    if (product.imageUrl) {
+      await deleteProductImage(product.imageUrl);
+    }
+    
+    const productRef = ref(database, `products/${productId}`);
+    await remove(productRef);
+    
+    alert('Ürün başarıyla silindi!');
+  } catch (error) {
+    console.error('Delete error:', error);
+    alert('Silme işlemi başarısız: ' + error.message);
+  }
+};
+
+// ==================== ORDERS MANAGEMENT ====================
+
+function generateTrackingCode() {
+  const year = new Date().getFullYear();
+  const random = Math.floor(Math.random() * 9000) + 1000;
+  return `ZE-${year}-${random}`;
+}
+
+async function createOrder(orderData) {
+  try {
+    const trackingCode = generateTrackingCode();
+    const orderRef = ref(database, `orders/${trackingCode}`);
+    
+    const order = {
+      ...orderData,
+      id: trackingCode,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      history: [{
+        status: 'Sipariş Alındı',
+        timestamp: new Date().toISOString(),
+        note: 'Sipariş sistemimize kaydedildi.'
+      }]
+    };
+    
+    await set(orderRef, order);
+    return trackingCode;
+  } catch (error) {
+    console.error('Create order error:', error);
+    throw error;
+  }
+}
+
+async function updateOrderStatus(trackingCode, newStatus, note = '') {
+  try {
+    const orderRef = ref(database, `orders/${trackingCode}`);
+    const snapshot = await get(orderRef);
+    
+    if (!snapshot.exists()) {
+      throw new Error('Sipariş bulunamadı');
+    }
+    
+    const order = snapshot.val();
+    const history = order.history || [];
+    
+    const statusTexts = {
+      pending: 'Sipariş Alındı',
+      confirmed: 'Sipariş Onaylandı',
+      preparing: 'Hazırlanıyor',
+      ready: 'Teslimata Hazır',
+      delivered: 'Teslim Edildi',
+      cancelled: 'İptal Edildi'
+    };
+    
+    history.push({
+      status: statusTexts[newStatus] || newStatus,
+      timestamp: new Date().toISOString(),
+      note: note || ''
+    });
+    
+    await update(orderRef, {
+      status: newStatus,
+      updatedAt: new Date().toISOString(),
+      history
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Update order status error:', error);
+    throw error;
+  }
+}
+
+function loadOrders() {
+  const ordersRef = ref(database, 'orders');
+  
+  onValue(ordersRef, (snapshot) => {
+    const ordersData = snapshot.val() || {};
+    renderOrders(ordersData);
+  });
+}
+
+// Admin Location Tracking
+let adminIsTracking = false;
+let adminWatchId = null;
+let adminWakeLock = null;
+
+async function startAdminTracking() {
+  adminIsTracking = true;
+  
+  try {
+    if ('wakeLock' in navigator) {
+      adminWakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (err) {
+    console.warn('Wake lock failed:', err);
+  }
+  
+  const options = {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 15000
+  };
+  
+  navigator.geolocation.getCurrentPosition(
+    (pos) => updateAdminLocation(pos),
+    (err) => console.error('Location error:', err),
+    options
+  );
+  
+  adminWatchId = navigator.geolocation.watchPosition(
+    (pos) => updateAdminLocation(pos),
+    (err) => console.error('Location error:', err),
+    options
+  );
+}
+
+function stopAdminTracking() {
+  adminIsTracking = false;
+  
+  if (adminWatchId) {
+    navigator.geolocation.clearWatch(adminWatchId);
+    adminWatchId = null;
+  }
+  
+  if (adminWakeLock) {
+    adminWakeLock.release();
+    adminWakeLock = null;
+  }
+}
+
+function updateAdminLocation(position) {
+  const locationData = {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+    accuracy: position.coords.accuracy,
+    speed: position.coords.speed || 0,
+    heading: position.coords.heading || 0,
+    timestamp: new Date().toISOString(),
+    lastUpdate: Date.now()
+  };
+  
+  const emailKey = currentUser.email.replace(/[.@]/g, '_');
+  const locationRef = ref(database, `locations/${emailKey}`);
+  
+  set(locationRef, locationData).then(() => {
+    console.log('Admin location updated');
+  }).catch((error) => {
+    console.error('Admin location update error:', error);
+  });
+}
+
+window.adminTakeOrder = async (orderId) => {
+  if (!confirm('Bu siparişi kendiniz teslim etmek istediğinize emin misiniz?\n\nKonum paylaşımını açmanız gerekecek.')) return;
+  
+  try {
+    const orderRef = ref(database, `orders/${orderId}`);
+    const snapshot = await get(orderRef);
+    
+    if (!snapshot.exists()) {
+      alert('Sipariş bulunamadı!');
+      return;
+    }
+    
+    const order = snapshot.val();
+    const history = order.history || [];
+    
+    history.push({
+      status: 'Admin Tarafından Alındı',
+      timestamp: new Date().toISOString(),
+      note: `Admin: ${currentUser.email}`
+    });
+    
+    await update(orderRef, {
+      status: 'shipped',
+      courier: {
+        email: currentUser.email,
+        name: 'Admin',
+        assignedAt: new Date().toISOString()
+      },
+      updatedAt: new Date().toISOString(),
+      history
+    });
+    
+    // Start location tracking
+    if (!adminIsTracking) {
+      startAdminTracking();
+    }
+    
+    alert('Sipariş alındı! Konum paylaşımı başlatıldı.');
+  } catch (error) {
+    console.error('Take order error:', error);
+    alert('Hata: ' + error.message);
+  }
+};
+
+function renderOrders(ordersData) {
+  const container = document.getElementById('ordersContainer');
+  
+  if (!ordersData || Object.keys(ordersData).length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <p>Henüz sipariş yok.</p>
+        <button class="btn btn-primary" onclick="openAddOrderModal()" style="margin-top:16px;">İlk Siparişi Oluştur</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const ordersArray = Object.entries(ordersData).map(([id, data]) => ({ id, ...data }));
+  ordersArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
+  const statusBadges = {
+    pending: { text: 'Bekliyor', class: 'badge-warning' },
+    confirmed: { text: 'Onaylandı', class: 'badge-success' },
+    preparing: { text: 'Hazırlanıyor', class: 'badge-warning' },
+    ready: { text: 'Hazır', class: 'badge-success' },
+    shipped: { text: 'Yolda', class: 'badge-info' },
+    delivered: { text: 'Teslim Edildi', class: 'badge-success' },
+    cancelled: { text: 'İptal', class: 'badge-danger' }
+  };
+  
+  // Admin Location Status
+  let html = `
+    <div style="margin-bottom:24px;padding:20px;background:var(--surface);border:${adminIsTracking ? '2px solid var(--success)' : '1px solid var(--border)'};border-radius:12px;${adminIsTracking ? 'box-shadow:0 8px 32px rgba(34,197,94,0.2);' : ''}">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:16px;height:16px;border-radius:50%;background:${adminIsTracking ? 'var(--success)' : 'var(--text-muted)'};${adminIsTracking ? 'animation:pulse 2s ease-in-out infinite;box-shadow:0 0 0 0 rgba(34,197,94,0.7);' : ''}"></div>
+        <span style="font-weight:600;font-size:1.05rem;color:${adminIsTracking ? 'var(--success)' : 'var(--text)'};">${adminIsTracking ? '✓ Konum Paylaşımı Aktif' : 'Konum Paylaşımı Kapalı'}</span>
+      </div>
+      ${adminIsTracking ? 
+        `<p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">Konumunuz müşteriler tarafından canlı olarak görüntüleniyor</p>
+        <button class="btn btn-danger" onclick="stopAdminTracking();renderOrders(window.allOrdersData);" style="padding:10px 16px;font-size:0.9rem;">Konum Paylaşımını Durdur</button>` : 
+        '<p style="font-size:0.9rem;color:var(--text-muted);">Sipariş aldığınızda konum paylaşımı otomatik başlatılır</p>'}
+    </div>
+  `;
+  
+  html += '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">';
+  html += `
+    <thead>
+      <tr style="border-bottom:1px solid var(--border);">
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">Takip Kodu</th>
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">Müşteri</th>
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">Ürün</th>
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">Durum</th>
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">Tarih</th>
+        <th style="padding:12px;text-align:left;color:var(--text-muted);font-size:0.9rem;">İşlemler</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+  
+  ordersArray.forEach(order => {
+    const status = statusBadges[order.status] || statusBadges.pending;
+    const date = new Date(order.createdAt).toLocaleDateString('tr-TR');
+    
+    html += `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:12px;"><strong style="color:var(--primary);">${order.id}</strong></td>
+        <td style="padding:12px;">${order.customerName}<br><small style="color:var(--text-muted);">${order.customerPhone}</small></td>
+        <td style="padding:12px;">${order.productName}</td>
+        <td style="padding:12px;"><span class="badge ${status.class}">${status.text}</span></td>
+        <td style="padding:12px;">${date}</td>
+        <td style="padding:12px;display:flex;gap:4px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.85rem;" onclick="viewOrderDetails('${order.id}')">Detay</button>
+          ${order.status === 'ready' ? 
+            `<button class="btn" style="padding:6px 12px;font-size:0.85rem;background:linear-gradient(135deg,var(--success),#16a34a);color:white;font-weight:600;border:none;" onclick="adminTakeOrder('${order.id}')">Ben Götürürüm</button>` : ''}
+          ${order.status !== 'delivered' && order.status !== 'cancelled' ? 
+            `<button class="btn btn-primary" style="padding:6px 12px;font-size:0.85rem;" onclick="openUpdateOrderModal('${order.id}')">Güncelle</button>` : ''}
+        </td>
+      </tr>
+    `;
+  });
+  
+  html += '</tbody></table></div>';
+  
+  window.allOrdersData = ordersData;
+  container.innerHTML = html;
+}
+
+window.viewOrderDetails = async (trackingCode) => {
+  window.open(`/site/takip.html?kod=${trackingCode}`, '_blank');
+};
+
+window.openUpdateOrderModal = async (trackingCode) => {
+  const orderRef = ref(database, `orders/${trackingCode}`);
+  const snapshot = await get(orderRef);
+  
+  if (!snapshot.exists()) {
+    alert('Sipariş bulunamadı!');
+    return;
+  }
+  
+  const order = snapshot.val();
+  
+  document.getElementById('updateOrderId').value = trackingCode;
+  document.getElementById('updateOrderCode').value = trackingCode;
+  document.getElementById('updateOrderStatus').value = order.status;
+  document.getElementById('updateOrderNote').value = '';
+  document.getElementById('updateOrderMessage').innerHTML = '';
+  
+  document.getElementById('updateOrderModal').classList.add('active');
+};
+
+window.closeUpdateOrderModal = () => {
+  document.getElementById('updateOrderModal').classList.remove('active');
+};
+
+document.getElementById('updateOrderForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const trackingCode = document.getElementById('updateOrderId').value;
+  const newStatus = document.getElementById('updateOrderStatus').value;
+  const note = document.getElementById('updateOrderNote').value.trim();
+  const btnText = document.getElementById('updateOrderBtnText');
+  const messageDiv = document.getElementById('updateOrderMessage');
+  
+  btnText.innerHTML = '<div class="loading"></div>';
+  
+  try {
+    await updateOrderStatus(trackingCode, newStatus, note);
+    messageDiv.innerHTML = '<div class="alert alert-success">Sipariş durumu güncellendi!</div>';
+    setTimeout(() => {
+      closeUpdateOrderModal();
+    }, 1500);
+  } catch (error) {
+    console.error('Update error:', error);
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${error.message}</div>`;
+  } finally {
+    btnText.textContent = 'Güncelle';
+  }
+});
+
+window.openAddOrderModal = () => {
+  const modal = document.getElementById('orderModal');
+  const productSelect = document.getElementById('orderProduct');
+  
+  productSelect.innerHTML = '<option value="">Ürün seçin</option>';
+  Object.values(products).forEach(product => {
+    if (product.status === 'active') {
+      productSelect.innerHTML += `<option value="${product.name}">${product.name} - ${product.price}₺</option>`;
+    }
+  });
+  
+  document.getElementById('orderForm').reset();
+  document.getElementById('orderModalMessage').innerHTML = '';
+  modal.classList.add('active');
+};
+
+window.closeOrderModal = () => {
+  document.getElementById('orderModal').classList.remove('active');
+};
+
+document.getElementById('orderForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const btnText = document.getElementById('orderSaveBtnText');
+  const messageDiv = document.getElementById('orderModalMessage');
+  btnText.innerHTML = '<div class="loading"></div>';
+  
+  const orderData = {
+    customerName: document.getElementById('orderCustomerName').value.trim(),
+    customerPhone: document.getElementById('orderCustomerPhone').value.trim(),
+    customerEmail: document.getElementById('orderCustomerEmail').value.trim(),
+    productName: document.getElementById('orderProduct').value,
+    address: document.getElementById('orderAddress').value.trim(),
+    latitude: parseFloat(document.getElementById('orderLatitude').value) || 41.0082,
+    longitude: parseFloat(document.getElementById('orderLongitude').value) || 28.9784
+  };
+  
+  try {
+    const trackingCode = await createOrder(orderData);
+    messageDiv.innerHTML = `<div class="alert alert-success">Sipariş oluşturuldu!<br><strong>Takip Kodu: ${trackingCode}</strong></div>`;
+    setTimeout(() => {
+      closeOrderModal();
+      switchTab('orders');
+    }, 2000);
+  } catch (error) {
+    console.error('Order creation error:', error);
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${error.message}</div>`;
+  } finally {
+    btnText.textContent = 'Sipariş Oluştur';
+  }
+});
+
+// ==================== COURIERS MANAGEMENT ====================
+
+function loadCouriers() {
+  const couriersRef = ref(database, 'couriers');
+  
+  onValue(couriersRef, (snapshot) => {
+    const couriersData = snapshot.val() || {};
+    renderCouriers(couriersData);
+  });
+}
+
+function renderCouriers(couriersData) {
+  const container = document.getElementById('couriersContainer');
+  
+  if (!couriersData || Object.keys(couriersData).length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--text-muted);">
+        <p>Henüz kurye eklenmemiş.</p>
+        <button class="btn btn-primary" onclick="openAddCourierModal()" style="margin-top:16px;">İlk Kuryeyi Ekle</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const couriersArray = Object.entries(couriersData).map(([id, data]) => ({ id, ...data }));
+  
+  let html = '<div style="display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">';
+  
+  couriersArray.forEach(courier => {
+    const isActive = courier.location ? true : false;
+    const activeOrders = courier.activeOrders ? Object.keys(courier.activeOrders).length : 0;
+    
+    html += `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:white;">
+            ${courier.name.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem;margin-bottom:4px;">${courier.name}</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);">${courier.email}</p>
+          </div>
+        </div>
+        <div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">
+          ${courier.phone}<br>
+          Aktif Teslimat: ${activeOrders}<br>
+          ${isActive ? 
+            '<span style="color:var(--success);">Konum Aktif</span>' : 
+            '<span style="color:var(--text-muted);">Konum Pasif</span>'}
+        </div>
+        <button class="btn btn-danger" style="width:100%;padding:8px;font-size:0.85rem;" onclick="deleteCourier('${courier.id}', '${courier.name}')">Sil</button>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+window.openAddCourierModal = () => {
+  const modal = document.getElementById('courierModal');
+  document.getElementById('courierForm').reset();
+  document.getElementById('courierModalMessage').innerHTML = '';
+  modal.classList.add('active');
+};
+
+window.closeCourierModal = () => {
+  document.getElementById('courierModal').classList.remove('active');
+};
+
+document.getElementById('courierForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const name = document.getElementById('courierName').value.trim();
+  const email = document.getElementById('courierEmail').value.trim();
+  const phone = document.getElementById('courierPhone').value.trim();
+  const password = document.getElementById('courierPassword').value;
+  
+  const btnText = document.getElementById('courierSaveBtnText');
+  const messageDiv = document.getElementById('courierModalMessage');
+  btnText.innerHTML = '<div class="loading"></div>';
+  
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    
+    const courierRef = ref(database, `couriers/${email.replace(/[.@]/g, '_')}`);
+    await set(courierRef, {
+      name,
+      email,
+      phone,
+      createdAt: new Date().toISOString(),
+      activeOrders: {}
+    });
+    
+    messageDiv.innerHTML = `<div class="alert alert-success">Kurye eklendi!<br><strong>Email:</strong> ${email}<br><strong>Şifre:</strong> ${password}</div>`;
+    setTimeout(() => {
+      closeCourierModal();
+    }, 2500);
+  } catch (error) {
+    console.error('Courier creation error:', error);
+    let errorMsg = error.message;
+    if (error.code === 'auth/email-already-in-use') {
+      errorMsg = 'Bu e-posta adresi zaten kullanımda!';
+    }
+    messageDiv.innerHTML = `<div class="alert alert-error">Hata: ${errorMsg}</div>`;
+  } finally {
+    btnText.textContent = 'Kurye Ekle';
+  }
+});
+
+window.deleteCourier = async (courierId, courierName) => {
+  if (!confirm(`${courierName} kuryesini silmek istediğinize emin misiniz?`)) {
+    return;
+  }
+  
+  try {
+    const courierRef = ref(database, `couriers/${courierId}`);
+    await remove(courierRef);
+    alert('Kurye silindi!');
+  } catch (error) {
+    console.error('Delete courier error:', error);
+    alert('Hata: ' + error.message);
+  }
+};
+
+// Tab switching
+window.switchTab = (tabName) => {
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.style.display = 'none';
+  });
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  document.getElementById(tabName + 'Tab').style.display = 'block';
+  event.target.classList.add('active');
+  
+  if (tabName === 'orders') {
+    loadOrders();
+  } else if (tabName === 'couriers') {
+    loadCouriers();
+  }
+};
+
+console.log('✅ Admin panel hazır - Tüm özellikler aktif!');
+</script>
 </body>
 </html>

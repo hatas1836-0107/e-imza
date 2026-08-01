@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Test</title>
+<style>
+:root {
+  --primary: #4f46e5;
+  --bg: #0b0e1a;
+  --surface: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+  --text: #f3f4f8;
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--primary), #7c3aed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+
+.user-info {
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: var(--danger);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.section h2 {
+  margin-bottom: 16px;
+}
+
+.alert {
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.alert-success {
+  background: rgba(34,197,94,0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.alert-error {
+  background: rgba(239,68,68,0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🎉 Admin Paneline Hoş Geldiniz!</h1>
+    <div class="user-info">
+      <p>Email: <span id="userEmail">Yükleniyor...</span></p>
+      <button class="btn" onclick="logout()">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Durum</h2>
+    <div id="status">
+      <div class="loading"></div> Firebase bağlanıyor...
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Ürünler</h2>
+    <div id="products">
+      <div class="loading"></div> Ürünler yükleniyor...
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+    authDomain: "e-imza-4c867.firebaseapp.com",
+    databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+    projectId: "e-imza-4c867",
+    storageBucket: "e-imza-4c867.firebasestorage.app",
+    messagingSenderId: "856535109805",
+    appId: "1:856535109805:web:39f6fa2e23275f7be77624",
+    measurementId: "G-YSFYRP4HEN"
+  };
+
+  console.log('🔥 Firebase başlatılıyor...');
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+
+  const statusDiv = document.getElementById('status');
+  const productsDiv = document.getElementById('products');
+  const userEmailSpan = document.getElementById('userEmail');
+
+  // Auth kontrolü
+  onAuthStateChanged(auth, (user) => {
+    console.log('🔥 Auth state:', user ? user.email : 'No user');
+    
+    if (user) {
+      statusDiv.innerHTML = '<div class="alert alert-success">✅ Firebase bağlantısı başarılı!<br>Kullanıcı: ' + user.email + '</div>';
+      userEmailSpan.textContent = user.email;
+      
+      // Ürünleri yükle
+      console.log('📦 Ürünler yükleniyor...');
+      const productsRef = ref(database, 'products');
+      
+      onValue(productsRef, (snapshot) => {
+        const products = snapshot.val();
+        console.log('📦 Ürünler:', products);
+        
+        if (products) {
+          const count = Object.keys(products).length;
+          productsDiv.innerHTML = '<div class="alert alert-success">✅ ' + count + ' ürün bulundu!</div>';
+          
+          let html = '<div style="display:grid;gap:16px;">';
+          Object.entries(products).forEach(([id, product]) => {
+            html += `
+              <div style="background:rgba(255,255,255,0.05);padding:16px;border-radius:8px;">
+                <h3>${product.name}</h3>
+                <p style="color:#4f46e5;font-size:1.5rem;font-weight:700;">${product.price}₺</p>
+                <p style="opacity:0.7;">${product.description || ''}</p>
+              </div>
+            `;
+          });
+          html += '</div>';
+          productsDiv.innerHTML += html;
+        } else {
+          productsDiv.innerHTML = '<div class="alert alert-error">❌ Ürün bulunamadı</div>';
+        }
+      }, (error) => {
+        console.error('❌ Ürün yükleme hatası:', error);
+        productsDiv.innerHTML = '<div class="alert alert-error">❌ Ürünler yüklenemedi: ' + error.message + '</div>';
+      });
+      
+    } else {
+      console.log('❌ Kullanıcı giriş yapmamış');
+      statusDiv.innerHTML = '<div class="alert alert-error">❌ Giriş yapılmamış! Yönlendiriliyor...</div>';
+      setTimeout(() => {
+        window.location.href = '/site/giris.html';
+      }, 2000);
+    }
+  });
+
+  // Logout
+  window.logout = async () => {
+    if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+      await signOut(auth);
+      window.location.href = '/site/giris.html';
+    }
+  };
+
+  console.log('✅ Admin panel hazır');
+</script>
+
+</body>
+</html>

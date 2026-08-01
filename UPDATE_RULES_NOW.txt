@@ -1,0 +1,34 @@
+🚨 ACİL - FIREBASE RULES GÜNCELLEMESİ
+
+ADIM 1: Bu linke tıkla
+👉 https://console.firebase.google.com/project/e-imza-4c867/database/e-imza-4c867-default-rtdb/rules
+
+ADIM 2: Aşağıdaki TAMAMI kopyala (bu satırdan sonra başlıyor):
+
+{
+  "rules": {
+    "products": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "orders": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "couriers": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "locations": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}
+
+ADIM 3: Yapıştır ve "YAYINLA" butonuna bas
+
+ADIM 4: Sayfayı yenile (Ctrl+F5 veya Cmd+Shift+R)
+
+⚠️ BU RULES ÇOK BASIT VE GÜVENLİK İÇİN GEÇİCİ!
+Herhangi bir giriş yapmış kullanıcı her şeye yazabilir ama şimdilik ÇALIŞMASI ÖNEMLİ.

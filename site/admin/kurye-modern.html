@@ -27,6 +27,7 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -37,7 +38,6 @@ body::before {
     radial-gradient(circle at 20% 20%, rgba(79,70,229,0.15), transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(124,58,237,0.15), transparent 50%);
   pointer-events: none;
-  z-index: 0;
 }
 
 .container {
@@ -45,11 +45,10 @@ body::before {
   margin: 0 auto;
   padding: 20px;
   position: relative;
-  z-index: 1;
 }
 
 /* Login */
-#loginScreen {
+.login-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -67,7 +66,7 @@ body::before {
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
 
-.brand-icon {
+.brand-mark {
   width: 80px;
   height: 80px;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -78,7 +77,7 @@ body::before {
   margin: 0 auto 24px;
 }
 
-.brand-icon svg {
+.brand-mark svg {
   width: 40px;
   height: 40px;
   color: white;
@@ -153,15 +152,15 @@ body::before {
 }
 
 /* Dashboard */
-#dashboard {
+.dashboard {
   display: none;
 }
 
-#dashboard.active {
+.dashboard.active {
   display: block;
 }
 
-.header {
+.dash-header {
   background: var(--surface);
   backdrop-filter: blur(20px);
   border: 1px solid var(--border);
@@ -171,60 +170,46 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
 }
 
-.header h1 {
+.dash-header h1 {
   font-size: 1.8rem;
   margin-bottom: 4px;
 }
 
-.header-info {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.btn-logout {
+.btn-ghost {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text);
   padding: 10px 20px;
   border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
 }
 
-.btn-logout:hover {
+.btn-ghost:hover {
   background: var(--danger);
   border-color: var(--danger);
-  color: white;
 }
 
 /* Location Status */
-.location-card {
+.location-status {
   background: var(--surface);
   border: 2px solid var(--border);
   border-radius: 16px;
   padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 24px;
   transition: all 0.3s;
 }
 
-.location-card.active {
+.location-status.active {
   border-color: var(--success);
   background: rgba(34,197,94,0.1);
   box-shadow: 0 8px 32px rgba(34,197,94,0.2);
 }
 
-.location-status {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.status-dot {
+.location-dot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -232,19 +217,18 @@ body::before {
   transition: all 0.3s;
 }
 
-.status-dot.active {
+.location-dot.active {
   background: var(--success);
   animation: pulse-dot 2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
 }
 
 @keyframes pulse-dot {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
-    transform: scale(1);
   }
   50% {
     box-shadow: 0 0 0 12px rgba(34,197,94,0);
-    transform: scale(1.1);
   }
 }
 
@@ -257,12 +241,12 @@ body::before {
 .delivery-btn {
   position: relative;
   width: 100%;
-  padding: 20px;
+  padding: 24px;
   background: linear-gradient(135deg, var(--success), #16a34a);
   border: none;
-  border-radius: 16px;
+  border-radius: 20px;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
   overflow: hidden;
@@ -272,13 +256,25 @@ body::before {
 }
 
 .delivery-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 16px 48px rgba(34,197,94,0.5);
 }
 
 .delivery-btn.tracking {
   background: linear-gradient(135deg, var(--danger), #dc2626);
   box-shadow: 0 12px 40px rgba(239,68,68,0.4);
+  animation: pulse-track 2s ease-in-out infinite;
+}
+
+@keyframes pulse-track {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 12px 40px rgba(239,68,68,0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 16px 48px rgba(239,68,68,0.6);
+  }
 }
 
 .delivery-btn .progress {
@@ -289,7 +285,6 @@ body::before {
   background: rgba(255,255,255,0.25);
   width: 0%;
   transition: width 20ms linear;
-  border-radius: 16px;
 }
 
 .delivery-btn .text {
@@ -297,11 +292,19 @@ body::before {
   z-index: 2;
 }
 
-/* Section */
+/* Orders */
 .section-title {
   font-size: 1.5rem;
   margin: 40px 0 20px;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title svg {
+  width: 28px;
+  height: 28px;
+  color: var(--primary);
 }
 
 .orders-grid {
@@ -333,7 +336,6 @@ body::before {
   justify-content: space-between;
   align-items: start;
   margin-bottom: 16px;
-  gap: 16px;
 }
 
 .tracking-code {
@@ -354,30 +356,33 @@ body::before {
   color: var(--success);
 }
 
-.badge-shipped {
-  background: rgba(245,158,11,0.2);
-  color: var(--warning);
-}
-
-.order-info {
+.order-details {
   display: grid;
   gap: 12px;
   margin-bottom: 16px;
 }
 
-.info-row {
-  display: grid;
-  grid-template-columns: 100px 1fr;
+.detail-row {
+  display: flex;
+  align-items: start;
   gap: 12px;
 }
 
-.info-label {
-  font-size: 0.9rem;
+.detail-row svg {
+  width: 20px;
+  height: 20px;
   color: var(--text-muted);
-  font-weight: 500;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
-.info-value {
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  min-width: 80px;
+}
+
+.detail-value {
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -388,8 +393,10 @@ body::before {
   margin-top: 20px;
 }
 
-.btn-action {
+.btn-take {
   flex: 1;
+  background: linear-gradient(135deg, var(--success), #16a34a);
+  color: white;
   padding: 12px;
   border: none;
   border-radius: 12px;
@@ -398,24 +405,9 @@ body::before {
   transition: all 0.3s;
 }
 
-.btn-take {
-  background: linear-gradient(135deg, var(--success), #16a34a);
-  color: white;
-}
-
 .btn-take:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(34,197,94,0.4);
-}
-
-.btn-complete {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-}
-
-.btn-complete:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(79,70,229,0.4);
 }
 
 .loading {
@@ -438,33 +430,26 @@ body::before {
   color: var(--text-muted);
 }
 
-.alert {
-  padding: 12px 16px;
-  border-radius: 12px;
-  margin-top: 16px;
-  font-size: 0.9rem;
-}
-
-.alert-error {
-  background: rgba(244,63,94,0.1);
-  border: 1px solid rgba(244,63,94,0.3);
-  color: var(--danger);
+.empty-state svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  opacity: 0.3;
 }
 
 @media (max-width: 768px) {
   .login-card { padding: 32px; }
-  .header { flex-direction: column; align-items: flex-start; }
-  .header h1 { font-size: 1.4rem; }
-  .order-actions { flex-direction: column; }
+  .dash-header { flex-direction: column; gap: 16px; }
+  .dash-header h1 { font-size: 1.4rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- Login -->
-<div id="loginScreen">
+<!-- Login Screen -->
+<div id="loginScreen" class="login-screen">
   <div class="login-card">
-    <div class="brand-icon">
+    <div class="brand-mark">
       <svg fill="currentColor" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z"/></svg>
     </div>
     <h1>Kurye Paneli</h1>
@@ -485,39 +470,47 @@ body::before {
         <span id="loginBtnText">Giriş Yap</span>
       </button>
       
-      <div id="loginMessage"></div>
+      <div id="loginMessage" style="margin-top:20px;"></div>
     </form>
   </div>
 </div>
 
 <!-- Dashboard -->
-<div id="dashboard">
+<div id="dashboard" class="dashboard">
   <div class="container">
-    <div class="header">
+    <div class="dash-header">
       <div>
         <h1>Kurye Paneli</h1>
-        <div class="header-info" id="userEmail"></div>
+        <span id="userEmail" style="color:var(--text-muted);"></span>
       </div>
-      <button class="btn-logout" onclick="logout()">Çıkış</button>
+      <button class="btn btn-ghost" onclick="logout()">Çıkış</button>
     </div>
 
-    <div id="locationCard" class="location-card">
-      <div class="location-status">
-        <div id="statusDot" class="status-dot"></div>
-        <span id="statusText">Konum Paylaşımı Kapalı</span>
-      </div>
-      
-      <button id="deliveryBtn" class="delivery-btn">
-        <div class="progress"></div>
-        <div class="text">Yola Çıkıyorum (Basılı Tut)</div>
-      </button>
+    <!-- Location Status -->
+    <div id="locationStatus" class="location-status">
+      <div id="locationDot" class="location-dot"></div>
+      <span id="locationText">Konum Paylaşımı Kapalı</span>
     </div>
 
-    <h2 class="section-title">Teslimata Hazır Siparişler</h2>
-    <div id="readyOrders" class="orders-grid"></div>
+    <!-- Delivery Button -->
+    <button id="deliveryBtn" class="delivery-btn">
+      <div class="progress"></div>
+      <div class="text">Yola Çıkıyorum (Basılı Tut)</div>
+    </button>
 
-    <h2 class="section-title" style="margin-top:48px;">Aktif Teslimatlarım <span id="activeCount" style="font-size:1rem;font-weight:600;color:var(--success);margin-left:12px;"></span></h2>
-    <div id="myOrders" class="orders-grid"></div>
+    <!-- Ready Orders -->
+    <h2 class="section-title">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Teslimata Hazır Siparişler
+    </h2>
+    <div id="readyOrdersContainer" class="orders-grid"></div>
+
+    <!-- My Active Orders -->
+    <h2 class="section-title" style="margin-top:48px;">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Aktif Teslimatlarım
+    </h2>
+    <div id="myOrdersContainer" class="orders-grid"></div>
   </div>
 </div>
 
@@ -556,6 +549,7 @@ onAuthStateChanged(auth, (user) => {
     loadMyOrders();
   } else {
     document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('dashboard').classList.remove('active');
   }
 });
 
@@ -572,7 +566,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
-    msg.innerHTML = `<div class="alert alert-error">Giriş başarısız: ${error.message}</div>`;
+    msg.innerHTML = `<div style="color:var(--danger);font-size:0.9rem;">Giriş başarısız: ${error.message}</div>`;
     btnText.textContent = 'Giriş Yap';
   }
 });
@@ -584,7 +578,7 @@ window.logout = async () => {
   }
 };
 
-// Load Ready Orders
+// Load Ready Orders (status: 'ready')
 function loadReadyOrders() {
   const ordersRef = ref(database, 'orders');
   onValue(ordersRef, (snapshot) => {
@@ -598,10 +592,15 @@ function loadReadyOrders() {
 }
 
 function renderReadyOrders(orders) {
-  const container = document.getElementById('readyOrders');
+  const container = document.getElementById('readyOrdersContainer');
   
   if (orders.length === 0) {
-    container.innerHTML = '<div class="empty-state">Şu anda teslimata hazır sipariş yok</div>';
+    container.innerHTML = `
+      <div class="empty-state">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+        <p>Şu anda teslimata hazır sipariş yok</p>
+      </div>
+    `;
     return;
   }
   
@@ -611,28 +610,34 @@ function renderReadyOrders(orders) {
       <div class="order-card ready">
         <div class="order-header">
           <div class="tracking-code">${order.id}</div>
-          <span class="badge badge-ready">Hazır</span>
+          <span class="badge badge-ready">✓ Hazır</span>
         </div>
-        <div class="order-info">
-          <div class="info-row">
-            <div class="info-label">Müşteri:</div>
-            <div class="info-value">${order.customerName}</div>
+        <div class="order-details">
+          <div class="detail-row">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <div>
+              <div class="detail-label">Müşteri</div>
+              <div class="detail-value">${order.customerName}</div>
+              <div class="detail-value" style="font-size:0.85rem;color:var(--text-muted);">${order.customerPhone}</div>
+            </div>
           </div>
-          <div class="info-row">
-            <div class="info-label">Telefon:</div>
-            <div class="info-value">${order.customerPhone}</div>
+          <div class="detail-row">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            <div>
+              <div class="detail-label">Ürün</div>
+              <div class="detail-value">${order.productName}</div>
+            </div>
           </div>
-          <div class="info-row">
-            <div class="info-label">Ürün:</div>
-            <div class="info-value">${order.productName}</div>
-          </div>
-          <div class="info-row">
-            <div class="info-label">Adres:</div>
-            <div class="info-value">${order.address}</div>
+          <div class="detail-row">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <div>
+              <div class="detail-label">Adres</div>
+              <div class="detail-value">${order.address}</div>
+            </div>
           </div>
         </div>
         <div class="order-actions">
-          <button class="btn-action btn-take" onclick="takeOrder('${order.id}')">Siparişi Al</button>
+          <button class="btn-take" onclick="takeOrder('${order.id}')">📦 Siparişi Al</button>
         </div>
       </div>
     `;
@@ -674,6 +679,7 @@ window.takeOrder = async (orderId) => {
       history
     });
     
+    // Add to courier's active orders
     const courierKey = currentUser.email.replace(/[.@]/g, '_');
     const courierOrderRef = ref(database, `couriers/${courierKey}/activeOrders/${orderId}`);
     await set(courierOrderRef, {
@@ -704,41 +710,43 @@ function loadMyOrders() {
 }
 
 function renderMyOrders(orders) {
-  const container = document.getElementById('myOrders');
-  const countBadge = document.getElementById('activeCount');
+  const container = document.getElementById('myOrdersContainer');
   
   if (orders.length === 0) {
-    container.innerHTML = '<div class="empty-state">Aktif teslimatınız yok</div>';
-    countBadge.textContent = '';
+    container.innerHTML = `
+      <div class="empty-state">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p>Aktif teslimatınız yok</p>
+      </div>
+    `;
     return;
   }
-  
-  countBadge.textContent = `(${orders.length})`;
   
   let html = '';
   orders.forEach(order => {
     html += `
-      <div class="order-card">
+      <div class="order-card" style="border-color:var(--warning);">
         <div class="order-header">
           <div class="tracking-code">${order.id}</div>
-          <span class="badge badge-shipped">Yolda</span>
+          <span class="badge" style="background:rgba(245,158,11,0.2);color:var(--warning);">🚚 Yolda</span>
         </div>
-        <div class="order-info">
-          <div class="info-row">
-            <div class="info-label">Müşteri:</div>
-            <div class="info-value">${order.customerName}</div>
+        <div class="order-details">
+          <div class="detail-row">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <div>
+              <div class="detail-value">${order.customerName}</div>
+              <div style="font-size:0.85rem;color:var(--text-muted);">${order.customerPhone}</div>
+            </div>
           </div>
-          <div class="info-row">
-            <div class="info-label">Telefon:</div>
-            <div class="info-value">${order.customerPhone}</div>
-          </div>
-          <div class="info-row">
-            <div class="info-label">Adres:</div>
-            <div class="info-value">${order.address}</div>
+          <div class="detail-row">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            <div>
+              <div class="detail-value">${order.address}</div>
+            </div>
           </div>
         </div>
         <div class="order-actions">
-          <button class="btn-action btn-complete" onclick="completeOrder('${order.id}')">Teslim Edildi</button>
+          <button class="btn-take" style="background:linear-gradient(135deg,var(--success),#16a34a);" onclick="completeOrder('${order.id}')">✓ Teslim Edildi</button>
         </div>
       </div>
     `;
@@ -776,6 +784,7 @@ window.completeOrder = async (orderId) => {
       history
     });
     
+    // Remove from active orders
     const courierKey = currentUser.email.replace(/[.@]/g, '_');
     const courierOrderRef = ref(database, `couriers/${courierKey}/activeOrders/${orderId}`);
     await set(courierOrderRef, null);
@@ -787,7 +796,7 @@ window.completeOrder = async (orderId) => {
   }
 };
 
-// Delivery Button
+// Delivery Button - Location Tracking
 const btn = document.getElementById('deliveryBtn');
 const progress = btn.querySelector('.progress');
 const btnText = btn.querySelector('.text');
@@ -837,10 +846,11 @@ async function startTracking() {
   btnText.textContent = 'Konum Paylaşılıyor (Durdurmak için bas)';
   progress.style.width = '100%';
   
-  document.getElementById('locationCard').classList.add('active');
-  document.getElementById('statusDot').classList.add('active');
-  document.getElementById('statusText').textContent = 'Konum Aktif - Müşteriler konumunuzu görebilir';
+  document.getElementById('locationStatus').classList.add('active');
+  document.getElementById('locationDot').classList.add('active');
+  document.getElementById('locationText').textContent = 'Konum Aktif - Müşteriler konumunuzu görebilir';
   
+  // Request wake lock
   try {
     if ('wakeLock' in navigator) {
       wakeLock = await navigator.wakeLock.request('screen');
@@ -849,6 +859,7 @@ async function startTracking() {
     console.warn('Wake lock failed:', err);
   }
   
+  // Start location tracking
   const options = {
     enableHighAccuracy: true,
     maximumAge: 0,
@@ -874,9 +885,9 @@ function stopTracking() {
   btnText.textContent = 'Yola Çıkıyorum (Basılı Tut)';
   progress.style.width = '0%';
   
-  document.getElementById('locationCard').classList.remove('active');
-  document.getElementById('statusDot').classList.remove('active');
-  document.getElementById('statusText').textContent = 'Konum Paylaşımı Kapalı';
+  document.getElementById('locationStatus').classList.remove('active');
+  document.getElementById('locationDot').classList.remove('active');
+  document.getElementById('locationText').textContent = 'Konum Paylaşımı Kapalı';
   
   if (watchId) {
     navigator.geolocation.clearWatch(watchId);
