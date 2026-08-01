@@ -722,18 +722,29 @@ let selectedImage = null;
 
 // Auth state listener - Kurye gibi basit
 onAuthStateChanged(auth, (user) => {
+  console.log('🔄 onAuthStateChanged triggered');
+  console.log('🔄 User:', user ? user.email : 'null');
+  
   if (user) {
     console.log('✅ User logged in:', user.email);
+    console.log('✅ User UID:', user.uid);
     currentUser = user;
     
     // Session flag'i temizle
     sessionStorage.removeItem('justLoggedIn');
     sessionStorage.removeItem('userRole');
     
+    console.log('📊 Setting user email in UI...');
     document.getElementById('userEmail').textContent = user.email;
+    
+    console.log('📊 Loading dashboard data...');
+    console.log('📦 Calling loadProducts()...');
     loadProducts();
+    console.log('📦 Calling loadOrders()...');
     loadOrders();
+    console.log('📦 Calling loadCouriers()...');
     loadCouriers();
+    console.log('✅ All load functions called');
   } else {
     console.log('❌ No user, redirecting to login...');
     // Kullanıcı oturum açmamışsa giriş sayfasına yönlendir
@@ -751,12 +762,64 @@ window.logout = async () => {
 
 // Load products
 function loadProducts() {
-  const productsRef = ref(database, 'products');
-  onValue(productsRef, (snapshot) => {
-    products = snapshot.val() || {};
-    renderProducts();
-    updateStats();
-  });
+  console.log('📦 loadProducts() started');
+  try {
+    const productsRef = ref(database, 'products');
+    console.log('📦 Firebase ref created for products');
+    
+    onValue(productsRef, (snapshot) => {
+      console.log('📦 onValue callback triggered');
+      products = snapshot.val() || {};
+      console.log('📦 Products loaded:', Object.keys(products).length, 'items');
+      renderProducts();
+      updateStats();
+    }, (error) => {
+      console.error('❌ Error loading products:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+    });
+  } catch (error) {
+    console.error('❌ Exception in loadProducts:', error);
+  }
+}
+
+// Load orders
+function loadOrders() {
+  console.log('📦 loadOrders() started');
+  try {
+    const ordersRef = ref(database, 'orders');
+    console.log('📦 Firebase ref created for orders');
+    
+    onValue(ordersRef, (snapshot) => {
+      console.log('📦 Orders onValue callback triggered');
+      orders = snapshot.val() || {};
+      console.log('📦 Orders loaded:', Object.keys(orders).length, 'items');
+      updateStats();
+    }, (error) => {
+      console.error('❌ Error loading orders:', error);
+    });
+  } catch (error) {
+    console.error('❌ Exception in loadOrders:', error);
+  }
+}
+
+// Load couriers
+function loadCouriers() {
+  console.log('📦 loadCouriers() started');
+  try {
+    const couriersRef = ref(database, 'couriers');
+    console.log('📦 Firebase ref created for couriers');
+    
+    onValue(couriersRef, (snapshot) => {
+      console.log('📦 Couriers onValue callback triggered');
+      couriers = snapshot.val() || {};
+      console.log('📦 Couriers loaded:', Object.keys(couriers).length, 'items');
+    }, (error) => {
+      console.error('❌ Error loading couriers:', error);
+    });
+  } catch (error) {
+    console.error('❌ Exception in loadCouriers:', error);
+  }
 }
 
 // Render products
