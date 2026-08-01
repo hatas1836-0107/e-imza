@@ -386,6 +386,9 @@
         header.style.boxShadow = y > 12 ? "0 6px 24px rgba(0,0,0," + (0.18 * shadowOpacity) + ")" : "none";
       }
       
+      // Hero scroll efekti KAPALI - artık herhangi bir scroll animasyonu yok
+      // Elementler normal kalacak, opacity ve position değişmeyecek
+      
       // Mesh Background - Gelişmiş parallax ve rotate
       if (meshBg) {
         var translateY = y * 0.4; // Daha hızlı hareket
@@ -404,14 +407,8 @@
         grainOverlay.style.opacity = Math.min(grainOpacity, 0.05);
       }
       
-      // Hero Section - Gelişmiş parallax
-      if (heroSection && y < windowHeight) {
-        var heroTranslate = y * 0.2;
-        var heroOpacity = 1 - (y / windowHeight) * 0.8;
-        var heroScale = 1 - (y / windowHeight) * 0.05;
-        heroSection.style.transform = "translateY(" + heroTranslate + "px) scale(" + heroScale + ")";
-        heroSection.style.opacity = Math.max(0, heroOpacity);
-      }
+      // Hero Section - Parallax KAPALI (artık hareket etmeyecek)
+      // Scroll yapınca elementler normal kalacak
       
       // Kartlar için scroll-triggered animations
       var revealCards = document.querySelectorAll('.card:not(.revealed)');

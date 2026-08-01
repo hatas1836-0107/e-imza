@@ -164,13 +164,25 @@
       requestAnimationFrame(step);
     }
 
-    /* ---------- Yukarı çık + header küçülme ---------- */
+    /* ---------- Yukarı çık + header küçülme + hero scroll fade ---------- */
     var fabTop = document.querySelector(".fab-top");
     var header = document.querySelector(".site-header");
+    var hero = document.querySelector(".hero");
+    
     window.addEventListener("scroll", function () {
       var y = window.scrollY || window.pageYOffset;
       if (fabTop) fabTop.classList.toggle("show", y > 480);
       if (header) header.style.boxShadow = y > 12 ? "0 6px 24px rgba(0,0,0,.18)" : "none";
+      
+      // Hero scroll fade effect (mobilde çalışır)
+      if (hero && window.innerWidth <= 1020) {
+        // Scroll 50px'den fazla olunca fade-out başlasın
+        if (y > 50) {
+          hero.classList.add("scrolling");
+        } else {
+          hero.classList.remove("scrolling");
+        }
+      }
     }, { passive: true });
     if (fabTop) fabTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
 

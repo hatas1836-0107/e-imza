@@ -412,6 +412,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: relative;
   z-index: 1;
 }
+
+/* Hero scroll parallax effect - KAPALI */
+/* Scroll efekti kaldırıldı, elementler normal kalacak */
+
+/* Mobil için hero scroll efekti - KAPALI */
+/* Artık scroll efekti yok, her şey normal */
+@media (max-width: 1020px) {
+  /* Herhangi bir scroll animasyonu yok */
+}
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 7px 16px; border-radius: var(--radius-pill);
@@ -779,7 +788,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .addon-row + .addon-row { margin-top: 12px; }
 
 /* ---------- Bölgeler / İlçeler ---------- */
-.districts-section {
+.district-section {
   padding: 50px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1617,9 +1626,109 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .nav-toggle { display: flex; }
   .form-grid { grid-template-columns: 1fr; }
   
-  /* Hero mobilde */
-  .hero-grid { gap: 32px; }
-  .hero { padding: 32px 0; }
+  /* Hero mobilde - inline grid'i kır */
+  .hero > .container > div[style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 48px !important;
+    padding: 0 !important;
+  }
+  
+  /* Mobilde text kısmı (İmzanız hazır) en üstte olmalı */
+  .hero > .container > div[style*="grid-template-columns"] > div:first-child {
+    order: 1 !important;
+  }
+  
+  /* Tracking card (sağdaki) altta olmalı */
+  .hero > .container > div[style*="grid-template-columns"] > div:last-child {
+    order: 2 !important;
+  }
+  
+  /* Kartların mobilde tam genişlik */
+  .hero > .container > div[style*="grid-template-columns"] > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* İçerideki grid'leri de düzelt - daha geniş ve havadar */
+  .hero .glass[style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+    padding: 40px 24px !important;
+    min-height: auto !important;
+  }
+  
+  .hero .glass[style*="grid-template-columns"] > * {
+    width: 100% !important;
+  }
+  
+  /* Yuvarlak animasyon alanı - mobilde daha büyük ve merkezde */
+  .hero .glass div[style*="min-height: 280px"] {
+    min-height: 320px !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px 0 !important;
+  }
+  
+  .hero .glass div[style*="width: 290px"] {
+    width: min(290px, 90vw) !important;
+    height: min(290px, 90vw) !important;
+    max-width: 320px !important;
+    max-height: 320px !important;
+  }
+  
+  /* Hero section daha uzun ve ferah */
+  .hero { 
+    padding: 56px 0 80px !important; 
+    min-height: 100vh !important;
+  }
+  
+  .hero-lead {
+    font-size: 1.08rem !important;
+    line-height: 1.75 !important;
+    margin-bottom: 36px !important;
+  }
+  
+  .hero h1 {
+    font-size: clamp(2.1rem, 9vw, 2.9rem) !important;
+    margin-bottom: 24px !important;
+    line-height: 1.15 !important;
+  }
+  
+  .eyebrow {
+    margin-bottom: 22px !important;
+    font-size: .88rem !important;
+  }
+  
+  /* Section'lar arasında daha fazla boşluk */
+  .section {
+    padding: 96px 0 !important;
+  }
+  
+  .section-tight {
+    padding: 64px 0 !important;
+  }
+  
+  /* Reveal animasyonları daha yavaş ve smooth */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.22, 0.9, 0.32, 1), 
+                transform 0.8s cubic-bezier(0.22, 0.9, 0.32, 1);
+  }
+  
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Kartlar için staggered animation */
+  .reveal[style*="--i"] {
+    transition-delay: calc(var(--i) * 0.12s);
+  }
   
   /* Timeline mobilde */
   .signature-stage { 
@@ -1640,24 +1749,70 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     font-size: .76rem;
   }
   
-  /* İlçeler bölümü */
-  .districts-section {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 36px 28px;
+  /* İlçeler bölümü - Mobilde sadece 4 ana ilçe + badge */
+  .district-section {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 32px 24px !important;
+    gap: 24px !important;
+    text-align: center !important;
   }
+  
   .district-cloud {
-    max-height: 160px;
-    overflow: hidden;
-    position: relative;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
-  .district-cloud::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
+  
+  /* Desktop-only ilçeleri mobilde gizle */
+  .district-chip.desktop-only {
+    display: none !important;
+  }
+  
+  .district-chip {
+    font-size: 0.8rem !important;
+    padding: 8px 14px !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    display: block !important;
+    line-height: 1.2 !important;
+  }
+  
+  .district-chip svg {
+    display: none !important;
+  }
+  
+  /* +35 ilçe badge */
+  .district-more {
+    background: var(--gradient-seal) !important;
+    color: #3a2606 !important;
+    border: none !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    padding: 8px 14px !important;
+    margin-top: 2px !important;
+  }
+  
+  /* Architecture card mobilde */
+  .eimza-architecture-card {
+    gap: 28px;
+    padding: 32px 24px;
+  }
+  
+  .arch-visual {
+    min-height: 220px;
+    order: -1;
+  }
+  .arch-content {
+    text-align: center;
+  }
+  .arch-features {
+    max-width: 400px;
+    margin: 24px auto 0;
+  }
+}
     background: linear-gradient(180deg, transparent, var(--surface));
     pointer-events: none;
   }
@@ -1777,37 +1932,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   /* İlçeler mobilde */
-  .districts-section {
+  .district-section {
     padding: 28px 20px;
     gap: 20px;
   }
-  .districts-section h2 {
+  .district-section h2 {
     font-size: 1.35rem;
   }
   .district-cloud { 
-    gap: 7px;
-    max-height: 120px;
-    overflow: hidden;
-    position: relative;
+    gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
-  .district-cloud::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: linear-gradient(180deg, transparent, var(--surface));
-    pointer-events: none;
-    z-index: 1;
+  .district-chip.desktop-only {
+    display: none !important;
   }
   .district-chip { 
-    font-size: .75rem; 
-    padding: 7px 12px;
+    font-size: 0.8rem !important;
+    padding: 8px 14px !important;
+    line-height: 1.2 !important;
   }
   .district-more {
-    font-size: .75rem;
-    padding: 7px 14px;
+    font-size: 0.8rem !important;
+    padding: 8px 14px !important;
   }
   
   /* Cards */
@@ -2172,17 +2319,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   /* Districts extra small */
-  .districts-section {
+  .district-section {
     padding: 24px 16px;
   }
   
   .district-cloud {
-    max-height: 100px;
+    gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .district-chip.desktop-only {
+    display: none !important;
   }
   
   .district-chip {
-    font-size: .7rem;
-    padding: 6px 10px;
+    font-size: 0.8rem !important;
+    padding: 8px 14px !important;
+    line-height: 1.2 !important;
   }
   
   /* Timeline extra small */
@@ -3069,16 +3223,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   /* District cloud mobilde */
   .district-cloud {
     gap: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .district-chip.desktop-only {
+    display: none !important;
   }
   
   .district-chip {
     font-size: 0.8rem !important;
     padding: 8px 14px !important;
+    line-height: 1.2 !important;
   }
   
   .district-chip svg {
-    width: 12px !important;
-    height: 12px !important;
+    display: none !important;
   }
 }
 
