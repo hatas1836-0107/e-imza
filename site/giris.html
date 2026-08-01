@@ -343,17 +343,25 @@ function showMessage(msg, type = 'error') {
 
 // Check user role
 async function checkUserRole(email) {
-  if (isAdminEmail(email)) {
+  console.log('🔍 checkUserRole called for:', email);
+  
+  const isAdmin = isAdminEmail(email);
+  console.log('🔍 isAdmin result:', isAdmin);
+  
+  if (isAdmin) {
+    console.log('✅ User is ADMIN');
     return 'admin';
   }
   
   // Courier kontrolünü dene, hata olursa admin olmadığını döndür
   try {
     const courierKey = email.replace(/[.@]/g, '_');
+    console.log('🔍 Checking courier:', courierKey);
     const courierRef = ref(database, `couriers/${courierKey}`);
     const snap = await get(courierRef);
     
     if (snap.exists()) {
+      console.log('✅ User is COURIER');
       return 'courier';
     }
   } catch (error) {
@@ -362,24 +370,31 @@ async function checkUserRole(email) {
   }
   
   // Admin değilse ve courier değilse
+  console.log('❌ User is neither admin nor courier');
   return null;
 }
 
 // Redirect user
 async function redirectUser(role) {
+  console.log('🚀 redirectUser called with role:', role);
+  
   if (role === 'admin') {
+    console.log('🚀 Redirecting to admin panel...');
     // Session storage'a işaretle
     sessionStorage.setItem('justLoggedIn', 'true');
     sessionStorage.setItem('userRole', 'admin');
-    // MODERN admin paneline yönlendir
+    
+    // Yönlendirme
+    console.log('🚀 window.location.href = admin/index-modern.html');
     window.location.href = 'admin/index-modern.html';
   } else if (role === 'courier') {
+    console.log('🚀 Redirecting to courier panel...');
     // Session storage'a işaretle
     sessionStorage.setItem('justLoggedIn', 'true');
     sessionStorage.setItem('userRole', 'courier');
-    // Kurye paneline yönlendir
     window.location.href = 'admin/kurye.html';
   } else {
+    console.log('❌ Invalid role, signing out...');
     showMessage('❌ Yetkisiz erişim! Bu sistemi kullanma yetkiniz yok.', 'error');
     await auth.signOut();
   }
