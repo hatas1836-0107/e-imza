@@ -54,6 +54,15 @@
         "location": {
           ".validate": "!newData.exists() || newData.isString()"
         },
+        "latitude": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "longitude": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "productPrice": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
         "courier": {
           ".validate": "!newData.exists() || newData.hasChildren(['email', 'name'])",
           "email": {

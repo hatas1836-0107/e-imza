@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Örnek Ürün Ekle</title>
+</head>
+<body>
+  <h1>Örnek Ürünler Ekleniyor...</h1>
+  <div id="status"></div>
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const db = firebase.database();
+    const statusDiv = document.getElementById('status');
+    
+    const sampleProducts = [
+      {
+        name: 'Bireysel E-İmza',
+        category: '1 YILLIK',
+        price: 1250,
+        description: 'Bireysel kullanım için ideal e-imza paketi',
+        features: 'Akıllı kart + okuyucu dahil\nBilgisayara online kurulum\nTelefonda kurulum desteği',
+        priceNote: '+ KDV',
+        status: 'active',
+        popular: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        name: 'Bireysel E-İmza',
+        category: '2 YILLIK',
+        price: 1850,
+        description: 'En çok tercih edilen seçenek',
+        features: 'Akıllı kart + okuyucu dahil\nAynı gün kurye önceliği\nYerilme kurulum ve test',
+        priceNote: '+ KDV',
+        status: 'active',
+        popular: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        name: 'Bireysel E-İmza',
+        category: '3 YILLIK',
+        price: 2450,
+        description: 'Uzun vadeli kullanım için',
+        features: 'Akıllı kart + okuyucu dahil\nAynı gün kurye önceliği\nYenileme hatırlatma servisi',
+        priceNote: '+ KDV',
+        status: 'active',
+        popular: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        name: 'Kurumsal E-İmza',
+        category: 'KURUMSAL',
+        price: 3500,
+        description: 'Şirketler için profesyonel e-imza çözümü',
+        features: 'Toplu kurulum desteği\nKurumsal entegrasyon\n7/24 kurumsal destek',
+        priceNote: '+ KDV',
+        status: 'active',
+        popular: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
+    
+    statusDiv.innerHTML = '<p>Ürünler ekleniyor...</p>';
+    
+    let promises = sampleProducts.map(product => {
+      return db.ref('products').push().set(product);
+    });
+    
+    Promise.all(promises)
+      .then(() => {
+        statusDiv.innerHTML = '<h2 style="color:green;">✅ Örnek ürünler başarıyla eklendi!</h2><p><a href="products.html">Ürün Yönetimine Git</a></p>';
+      })
+      .catch(error => {
+        statusDiv.innerHTML = '<h2 style="color:red;">❌ Hata: ' + error.message + '</h2>';
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürün Yönetimi - Zirve E-İmza Admin</title>
+  <link rel="stylesheet" href="admin-modern.css">
+  <style>
+    .product-form {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    
+    .product-form h3 {
+      color: #f3f4f8;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #b6bad0;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #f3f4f8;
+      font-size: 0.95rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .product-list {
+      display: grid;
+      gap: 16px;
+    }
+    
+    .product-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+      transition: all 0.2s ease;
+    }
+    
+    .product-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(129, 140, 248, 0.3);
+    }
+    
+    .product-item.inactive {
+      opacity: 0.5;
+    }
+    
+    .product-info h4 {
+      color: #f3f4f8;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    
+    .product-info p {
+      color: #7d81a0;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    
+    .product-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+    }
+    
+    .product-meta span {
+      color: #b6bad0;
+    }
+    
+    .product-meta strong {
+      color: #818cf8;
+      font-weight: 600;
+    }
+    
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+    }
+    
+    .btn-icon {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      white-space: nowrap;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .badge-popular {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #fff;
+    }
+    
+    .badge-active {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+    
+    .badge-inactive {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <h2>Zirve E-İmza</h2>
+        <span class="admin-badge">Admin Panel</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="index-modern.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard
+        </a>
+        <a href="products.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Ürünler
+        </a>
+        <a href="kurye-modern.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 10 8h4l3 5m-9 0h9m-4-9h3l2 4"/></svg>
+          Kurye Panel
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="firebase.auth().signOut(); window.location.href='../giris.html';">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Çıkış Yap
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1>Ürün Yönetimi</h1>
+        <div class="header-actions">
+          <span id="userEmail" class="user-email"></span>
+        </div>
+      </header>
+      
+      <div class="admin-content">
+        <!-- Add/Edit Product Form -->
+        <div class="product-form">
+          <h3 id="formTitle">Yeni Ürün Ekle</h3>
+          <form id="productForm">
+            <input type="hidden" id="productId">
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="productName">Ürün Adı *</label>
+                <input type="text" id="productName" required placeholder="örn: Bireysel E-İmza">
+              </div>
+              
+              <div class="form-group">
+                <label for="productCategory">Kategori/Süre</label>
+                <input type="text" id="productCategory" placeholder="örn: 1 YILLIK">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="productPrice">Fiyat (₺) *</label>
+                <input type="number" id="productPrice" required placeholder="örn: 450" step="0.01">
+              </div>
+              
+              <div class="form-group">
+                <label for="productPriceNote">Fiyat Notu</label>
+                <input type="text" id="productPriceNote" placeholder="örn: / yıl">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="productDescription">Açıklama</label>
+              <textarea id="productDescription" placeholder="Ürün açıklaması..." rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="productFeatures">Özellikler (Her satıra bir özellik)</label>
+              <textarea id="productFeatures" placeholder="1 yıl geçerlilik&#10;Akıllı kart + okuyucu dahil&#10;e-Devlet uyumlu" rows="5"></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="productStatus">Durum *</label>
+                <select id="productStatus" required>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Pasif</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" id="productPopular" style="width:auto;margin-right:8px;">
+                  Popüler ürün olarak işaretle
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Kaydet
+              </button>
+              <button type="button" class="btn btn-ghost" onclick="resetForm()">İptal</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Products List -->
+        <div>
+          <h3 style="color:#f3f4f8;margin-bottom:20px;font-size:1.3rem;">Mevcut Ürünler</h3>
+          <div id="productsList" class="product-list">
+            <div style="text-align:center;padding:40px;color:#7d81a0;">
+              <div style="width:40px;height:40px;border:3px solid rgba(129,140,248,0.3);border-top-color:#818cf8;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;"></div>
+              Ürünler yükleniyor...
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="products-admin.js"></script>
+</body>
+</html>

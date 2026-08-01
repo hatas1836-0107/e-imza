@@ -27,6 +27,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -147,6 +152,16 @@
                 <option value="Adalar">Adalar</option><option value="Arnavutköy">Arnavutköy</option><option value="Ataşehir">Ataşehir</option><option value="Avcılar">Avcılar</option><option value="Bağcılar">Bağcılar</option><option value="Bahçelievler">Bahçelievler</option><option value="Bakırköy">Bakırköy</option><option value="Başakşehir">Başakşehir</option><option value="Bayrampaşa">Bayrampaşa</option><option value="Beşiktaş">Beşiktaş</option><option value="Beykoz">Beykoz</option><option value="Beylikdüzü">Beylikdüzü</option><option value="Beyoğlu">Beyoğlu</option><option value="Büyükçekmece">Büyükçekmece</option><option value="Çatalca">Çatalca</option><option value="Çekmeköy">Çekmeköy</option><option value="Esenler">Esenler</option><option value="Esenyurt">Esenyurt</option><option value="Eyüpsultan">Eyüpsultan</option><option value="Fatih">Fatih</option><option value="Gaziosmanpaşa">Gaziosmanpaşa</option><option value="Güngören">Güngören</option><option value="Kadıköy">Kadıköy</option><option value="Kağıthane">Kağıthane</option><option value="Kartal">Kartal</option><option value="Küçükçekmece">Küçükçekmece</option><option value="Maltepe">Maltepe</option><option value="Pendik">Pendik</option><option value="Sancaktepe">Sancaktepe</option><option value="Sarıyer">Sarıyer</option><option value="Silivri">Silivri</option><option value="Sultanbeyli">Sultanbeyli</option><option value="Sultangazi">Sultangazi</option><option value="Şile">Şile</option><option value="Şişli">Şişli</option><option value="Tuzla">Tuzla</option><option value="Ümraniye">Ümraniye</option><option value="Üsküdar">Üsküdar</option><option value="Zeytinburnu">Zeytinburnu</option>
               </select>
             </div>
+            <div class="form-field full">
+              <label for="adres">Açık Adres (Opsiyonel)</label>
+              <textarea id="adres" name="Adres" placeholder="Mahalle, sokak, bina no..." rows="3"></textarea>
+              <button type="button" id="getLocationBtnContact" class="btn btn-ghost" style="margin-top:10px;width:100%;">
+                Konumumu Al
+              </button>
+              <small id="location-status-contact" style="color:#7d81a0;font-size:0.85rem;margin-top:8px;display:block;"></small>
+              <input type="hidden" id="locationLatitude" name="Enlem">
+              <input type="hidden" id="locationLongitude" name="Boylam">
+            </div>
             <div class="form-field">
               <label for="hizmetTuru">Hizmet Türü</label>
               <select id="hizmetTuru" name="Hizmet Türü">
@@ -265,5 +280,155 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="assets/js/main.js"></script>
+
+<style>
+.btn-get-location {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--surface-border);
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-get-location:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(79,70,229,0.5);
+}
+
+.btn-get-location svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.btn-get-location:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+</style>
+
+<script>
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+// Get Location Button
+document.getElementById('getLocationBtnContact')?.addEventListener('click', function() {
+  const btn = this;
+  const statusEl = document.getElementById('location-status-contact');
+  const addressField = document.getElementById('adres');
+  const existingMap = document.querySelector('.map-frame iframe');
+  
+  if (!navigator.geolocation) {
+    statusEl.textContent = '❌ Tarayıcınız konum hizmetlerini desteklemiyor.';
+    statusEl.style.color = '#ef4444';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Alınıyor...';
+  statusEl.textContent = '📍 Konumunuz alınıyor...';
+  statusEl.style.color = '#818cf8';
+  
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      
+      // Save coordinates to hidden fields
+      document.getElementById('locationLatitude').value = lat;
+      document.getElementById('locationLongitude').value = lon;
+      
+      statusEl.textContent = '✅ Konum alındı. Adres bilgisi getiriliyor...';
+      
+      // Update existing map with user location - Google Maps embed
+      if (existingMap) {
+        existingMap.src = `https://maps.google.com/maps?q=${lat},${lon}&hl=tr&z=15&output=embed`;
+      }
+      
+      // Reverse geocoding
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&accept-language=tr`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.address) {
+            const addr = data.address;
+            let addressText = '';
+            
+            if (addr.road) addressText += addr.road;
+            if (addr.house_number) addressText += ' No:' + addr.house_number;
+            if (addr.neighbourhood || addr.suburb) addressText += ', ' + (addr.neighbourhood || addr.suburb);
+            if (addr.quarter) addressText += ', ' + addr.quarter;
+            if (addr.district) addressText += ', ' + addr.district;
+            
+            if (addressText) {
+              addressField.value = addressText.trim();
+              statusEl.textContent = '✅ Konum ve adres başarıyla alındı!';
+              statusEl.style.color = '#10b981';
+            } else {
+              statusEl.textContent = `✅ Konum alındı. Lütfen adresi manuel girin.`;
+              statusEl.style.color = '#f59e0b';
+            }
+          } else {
+            statusEl.textContent = `✅ Konum alındı. Lütfen adresi manuel girin.`;
+            statusEl.style.color = '#f59e0b';
+          }
+        })
+        .catch(error => {
+          console.error('Reverse geocoding error:', error);
+          statusEl.textContent = `✅ Konum kaydedildi. Lütfen adresi manuel girin.`;
+          statusEl.style.color = '#f59e0b';
+        })
+        .finally(() => {
+          btn.disabled = false;
+          btn.textContent = 'Konumumu Al';
+        });
+    },
+    error => {
+      console.error('Geolocation error:', error);
+      btn.disabled = false;
+      btn.textContent = 'Konumumu Al';
+      
+      if (error.code === error.PERMISSION_DENIED) {
+        statusEl.textContent = '❌ Konum izni reddedildi. Lütfen tarayıcı ayarlarından izin verin.';
+      } else if (error.code === error.POSITION_UNAVAILABLE) {
+        statusEl.textContent = '❌ Konum bilgisi alınamadı.';
+      } else {
+        statusEl.textContent = '❌ Konum alınırken bir hata oluştu.';
+      }
+      statusEl.style.color = '#ef4444';
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+});
+</script>
 </body>
 </html>

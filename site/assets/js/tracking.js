@@ -130,8 +130,15 @@ function displayOrderInfo(order) {
     displayCourierInfo(order.courier);
   }
   
+  // Haritayı sadece shipped durumunda göster (delivered veya cancelled değilse)
   if (order.status === 'shipped') {
     initMap(order);
+  } else {
+    // Teslim edildi veya iptal edildi ise haritayı gizle
+    const mapSection = document.getElementById('mapSection');
+    if (mapSection) {
+      mapSection.style.display = 'none';
+    }
   }
 }
 
@@ -486,6 +493,7 @@ function startRealtimeTracking(trackingCode) {
       displayQueueInfo(order);
       displayTimeline(order);
       
+      // Shipped durumunda harita ve konum takibi
       if (order.status === 'shipped' && order.courier) {
         const courierEmail = order.courier.email;
         const emailKey = courierEmail.replace(/[.@]/g, '_');
@@ -514,6 +522,17 @@ function startRealtimeTracking(trackingCode) {
             }, 1000);
           }
         }
+      } else if (order.status === 'delivered' || order.status === 'cancelled') {
+        // Teslim edildi veya iptal edildi - haritayı gizle
+        const mapSection = document.getElementById('mapSection');
+        if (mapSection) {
+          mapSection.style.display = 'none';
+        }
+        
+        // Konum takibini durdur
+        stopLocationTracking();
+        
+        console.log('📦 Sipariş durumu:', order.status, '- Harita gizlendi');
       }
     }
   });

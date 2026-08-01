@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Test</title>
+  <style>
+    body {
+      font-family: system-ui;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a2e;
+      color: #fff;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #4f46e5;
+    }
+    #log {
+      background: #0f0f1e;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 13px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+    .info { color: #818cf8; }
+  </style>
+</head>
+<body>
+  <h1>Firebase Sipariş Testi</h1>
+  
+  <div>
+    <button onclick="testConnection()">1. Bağlantı Testi</button>
+    <button onclick="testRead()">2. Okuma Testi</button>
+    <button onclick="testWrite()">3. Yazma Testi (Sipariş)</button>
+    <button onclick="clearLog()">Temizle</button>
+  </div>
+  
+  <div id="log"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+      authDomain: "e-imza-4c867.firebaseapp.com",
+      databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+      projectId: "e-imza-4c867",
+      storageBucket: "e-imza-4c867.firebasestorage.app",
+      messagingSenderId: "856535109805",
+      appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+    };
+    
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const db = firebase.database();
+    
+    function log(message, type = 'info') {
+      const logDiv = document.getElementById('log');
+      const time = new Date().toLocaleTimeString('tr-TR');
+      logDiv.innerHTML += `<div class="${type}">[${time}] ${message}</div>`;
+      logDiv.scrollTop = logDiv.scrollHeight;
+      console.log(message);
+    }
+    
+    function clearLog() {
+      document.getElementById('log').innerHTML = '';
+    }
+    
+    function testConnection() {
+      log('🔌 Firebase bağlantısı test ediliyor...', 'info');
+      
+      db.ref('.info/connected').on('value', (snapshot) => {
+        if (snapshot.val() === true) {
+          log('✅ Firebase bağlantısı BAŞARILI', 'success');
+        } else {
+          log('❌ Firebase bağlantısı YOK', 'error');
+        }
+      });
+    }
+    
+    function testRead() {
+      log('📖 Orders okuma testi yapılıyor...', 'info');
+      
+      db.ref('orders').limitToLast(1).once('value')
+        .then(snapshot => {
+          log('✅ Okuma BAŞARILI', 'success');
+          log('Son sipariş sayısı: ' + snapshot.numChildren(), 'info');
+          
+          snapshot.forEach(child => {
+            log('Örnek sipariş ID: ' + child.key, 'info');
+            log('Veri: ' + JSON.stringify(child.val(), null, 2), 'info');
+          });
+        })
+        .catch(error => {
+          log('❌ Okuma HATASI: ' + error.message, 'error');
+          log('Hata kodu: ' + error.code, 'error');
+        });
+    }
+    
+    function testWrite() {
+      const testOrder = {
+        id: 'TEST-' + Date.now(),
+        productName: '1 Yıllık E-İmza',
+        productPrice: '1250',
+        customerName: 'Test Kullanıcı',
+        customerPhone: '05551234567',
+        customerEmail: 'test@example.com',
+        district: 'Kadıköy',
+        address: 'Test adresi test mahalle test sokak',
+        deliveryType: 'courier',
+        notes: 'Bu bir test siparişidir',
+        latitude: '41.0082',
+        longitude: '28.9784',
+        location: '41.0082,28.9784',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      log('✍️ Test siparişi yazılıyor...', 'info');
+      log('Sipariş ID: ' + testOrder.id, 'info');
+      log('Veri: ' + JSON.stringify(testOrder, null, 2), 'info');
+      
+      db.ref('orders/' + testOrder.id).set(testOrder)
+        .then(() => {
+          log('✅ YAZMA BAŞARILI! Sipariş Firebase\'e kaydedildi.', 'success');
+          log('Firebase yolu: orders/' + testOrder.id, 'success');
+          log('Admin panelinde kontrol et!', 'success');
+        })
+        .catch(error => {
+          log('❌ YAZMA HATASI: ' + error.message, 'error');
+          log('Hata kodu: ' + error.code, 'error');
+          log('Hata detayı: ' + JSON.stringify(error), 'error');
+          
+          if (error.code === 'PERMISSION_DENIED') {
+            log('⚠️ Firebase Rules hatası! Console\'da rules\'u kontrol et:', 'error');
+            log('https://console.firebase.google.com/project/e-imza-4c867/database/e-imza-4c867-default-rtdb/rules', 'error');
+          }
+        });
+    }
+  </script>
+</body>
+</html>

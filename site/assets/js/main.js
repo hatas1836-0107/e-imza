@@ -182,100 +182,152 @@
       });
     });
 
-    /* ---------- Testimonial slider ---------- */
-    var track = document.querySelector(".testi-track");
-    if (track) {
-      var cards = track.querySelectorAll(".testi-card");
-      var dotsWrap = document.querySelector(".testi-nav");
+    /* ---------- Testimonials Carousel ---------- */
+    var carousel = document.querySelector(".testimonials-carousel");
+    if (carousel) {
+      var slides = carousel.querySelectorAll(".testimonial-slide");
+      var dotsContainer = carousel.querySelector(".carousel-dots");
       
-      function getPerView() {
-        if (window.innerWidth >= 1024) return 3;
-        if (window.innerWidth >= 768) return 2;
-        return 1;
+      if (!dotsContainer || slides.length === 0) return;
+      
+      var currentIndex = 0;
+      var autoplayInterval;
+      var isMobile = window.innerWidth < 768;
+      
+      // Create dots
+      function createDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = "";
+        
+        slides.forEach(function(_, index) {
+          var dot = document.createElement("button");
+          dot.className = "carousel-dot";
+          dot.setAttribute("aria-label", "Yorum " + (index + 1));
+          if (index === 0) dot.classList.add("active");
+          
+          (function(idx) {
+            dot.addEventListener("click", function() { goToSlide(idx); });
+          })(index);
+          
+          dotsContainer.appendChild(dot);
+        });
       }
       
-      var perView = getPerView();
-      var index = 0;
-      var maxIndex = Math.max(0, cards.length - perView);
-
-      function renderDots() {
-        if (!dotsWrap) return;
-        dotsWrap.innerHTML = "";
-        for (var i = 0; i <= maxIndex; i++) {
-          var d = document.createElement("button");
-          d.className = "testi-dot" + (i === index ? " active" : "");
-          d.setAttribute("aria-label", "Yorum grubu " + (i + 1));
-          d.addEventListener("click", function (idx) { return function () { goTo(idx); }; }(i));
-          dotsWrap.appendChild(d);
+      // Update dots
+      function updateDots() {
+        if (!dotsContainer) return;
+        var dots = dotsContainer.querySelectorAll(".carousel-dot");
+        dots.forEach(function(dot, index) {
+          if (index === currentIndex) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
+          }
+        });
+      }
+      
+      // Update slides
+      function updateSlides() {
+        isMobile = window.innerWidth < 768;
+        
+        slides.forEach(function(slide, index) {
+          slide.classList.remove("active");
+          
+          if (isMobile) {
+            // Mobile: show only current slide
+            if (index === currentIndex) {
+              slide.classList.add("active");
+            }
+          } else {
+            // Desktop: show 3 slides (current index and 2 after)
+            var visibleIndices = [
+              currentIndex,
+              (currentIndex + 1) % slides.length,
+              (currentIndex + 2) % slides.length
+            ];
+            
+            if (visibleIndices.indexOf(index) !== -1) {
+              slide.classList.add("active");
+            }
+          }
+        });
+        
+        updateDots();
+      }
+      
+      // Go to slide
+      function goToSlide(index) {
+        currentIndex = index;
+        updateSlides();
+        resetAutoplay();
+      }
+      
+      // Next slide
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateSlides();
+      }
+      
+      // Start autoplay
+      function startAutoplay() {
+        stopAutoplay();
+        autoplayInterval = setInterval(nextSlide, 5000);
+      }
+      
+      // Stop autoplay
+      function stopAutoplay() {
+        if (autoplayInterval) {
+          clearInterval(autoplayInterval);
+          autoplayInterval = null;
         }
       }
       
-      function goTo(i) {
-        index = Math.max(0, Math.min(i, maxIndex));
-        var pct = (100 / perView) * index;
-        track.style.transform = "translateX(-" + pct + "%)";
-        renderDots();
+      // Reset autoplay
+      function resetAutoplay() {
+        stopAutoplay();
+        startAutoplay();
       }
       
-      document.querySelectorAll(".testi-arrow.next").forEach(function (b) { 
-        b.addEventListener("click", function () { 
-          goTo(index + 1 > maxIndex ? 0 : index + 1); 
-        }); 
-      });
+      // Initialize
+      createDots();
+      updateSlides();
+      startAutoplay();
       
-      document.querySelectorAll(".testi-arrow.prev").forEach(function (b) { 
-        b.addEventListener("click", function () { 
-          goTo(index - 1 < 0 ? maxIndex : index - 1); 
-        }); 
-      });
+      // Pause on hover
+      carousel.addEventListener("mouseenter", stopAutoplay);
+      carousel.addEventListener("mouseleave", startAutoplay);
       
-      renderDots();
-
-      var autoplay = setInterval(function () { 
-        goTo(index + 1 > maxIndex ? 0 : index + 1); 
-      }, 5500);
-      
-      track.closest(".testi-track-wrap").addEventListener("mouseenter", function () { 
-        clearInterval(autoplay); 
-      });
-
-      window.addEventListener("resize", function () {
-        var newPerView = getPerView();
-        if (newPerView !== perView) {
-          perView = newPerView;
-          maxIndex = Math.max(0, cards.length - perView);
-          index = Math.min(index, maxIndex);
-          goTo(index);
-        }
+      // Handle resize
+      var resizeTimer;
+      window.addEventListener("resize", function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          updateSlides();
+        }, 150);
       });
       
       // Touch swipe support
-      var startX = 0;
-      var currentX = 0;
-      var isDragging = false;
+      var touchStartX = 0;
+      var touchEndX = 0;
       
-      track.addEventListener("touchstart", function(e) {
-        startX = e.touches[0].clientX;
-        isDragging = true;
+      carousel.addEventListener("touchstart", function(e) {
+        touchStartX = e.changedTouches[0].screenX;
       }, { passive: true });
       
-      track.addEventListener("touchmove", function(e) {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX;
-      }, { passive: true });
-      
-      track.addEventListener("touchend", function() {
-        if (!isDragging) return;
-        var diff = startX - currentX;
+      carousel.addEventListener("touchend", function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        
         if (Math.abs(diff) > 50) {
           if (diff > 0) {
-            goTo(index + 1 > maxIndex ? 0 : index + 1);
+            nextSlide();
           } else {
-            goTo(index - 1 < 0 ? maxIndex : index - 1);
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlides();
           }
+          resetAutoplay();
         }
-        isDragging = false;
-      });
+      }, { passive: true });
     }
 
     /* ---------- Sayaç animasyonu (istatistikler) ---------- */
@@ -743,332 +795,53 @@
 })();
 
 
-// ========== Testimonials Carousel - Smooth Infinite Loop ==========
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
 (function() {
-  const carousel = document.querySelector('.testimonials-carousel');
-  if (!carousel) return;
+  'use strict';
   
-  const track = carousel.querySelector('.carousel-track');
-  const cards = Array.from(track.querySelectorAll('.testi-card'));
-  const indicatorsContainer = carousel.querySelector('.carousel-indicators');
-  const prevBtn = carousel.querySelector('.carousel-arrow.prev');
-  const nextBtn = carousel.querySelector('.carousel-arrow.next');
+  const cursor = document.querySelector('.custom-cursor');
+  const cursorDot = document.querySelector('.custom-cursor-dot');
   
-  if (cards.length === 0) return;
+  if (!cursor || !cursorDot) return;
   
-  let currentIndex = 0;
-  let autoplayInterval = null;
-  let isTransitioning = false;
-  let touchStartX = 0;
-  let touchEndX = 0;
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorX = 0;
+  let cursorY = 0;
+  let dotX = 0;
+  let dotY = 0;
   
-  // Mobil kontrolü
-  const isMobile = window.innerWidth <= 768;
-  const autoplayDelay = isMobile ? 4000 : 5000; // Mobilde daha hızlı
-  
-  // Indicator'ları oluştur
-  cards.forEach((_, index) => {
-    const dot = document.createElement('button');
-    dot.classList.add('carousel-dot');
-    dot.setAttribute('aria-label', `Yorum ${index + 1}`);
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      if (!isTransitioning) {
-        goToSlide(index);
-        resetAutoplay();
-      }
-    });
-    indicatorsContainer.appendChild(dot);
-  });
-  
-  const dots = Array.from(indicatorsContainer.querySelectorAll('.carousel-dot'));
-  
-  function goToSlide(index, direction = 'next') {
-    if (isTransitioning || index === currentIndex) return;
-    isTransitioning = true;
-    
-    // Mevcut kartı çıkış animasyonuna al
-    const prevCard = cards[currentIndex];
-    prevCard.classList.remove('active');
-    prevCard.classList.add('exiting');
-    
-    // Yöne göre transform ayarla
-    if (direction === 'next') {
-      prevCard.style.transform = 'translateX(-120px) scale(0.92)';
-    } else {
-      prevCard.style.transform = 'translateX(120px) scale(0.92)';
-    }
-    
-    // Yeni index'i güncelle
-    currentIndex = index;
-    
-    // Yeni kartı hazırla
-    const nextCard = cards[currentIndex];
-    if (direction === 'next') {
-      nextCard.style.transform = 'translateX(120px) scale(0.92)';
-    } else {
-      nextCard.style.transform = 'translateX(-120px) scale(0.92)';
-    }
-    nextCard.style.opacity = '0';
-    nextCard.style.visibility = 'visible';
-    
-    // Animasyonu başlat
-    setTimeout(() => {
-      prevCard.classList.remove('exiting');
-      prevCard.style.opacity = '0';
-      prevCard.style.visibility = 'hidden';
-      
-      nextCard.classList.add('active');
-      nextCard.style.transform = 'translateX(0) scale(1)';
-      nextCard.style.opacity = '1';
-      
-      // Indicator'ları güncelle
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentIndex);
-      });
-      
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 700);
-    }, 50);
-  }
-  
-  function nextSlide() {
-    const nextIndex = (currentIndex + 1) % cards.length;
-    goToSlide(nextIndex, 'next');
-  }
-  
-  function prevSlide() {
-    const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
-    goToSlide(prevIndex, 'prev');
-  }
-  
-  function startAutoplay() {
-    if (autoplayInterval) return;
-    autoplayInterval = setInterval(nextSlide, autoplayDelay);
-  }
-  
-  function stopAutoplay() {
-    if (autoplayInterval) {
-      clearInterval(autoplayInterval);
-      autoplayInterval = null;
-    }
-  }
-  
-  function resetAutoplay() {
-    stopAutoplay();
-    setTimeout(startAutoplay, isMobile ? 6000 : 10000);
-  }
-  
-  // İlk kartı göster
-  cards[currentIndex].classList.add('active');
-  cards[currentIndex].style.transform = 'translateX(0) scale(1)';
-  cards[currentIndex].style.opacity = '1';
-  
-  // Diğer kartları gizle
-  cards.forEach((card, index) => {
-    if (index !== currentIndex) {
-      card.style.opacity = '0';
-      card.style.visibility = 'hidden';
-      card.style.transform = 'translateX(120px) scale(0.92)';
-    }
-  });
-  
-  // Otomatik geçişi başlat
-  setTimeout(() => {
-    startAutoplay();
-  }, 2000); // 2 saniye bekle, sonra başlat
-  
-  // Buton event listeners
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (!isTransitioning) {
-        nextSlide();
-        resetAutoplay();
-      }
-    });
-  }
-  
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (!isTransitioning) {
-        prevSlide();
-        resetAutoplay();
-      }
-    });
-  }
-  
-  // Hover'da durdur (sadece desktop)
-  if (!isMobile) {
-    carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', startAutoplay);
-  }
-  
-  // Klavye kontrolleri (sadece desktop)
-  if (!isMobile) {
-    document.addEventListener('keydown', (e) => {
-      const rect = carousel.getBoundingClientRect();
-      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-      
-      if (!isInViewport || isTransitioning) return;
-      
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        prevSlide();
-        resetAutoplay();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        nextSlide();
-        resetAutoplay();
-      }
-    });
-  }
-  
-  // Touch/Swipe desteği - Gelişmiş
-  let touchTimeout;
-  let touchMoved = false;
-  
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchMoved = false;
-    stopAutoplay();
-    if (touchTimeout) clearTimeout(touchTimeout);
-  }, { passive: true });
-  
-  track.addEventListener('touchmove', (e) => {
-    touchMoved = true;
-    const currentX = e.touches[0].clientX;
-    const diff = touchStartX - currentX;
-    
-    // Canlı feedback - aktif kartı hafifçe kaydır
-    if (Math.abs(diff) > 10 && !isTransitioning) {
-      const activeCard = cards[currentIndex];
-      const translateX = -diff * 0.3; // Resistance effect
-      activeCard.style.transform = `translateX(${translateX}px) scale(1)`;
-    }
-  }, { passive: true });
-  
-  track.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].clientX;
-    
-    // Aktif kartı eski haline getir
-    const activeCard = cards[currentIndex];
-    activeCard.style.transform = 'translateX(0) scale(1)';
-    
-    if (touchMoved) {
-      handleSwipe();
-    }
-    
-    // Otomatik geçişi kısa süre sonra başlat
-    touchTimeout = setTimeout(startAutoplay, 3000);
-  }, { passive: true });
-  
-  function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) < swipeThreshold) return;
-    
-    if (!isTransitioning) {
-      if (diff > 0) {
-        // Sola kaydırma - sonraki slide (sağdan sola)
-        nextSlide();
-      } else {
-        // Sağa kaydırma - önceki slide (soldan sağa)
-        prevSlide();
-      }
-    }
-  }
-  
-  // Intersection Observer - Görünür olunca başlat
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        if (!autoplayInterval) {
-          startAutoplay();
-        }
-      } else {
-        stopAutoplay();
-      }
-    });
-  }, { threshold: 0.3 });
-  
-  observer.observe(carousel);
-  
-  // Sayfa focus dışına çıktığında durdur
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      stopAutoplay();
-    } else {
-      const rect = carousel.getBoundingClientRect();
-      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-      if (isInViewport) {
-        startAutoplay();
-      }
-    }
-  });
-  
-  // Window resize - mobil/desktop geçişinde yeniden başlat
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      const newIsMobile = window.innerWidth <= 768;
-      if (newIsMobile !== isMobile) {
-        location.reload(); // Mobil/desktop arası geçişte reload
-      }
-    }, 300);
-  });
-})();
-
-
-// ========== Custom Animated Cursor ==========
-(function() {
-  // Mobil cihazlarda custom cursor'u gösterme
-  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
-  
-  // Cursor elementlerini oluştur
-  const cursor = document.createElement('div');
-  cursor.className = 'custom-cursor';
-  
-  const cursorDot = document.createElement('div');
-  cursorDot.className = 'custom-cursor-dot';
-  
-  document.body.appendChild(cursor);
-  document.body.appendChild(cursorDot);
-  
-  let mouseX = 0, mouseY = 0;
-  let cursorX = 0, cursorY = 0;
-  let dotX = 0, dotY = 0;
-  
-  // Mouse pozisyonunu takip et
+  // Mouse hareket takibi
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    
-    // Dot anında takip eder
-    dotX = mouseX;
-    dotY = mouseY;
   });
   
   // Smooth cursor animasyonu
-  function animateCursor() {
-    // Cursor yavaş takip eder (easing effect)
+  function animate() {
+    // Cursor (outer circle) - smooth follow
     cursorX += (mouseX - cursorX) * 0.15;
     cursorY += (mouseY - cursorY) * 0.15;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
     
-    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-    cursorDot.style.transform = `translate(${dotX}px, ${dotY}px)`;
+    // Dot (inner circle) - faster follow
+    dotX += (mouseX - dotX) * 0.25;
+    dotY += (mouseY - dotY) * 0.25;
+    cursorDot.style.left = dotX + 'px';
+    cursorDot.style.top = dotY + 'px';
     
-    requestAnimationFrame(animateCursor);
+    requestAnimationFrame(animate);
   }
   
-  animateCursor();
+  animate();
   
-  // Tıklanabilir elementlerde cursor büyüsün
-  const clickables = document.querySelectorAll('a, button, .btn, .card, .clickable, [role="button"]');
+  // Hover effect - tıklanabilir elementlerde büyür
+  const hoverElements = 'a, button, input, textarea, select, .card, .btn, .custom-select-trigger, .select-modal-item';
   
-  clickables.forEach(el => {
+  document.querySelectorAll(hoverElements).forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursor.classList.add('cursor-hover');
       cursorDot.classList.add('cursor-hover');
@@ -1080,21 +853,7 @@
     });
   });
   
-  // Input ve textarea'larda custom cursor'u gizle, text cursor'u göster
-  const textInputs = document.querySelectorAll('input, textarea, select, [contenteditable="true"]');
-  textInputs.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.opacity = '0';
-      cursorDot.style.opacity = '0';
-    });
-    
-    el.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '1';
-      cursorDot.style.opacity = '1';
-    });
-  });
-  
-  // Mouse tıklamasında animasyon
+  // Click effect - pulse animasyonu
   document.addEventListener('mousedown', () => {
     cursor.classList.add('cursor-click');
     cursorDot.classList.add('cursor-click');
@@ -1105,7 +864,7 @@
     cursorDot.classList.remove('cursor-click');
   });
   
-  // Cursor sayfa dışına çıktığında gizle
+  // Sayfa dışına çıkınca gizle
   document.addEventListener('mouseleave', () => {
     cursor.style.opacity = '0';
     cursorDot.style.opacity = '0';
@@ -1115,4 +874,29 @@
     cursor.style.opacity = '1';
     cursorDot.style.opacity = '1';
   });
+  
+  // Dinamik elementler için (modal, etc.)
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll(hoverElements).forEach(el => {
+      if (!el.dataset.cursorInit) {
+        el.dataset.cursorInit = 'true';
+        
+        el.addEventListener('mouseenter', () => {
+          cursor.classList.add('cursor-hover');
+          cursorDot.classList.add('cursor-hover');
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          cursor.classList.remove('cursor-hover');
+          cursorDot.classList.remove('cursor-hover');
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
 })();
