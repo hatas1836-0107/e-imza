@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060A14">
+<title>e-İmza Arkaplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#060A14;
+    --bg-mid:#0B1220;
+    --line: rgba(148,163,184,.14);
+    --cyan:#33E6D8;
+    --cyan-dim: rgba(51,230,216,.35);
+    --gold:#F3B94E;
+    --gold-soft:#FFD98A;
+    --text-dim:#93A2B8;
+    --text-faint:#5C6A80;
+    --font-mono:'JetBrains Mono',monospace;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-deep);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ====================== ARKA PLAN KATMANI ====================== */
+  /* Bu bloğu (id="bgLayer") olduğu gibi kendi sayfanıza / Flask şablonunuza
+     ekleyin. İçerik (.page-spacer) yerine kendi gerçek sayfa içeriğiniz
+     geldiğinde arkaplan otomatik olarak sayfa yüksekliğine uyum sağlar. */
+  .bg-layer{
+    position:absolute;
+    top:0;left:0;width:100%;
+    z-index:0;
+    overflow:hidden;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, rgba(51,230,216,.10), transparent 60%),
+      linear-gradient(180deg,var(--bg-deep) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+  }
+
+  .mesh-blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.35;
+    will-change:transform;
+  }
+  .blob-1{width:520px;height:520px;top:2%;left:-8%;background:radial-gradient(circle,var(--cyan) 0%,transparent 70%);animation:driftA 26s ease-in-out infinite;}
+  .blob-2{width:460px;height:460px;top:38%;right:-10%;background:radial-gradient(circle,var(--gold) 0%,transparent 72%);opacity:.22;animation:driftB 32s ease-in-out infinite;}
+  .blob-3{width:380px;height:380px;bottom:6%;left:6%;background:radial-gradient(circle,var(--cyan) 0%,transparent 70%);opacity:.18;animation:driftA 22s ease-in-out infinite reverse;}
+  @keyframes driftA{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,60px)}}
+  @keyframes driftB{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,40px)}}
+
+  .grid-overlay{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 20%, #000 30%, transparent 85%);
+            mask-image:radial-gradient(ellipse 90% 70% at 50% 20%, #000 30%, transparent 85%);
+    opacity:.5;
+  }
+
+  .signal-path{position:absolute;top:0;left:0;overflow:visible;}
+  .signal-path path{
+    fill:none;
+    stroke:url(#pathGrad);
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-dasharray:2 10;
+    opacity:.55;
+    animation:dashFlow 3.2s linear infinite;
+  }
+  @keyframes dashFlow{to{stroke-dashoffset:-120;}}
+
+  .particles{position:absolute;inset:0;overflow:hidden;}
+  .particle{
+    position:absolute;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--cyan-dim);
+    opacity:.4;
+    animation-name:floatParticle;
+    animation-timing-function:ease-in-out;
+    animation-iteration-count:infinite;
+  }
+  @keyframes floatParticle{
+    0%,100%{transform:translateY(0);opacity:.15;}
+    50%{transform:translateY(var(--drift,-18px));opacity:.5;}
+  }
+
+  /* USB bellek (flash drive) */
+  .flash-drive{
+    position:absolute;
+    top:0;left:0;
+    width:44px;height:88px;
+    transform-origin:center;
+    will-change:transform;
+    filter:drop-shadow(0 0 10px var(--cyan-dim));
+    transition:filter .4s ease;
+  }
+  .flash-drive svg{width:100%;height:100%;display:block;}
+  .drive-led{fill:var(--bg-deep);transition:fill .4s ease, filter .4s ease;}
+  .flash-drive.is-connected{filter:drop-shadow(0 0 16px rgba(243,185,78,.65));}
+  .flash-drive.is-connected .drive-led{fill:var(--gold);filter:drop-shadow(0 0 6px var(--gold));}
+
+  /* Güvenli bellek / bilgisayar yuvası (sayfanın en altında) */
+  .laptop-dock{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:210px;
+    text-align:center;
+  }
+  .laptop-dock svg{margin:0 auto;display:block;}
+  .dock-port{transition:stroke .4s ease, filter .4s ease;}
+  .dock-led{fill:var(--cyan-dim);transition:fill .4s ease, filter .4s ease;}
+  .laptop-dock.is-connected .dock-port{stroke:var(--gold);filter:drop-shadow(0 0 10px rgba(243,185,78,.7));}
+  .laptop-dock.is-connected .dock-led{fill:var(--gold);filter:drop-shadow(0 0 6px var(--gold));}
+  .dock-status{
+    margin-top:10px;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.03em;
+    color:var(--text-faint);
+    transition:color .4s ease;
+  }
+  .laptop-dock.is-connected .dock-status{color:var(--gold-soft);}
+  .seal-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:10px;padding:5px 12px;
+    border-radius:999px;
+    border:1px solid rgba(243,185,78,.35);
+    background:rgba(243,185,78,.08);
+    font-family:var(--font-mono);
+    font-size:11px;color:var(--gold-soft);
+    opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .laptop-dock.is-connected .seal-badge{opacity:1;transform:translateY(0);}
+
+  .reduce-motion .mesh-blob,
+  .reduce-motion .particle,
+  .reduce-motion .signal-path path{animation:none !important;}
+
+  @media (max-width:640px){
+    .flash-drive{width:32px;height:64px;}
+    .laptop-dock{width:150px;}
+    .blob-1,.blob-2,.blob-3{filter:blur(60px);}
+  }
+
+  /* ====================== İÇERİK ALANI ======================
+     Bu boş kutu sadece arkaplanın kaydırma efektini gösterebilmesi için
+     yükseklik sağlar. Kendi Flask şablonunuzda bu div yerine gerçek
+     sayfa içeriğiniz (navbar, form, imza alanı vb.) gelecek — arkaplan
+     otomatik olarak o içeriğin yüksekliğine uyum sağlar. */
+  .page-spacer{
+    position:relative;
+    z-index:1;
+    min-height:420vh;
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-layer" id="bgLayer">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+    <div class="grid-overlay"></div>
+
+    <svg class="signal-path" id="signalSvg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#33E6D8" stop-opacity=".05"/>
+          <stop offset=".5" stop-color="#33E6D8" stop-opacity=".55"/>
+          <stop offset="1" stop-color="#F3B94E" stop-opacity=".75"/>
+        </linearGradient>
+      </defs>
+      <path id="signalPath"></path>
+    </svg>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="flash-drive" id="flashDrive" aria-hidden="true">
+      <svg viewBox="0 0 60 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="driveBody" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3EEBDB"/>
+            <stop offset="1" stop-color="#1AA79A"/>
+          </linearGradient>
+          <linearGradient id="driveCap" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#D8DEE9"/>
+            <stop offset="1" stop-color="#98A4B6"/>
+          </linearGradient>
+        </defs>
+        <rect x="10" y="6" width="40" height="64" rx="12" fill="url(#driveBody)" stroke="rgba(255,255,255,.28)" stroke-width="1.5"/>
+        <circle class="drive-led" cx="30" cy="26" r="4.5"/>
+        <rect x="18" y="42" width="24" height="4" rx="2" fill="rgba(6,10,20,.35)"/>
+        <rect x="18" y="50" width="15" height="4" rx="2" fill="rgba(6,10,20,.25)"/>
+        <rect x="21" y="70" width="18" height="30" rx="4" fill="url(#driveCap)"/>
+        <rect x="25" y="94" width="10" height="16" rx="2" fill="#7C8AA0"/>
+      </svg>
+    </div>
+
+    <div class="laptop-dock" id="laptopDock" aria-hidden="true">
+      <svg viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="40" width="200" height="80" rx="18" fill="#0E1626" stroke="rgba(148,163,184,.28)" stroke-width="1.5"/>
+        <rect x="98" y="10" width="24" height="18" rx="3" fill="#0B1220" stroke="rgba(148,163,184,.3)" stroke-width="1.2"/>
+        <rect class="dock-port" x="88" y="20" width="44" height="26" rx="6" fill="#132033" stroke="#33E6D8" stroke-width="2"/>
+        <circle class="dock-led" cx="32" cy="80" r="5"/>
+        <text x="48" y="84" font-family="JetBrains Mono, monospace" font-size="11" fill="#93A2B8">GÜVENLİ BELLEK</text>
+        <line x1="20" y1="103" x2="200" y2="103" stroke="rgba(148,163,184,.15)"/>
+        <text x="20" y="118" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#5C6A80">AES-256 · KVKK UYUMLU</text>
+      </svg>
+      <div class="dock-status" id="portStatus">Aktarım sürüyor...</div>
+      <span class="seal-badge">✓ İmzalandı ve saklandı</span>
+    </div>
+  </div>
+
+  <div class="page-spacer" id="pageSpacer"></div>
+
+<script>
+(function(){
+  var bgLayer = document.getElementById('bgLayer');
+  var svg = document.getElementById('signalSvg');
+  var path = document.getElementById('signalPath');
+  var drive = document.getElementById('flashDrive');
+  var dock = document.getElementById('laptopDock');
+  var statusEl = document.getElementById('portStatus');
+  var particlesWrap = document.getElementById('particles');
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+  var docHeight = 0;
+  var pathLength = 0;
+  var ticking = false;
+
+  function debounce(fn, wait){
+    var t;
+    return function(){
+      var args = arguments, ctx = this;
+      clearTimeout(t);
+      t = setTimeout(function(){ fn.apply(ctx, args); }, wait);
+    };
+  }
+
+  function buildPath(){
+    var w = window.innerWidth;
+    var marginX = isMobile ? w * 0.16 : w * 0.14;
+    var leftX = marginX;
+    var rightX = w - marginX;
+    var portX = w / 2;
+    var segH = isMobile ? 640 : 740;
+    var usableH = Math.max(400, docHeight - 440);
+    var segments = Math.max(3, Math.round(usableH / segH));
+
+    var d = 'M ' + leftX + ' 30';
+    var curX = leftX;
+    for (var i = 1; i <= segments; i++){
+      var nextX = (i % 2 === 0) ? leftX : rightX;
+      var y = 30 + usableH * (i / (segments + 1));
+      var midY = y - segH / 2;
+      d += ' C ' + curX + ' ' + midY + ', ' + nextX + ' ' + midY + ', ' + nextX + ' ' + y;
+      curX = nextX;
+    }
+    d += ' C ' + curX + ' ' + (docHeight - 260) + ', ' + portX + ' ' + (docHeight - 210) + ', ' + portX + ' ' + (docHeight - 150);
+    path.setAttribute('d', d);
+  }
+
+  function positionDock(){
+    var dockH = dock.offsetHeight || 170;
+    var offsetFromBottom = 150;
+    dock.style.top = (docHeight - offsetFromBottom - dockH + 60) + 'px';
+  }
+
+  function layout(){
+    docHeight = document.documentElement.scrollHeight;
+    bgLayer.style.height = docHeight + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + window.innerWidth + ' ' + docHeight);
+    svg.setAttribute('width', window.innerWidth);
+    svg.setAttribute('height', docHeight);
+    buildPath();
+    pathLength = path.getTotalLength();
+    positionDock();
+    updateFrame();
+  }
+
+  function updateFrame(){
+    var scrollY = window.scrollY || window.pageYOffset || 0;
+    var maxScroll = Math.max(1, docHeight - window.innerHeight);
+    var progress = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+    if (pathLength){
+      var p1 = path.getPointAtLength(progress * pathLength);
+      var p2 = path.getPointAtLength(Math.min(pathLength, progress * pathLength + 1));
+      var angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
+      drive.style.transform =
+        'translate(calc(' + p1.x + 'px - 50%), calc(' + p1.y + 'px - 50%)) rotate(' + (angle + 90) + 'deg)';
+    }
+
+    var connected = progress > 0.965;
+    dock.classList.toggle('is-connected', connected);
+    drive.classList.toggle('is-connected', connected);
+
+    if (statusEl){
+      if (progress > 0.965) statusEl.textContent = 'Bağlandı · Güvenle saklandı ✓';
+      else if (progress > 0.85) statusEl.textContent = 'Bağlanıyor...';
+      else statusEl.textContent = 'Aktarım sürüyor...';
+    }
+    ticking = false;
+  }
+
+  function onScroll(){
+    if (!ticking){
+      requestAnimationFrame(updateFrame);
+      ticking = true;
+    }
+  }
+
+  function spawnParticles(){
+    particlesWrap.innerHTML = '';
+    var count = isMobile ? 10 : 22;
+    for (var i = 0; i < count; i++){
+      var p = document.createElement('span');
+      p.className = 'particle';
+      p.textContent = Math.random() > 0.5 ? '0' : '1';
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.top = (Math.random() * 100) + '%';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 6) + 's';
+      p.style.setProperty('--drift', (Math.random() * 36 - 18) + 'px');
+      particlesWrap.appendChild(p);
+    }
+  }
+
+  if (reduceMotion){
+    document.body.classList.add('reduce-motion');
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', debounce(function(){
+    isMobile = window.matchMedia('(max-width: 640px)').matches;
+    layout();
+  }, 200));
+  window.addEventListener('load', layout);
+
+  spawnParticles();
+  layout();
+})();
+</script>
+</body>
+</html>

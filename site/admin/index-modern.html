@@ -720,48 +720,10 @@ let orders = {};
 let couriers = {};
 let selectedImage = null;
 
-// ADMIN EMAIL LISTESI - giris.html ile aynı
-const ADMIN_EMAILS = [
-  'huseyinatas@gmail.com',
-  'huseyin.atas@gmail.com',
-  '2sthillman@gmail.com',
-  'admin@zirveeimza.com'
-];
-
-// Email normalization
-function normalizeEmail(email) {
-  if (!email) return '';
-  const turkishMap = {
-    'ı': 'i', 'İ': 'i', 'ğ': 'g', 'Ğ': 'g',
-    'ü': 'u', 'Ü': 'u', 'ş': 's', 'Ş': 's',
-    'ö': 'o', 'Ö': 'o', 'ç': 'c', 'Ç': 'c'
-  };
-  return email.toLowerCase().split('').map(char => turkishMap[char] || char).join('');
-}
-
-// Check if email is admin
-function isAdminEmail(email) {
-  if (!email) return false;
-  const normalized = normalizeEmail(email);
-  console.log('🔍 Admin check:', email, '→', normalized);
-  return ADMIN_EMAILS.some(admin => normalizeEmail(admin) === normalized);
-}
-
-// Auth state listener
+// Auth state listener - Kurye gibi basit
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log('✅ User logged in:', user.email);
-    
-    // Admin kontrolü
-    if (!isAdminEmail(user.email)) {
-      console.error('❌ Not an admin:', user.email);
-      alert('❌ Admin yetkisi yok! Lütfen yönetici hesabıyla giriş yapın.');
-      signOut(auth);
-      window.location.href = '../giris.html';
-      return;
-    }
-    
-    console.log('✅ Admin confirmed, loading dashboard...');
     currentUser = user;
     
     // Session flag'i temizle
