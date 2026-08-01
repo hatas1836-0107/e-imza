@@ -301,15 +301,15 @@ const googleProvider = new GoogleAuthProvider();
 
 console.log('✅ Firebase initialized');
 
-// ADMIN EMAIL LISTESI
+// ADMIN EMAIL LISTESI - Normalize edilmiş
 const ADMIN_EMAILS = [
-  'huseyinatas@gmail.com',
-  'hüseyinataş@gmail.com',  // Firebase'de bu şekilde kayıtlı
+  'huseyinatas@gmail.com',  // Normalize edilmiş
+  'huseyin.atas@gmail.com',
   '2sthillman@gmail.com',
   'admin@zirveeimza.com'
 ];
 
-// Email normalization
+// Email normalization - Türkçe karakterleri temizle
 function normalizeEmail(email) {
   if (!email) return '';
   
@@ -326,6 +326,7 @@ function normalizeEmail(email) {
 function isAdminEmail(email) {
   if (!email) return false;
   const normalized = normalizeEmail(email);
+  console.log('🔍 Checking admin:', email, '→ normalized:', normalized);
   return ADMIN_EMAILS.some(admin => normalizeEmail(admin) === normalized);
 }
 
@@ -367,9 +368,15 @@ async function checkUserRole(email) {
 // Redirect user
 async function redirectUser(role) {
   if (role === 'admin') {
+    // Session storage'a işaretle
+    sessionStorage.setItem('justLoggedIn', 'true');
+    sessionStorage.setItem('userRole', 'admin');
     // MODERN admin paneline yönlendir
     window.location.href = 'admin/index-modern.html';
   } else if (role === 'courier') {
+    // Session storage'a işaretle
+    sessionStorage.setItem('justLoggedIn', 'true');
+    sessionStorage.setItem('userRole', 'courier');
     // Kurye paneline yönlendir
     window.location.href = 'admin/kurye.html';
   } else {

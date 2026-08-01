@@ -2,7 +2,7 @@
   "rules": {
     "products": {
       ".read": true,
-      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'admin@zirveeimza.com')",
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'huseyin.atas@gmail.com' || auth.token.email == 'admin@zirveeimza.com' || auth.token.email == '2sthillman@gmail.com')",
       ".indexOn": ["status", "price", "createdAt", "category", "popular"]
     },
     "orders": {
