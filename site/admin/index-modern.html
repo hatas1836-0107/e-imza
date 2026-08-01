@@ -712,6 +712,10 @@ const auth = getAuth(app);
 const database = getDatabase(app);
 const storage = getStorage(app);
 
+console.log('🔥 Firebase initialized');
+console.log('🔥 Auth:', auth ? 'OK' : 'FAILED');
+console.log('🔥 Database:', database ? 'OK' : 'FAILED');
+
 const googleProvider = new GoogleAuthProvider();
 
 let currentUser = null;
@@ -719,6 +723,8 @@ let products = {};
 let orders = {};
 let couriers = {};
 let selectedImage = null;
+
+console.log('🚀 Script loaded, setting up auth listener...');
 
 // Auth state listener - Kurye gibi basit
 onAuthStateChanged(auth, (user) => {
