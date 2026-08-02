@@ -56,41 +56,37 @@ body {
   min-height: 100vh;
 }
 
-/* Animated Mesh Gradient Background - Layer 1 (Bottom) */
+/* Subtle Bokeh Background - Modern & Elegant */
 body::before {
   content: '';
   position: fixed;
-  inset: -20%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 20% 15%, rgba(79,70,229,0.6), transparent 35%),
-    radial-gradient(ellipse at 80% 20%, rgba(236,72,153,0.5), transparent 40%),
-    radial-gradient(ellipse at 60% 70%, rgba(168,85,247,0.55), transparent 38%),
-    radial-gradient(ellipse at 15% 80%, rgba(59,130,246,0.5), transparent 35%),
-    radial-gradient(ellipse at 85% 85%, rgba(34,197,94,0.45), transparent 40%),
-    radial-gradient(ellipse at 50% 50%, rgba(249,115,22,0.35), transparent 45%);
-  filter: blur(140px);
-  opacity: 0.85;
-  animation: meshFloat1 30s ease-in-out infinite;
+    radial-gradient(circle at 25% 20%, rgba(79,70,229,0.08), transparent 50%),
+    radial-gradient(circle at 75% 25%, rgba(124,58,237,0.06), transparent 55%),
+    radial-gradient(circle at 50% 70%, rgba(99,102,241,0.05), transparent 60%),
+    radial-gradient(circle at 80% 75%, rgba(139,92,246,0.04), transparent 50%);
+  filter: blur(100px);
+  opacity: 0.6;
+  animation: subtleFloat 30s ease-in-out infinite;
 }
 
-/* Animated Mesh Gradient Background - Layer 2 (Middle) */
+@keyframes subtleFloat {
+  0%, 100% { 
+    transform: translate(0, 0);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translate(10px, -10px);
+    opacity: 0.7;
+  }
+}
+
+/* Remove the after pseudo-element */
 body::after {
-  content: '';
-  position: fixed;
-  inset: -15%;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 40% 30%, rgba(124,58,237,0.5), transparent 40%),
-    radial-gradient(circle at 70% 50%, rgba(99,102,241,0.45), transparent 42%),
-    radial-gradient(circle at 25% 65%, rgba(147,51,234,0.48), transparent 38%),
-    radial-gradient(circle at 90% 40%, rgba(251,207,232,0.35), transparent 45%),
-    radial-gradient(circle at 10% 25%, rgba(45,212,191,0.4), transparent 40%);
-  filter: blur(100px);
-  opacity: 0.75;
-  animation: meshFloat2 35s ease-in-out infinite reverse;
+  display: none;
 }
 
 /* Noise/Grain texture overlay for depth */
@@ -141,54 +137,6 @@ body::after {
   animation-delay: 5s;
 }
 
-@keyframes meshFloat1 {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1) rotate(0deg);
-    opacity: 0.85;
-  }
-  25% { 
-    transform: translate(40px, -50px) scale(1.1) rotate(3deg);
-    opacity: 0.9;
-  }
-  50% { 
-    transform: translate(-30px, 40px) scale(0.95) rotate(-2deg);
-    opacity: 0.75;
-  }
-  75% { 
-    transform: translate(50px, 30px) scale(1.08) rotate(2deg);
-    opacity: 0.88;
-  }
-}
-
-@keyframes meshFloat2 {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1) rotate(0deg);
-    opacity: 0.75;
-  }
-  33% { 
-    transform: translate(-50px, 40px) scale(1.12) rotate(-3deg);
-    opacity: 0.82;
-  }
-  66% { 
-    transform: translate(45px, -35px) scale(0.92) rotate(2.5deg);
-    opacity: 0.7;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(100px, -80px) scale(1.1);
-  }
-  50% {
-    transform: translate(-80px, 100px) scale(0.9);
-  }
-  75% {
-    transform: translate(120px, 60px) scale(1.05);
-  }
-}
 
 h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
   font-family: 'Manrope', 'Inter', sans-serif;
