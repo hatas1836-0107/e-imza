@@ -275,6 +275,13 @@
       const badgeHTML = isPopular ? '<div class="product-badge">En Popüler</div>' : '';
       const btnVariant = isPopular ? 'primary' : 'secondary';
 
+      // Product image (if available)
+      const imageHTML = product.imageUrl ? `
+        <div class="product-image">
+          <img src="${product.imageUrl}" alt="${product.name}" loading="lazy" />
+        </div>
+      ` : '';
+
       // Features
       const features = (product.features || [])
         .map(f => `
@@ -290,17 +297,20 @@
       return `
         <div class="product-card-premium${popularClass}" style="animation-delay:${index * 0.1}s;">
           ${badgeHTML}
-          <h2>${product.name || 'Ürün'}</h2>
-          <div class="desc">${product.description || ''}</div>
-          <div class="product-price">
-            <span class="amount">${Number(product.price || 0).toLocaleString('tr-TR')}₺</span>
-            <span class="period">+KDV</span>
+          ${imageHTML}
+          <div class="product-content">
+            <h2>${product.name || 'Ürün'}</h2>
+            <div class="desc">${product.description || ''}</div>
+            <div class="product-price">
+              <span class="amount">${Number(product.price || 0).toLocaleString('tr-TR')}₺</span>
+              <span class="period">+KDV</span>
+            </div>
+            <div class="product-divider"></div>
+            <ul class="product-features">${features}</ul>
+            <a href="./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}" class="product-btn product-btn-${btnVariant}">
+              Sipariş Oluştur
+            </a>
           </div>
-          <div class="product-divider"></div>
-          <ul class="product-features">${features}</ul>
-          <a href="./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}" class="product-btn product-btn-${btnVariant}">
-            Sipariş Oluştur
-          </a>
         </div>
       `;
     }).join('');
