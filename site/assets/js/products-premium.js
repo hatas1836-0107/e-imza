@@ -91,8 +91,8 @@
           // Light theme - softer colors
           foregroundColor = vec3(v.x * 0.4 + 0.3, v.y * 0.4 + 0.4, 0.85 - v.y * v.x * 0.2);
         } else {
-          // Dark theme - vibrant colors
-          foregroundColor = vec3(v.x, v.y, 0.7 - v.y * v.x);
+          // Dark theme - brighter vibrant colors to blend with #0b0e1a background
+          foregroundColor = vec3(v.x * 0.6 + 0.2, v.y * 0.6 + 0.2, 0.8 - v.y * v.x * 0.3);
         }
 
         vec3 color = mix(uBackgroundColor, foregroundColor, mask);
