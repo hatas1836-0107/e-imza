@@ -1,9 +1,0 @@
-{
-  "name": "zirve-e-imza",
-  "version": "1.0.0",
-  "description": "Zirve E-İmza - İstanbul E-İmza Hizmeti",
-  "private": true,
-  "dependencies": {
-    "@vercel/og": "^0.6.2"
-  }
-}

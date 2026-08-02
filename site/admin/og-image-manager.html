@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OG Image Yönetimi | Zirve E-İmza Admin</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #0b0e1a 0%, #1a1f35 100%);
+  color: #e5e7eb;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 30px;
+}
+.preview {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+.preview img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.preview-info {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #9ca3af;
+}
+.upload-area {
+  border: 3px dashed rgba(79, 70, 229, 0.3);
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  background: rgba(79, 70, 229, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+.upload-area:hover {
+  border-color: rgba(79, 70, 229, 0.6);
+  background: rgba(79, 70, 229, 0.1);
+}
+.upload-area.dragover {
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.15);
+}
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.upload-area input {
+  display: none;
+}
+.btn {
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+}
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 30px;
+}
+.info-box {
+  background: rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 30px;
+}
+.info-box h3 {
+  color: #a78bfa;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.info-box ul {
+  list-style: none;
+  padding-left: 0;
+}
+.info-box li {
+  padding: 8px 0;
+  color: #c4b5fd;
+  font-size: 14px;
+}
+.info-box li:before {
+  content: "✓";
+  color: #4f46e5;
+  font-weight: bold;
+  margin-right: 8px;
+}
+.alert {
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.alert-success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+.alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🖼️ Open Graph Image Yönetimi</h1>
+    <p style="color: #9ca3af;">WhatsApp, Facebook, Twitter'da görünecek paylaşım görseli</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-bottom: 20px; font-size: 20px;">Mevcut OG Image</h2>
+    <div class="preview" id="currentPreview">
+      <img src="../assets/img/og-image.png" alt="Current OG Image" id="currentImage">
+      <div class="preview-info">
+        <strong>Boyut:</strong> <span id="imageDimensions">Yükleniyor...</span> | 
+        <strong>Dosya:</strong> og-image.png
+      </div>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <h3 style="margin-bottom: 20px; font-size: 18px;">Yeni Image Yükle</h3>
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📤</div>
+      <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">
+        Tıklayın veya dosyayı sürükleyin
+      </p>
+      <p style="font-size: 14px; color: #9ca3af;">
+        PNG, JPG veya WEBP (Önerilen: 1200x630px)
+      </p>
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp">
+    </div>
+
+    <div class="btn-group" id="actionButtons" style="display: none;">
+      <button class="btn btn-primary" onclick="uploadImage()">
+        <span>✓</span> Yükle ve Kaydet
+      </button>
+      <button class="btn btn-secondary" onclick="cancelUpload()">
+        <span>✕</span> İptal
+      </button>
+    </div>
+
+    <div class="info-box">
+      <h3>📋 Önerilen Özellikler</h3>
+      <ul>
+        <li><strong>Boyut:</strong> 1200x630 piksel (zorunlu değil ama önerilir)</li>
+        <li><strong>Format:</strong> PNG veya JPG (PNG tercih edilir)</li>
+        <li><strong>Dosya boyutu:</strong> 1MB'dan küçük</li>
+        <li><strong>İçerik:</strong> Logo, başlık ve kısa açıklama içermeli</li>
+        <li><strong>Metin:</strong> Büyük ve okunaklı fontlar kullanın</li>
+        <li><strong>Renkler:</strong> Site renk paletinizi kullanın (#4f46e5, #7c3aed)</li>
+      </ul>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+      <a href="index.html" class="btn btn-secondary">← Admin Panele Dön</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedFile = null;
+
+// Load current image dimensions
+const img = document.getElementById('currentImage');
+img.onload = function() {
+  document.getElementById('imageDimensions').textContent = `${this.naturalWidth}x${this.naturalHeight}px`;
+};
+
+// Upload area interactions
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+  uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    handleFile(files[0]);
+  }
+});
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files.length > 0) {
+    handleFile(e.target.files[0]);
+  }
+});
+
+function handleFile(file) {
+  // Validate file type
+  if (!file.type.match('image.*')) {
+    showAlert('Lütfen bir resim dosyası seçin (PNG, JPG, WEBP)', 'error');
+    return;
+  }
+
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    showAlert('Dosya boyutu 5MB\'dan küçük olmalıdır', 'error');
+    return;
+  }
+
+  selectedFile = file;
+
+  // Preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const previewImg = document.getElementById('currentImage');
+    previewImg.src = e.target.result;
+    
+    // Check dimensions
+    const tempImg = new Image();
+    tempImg.onload = function() {
+      const dimensions = `${this.width}x${this.height}px`;
+      document.getElementById('imageDimensions').textContent = dimensions;
+      
+      if (this.width !== 1200 || this.height !== 630) {
+        showAlert(`⚠️ Boyut ${dimensions} - Önerilen 1200x630px`, 'error');
+      } else {
+        showAlert('✓ Mükemmel! Boyut tam olarak 1200x630px', 'success');
+      }
+    };
+    tempImg.src = e.target.result;
+    
+    document.getElementById('actionButtons').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+function uploadImage() {
+  if (!selectedFile) {
+    showAlert('Lütfen önce bir dosya seçin', 'error');
+    return;
+  }
+
+  showAlert('📤 Yükleniyor... (Bu işlev için Firebase Storage gerekli)', 'error');
+  
+  // Note: Gerçek implementasyon için Firebase Storage kullanılmalı
+  // Şimdilik sadece local preview gösteriyoruz
+  
+  showAlert('ℹ️ Not: Gerçek yükleme için Firebase Storage entegrasyonu gerekli. Şu an sadece önizleme modu.', 'error');
+}
+
+function cancelUpload() {
+  selectedFile = null;
+  document.getElementById('currentImage').src = '../assets/img/og-image.png';
+  document.getElementById('actionButtons').style.display = 'none';
+  fileInput.value = '';
+  showAlert('İşlem iptal edildi', 'success');
+}
+
+function showAlert(message, type) {
+  const container = document.getElementById('alertContainer');
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${type}`;
+  alert.textContent = message;
+  container.innerHTML = '';
+  container.appendChild(alert);
+  
+  setTimeout(() => {
+    alert.style.opacity = '0';
+    setTimeout(() => alert.remove(), 300);
+  }, 5000);
+}
+</script>
+</body>
+</html>
