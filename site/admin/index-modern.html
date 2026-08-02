@@ -1188,7 +1188,11 @@ const ADMIN_EMAILS = [
 function isAdmin(email) { return !!email && ADMIN_EMAILS.includes(email.toLowerCase()); }
 
 let isAuthChecked = false;
+let currentUser = null;
+
 onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  
   if (user) {
     if (!isAdmin(user.email)) {
       showToast('Bu hesabın yönetim paneline erişim yetkisi yok.', 'error');
@@ -1557,6 +1561,12 @@ function renderOrders() {
   list.forEach(o => {
     const color = STATUS_COLORS[o.status] || 'info';
     const label = STATUS_LABELS[o.status] || o.status || 'Bilinmiyor';
+    
+    // "Yola Çıktım" butonunu sadece shipped durumunda göster
+    const startDeliveryBtn = o.status === 'shipped' 
+      ? `<button class="btn btn-primary btn-sm" onclick="startDelivery('${o.id}')" style="background:var(--success);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Yola Çıktım</button>`
+      : '';
+    
     html += `
       <div class="order-card">
         <div class="order-top">
@@ -1570,6 +1580,7 @@ function renderOrders() {
         <div class="order-detail-line">${ICONS.mapPin}${escapeHtml([o.district, o.city].filter(Boolean).join(', ') || '-')}</div>
         <div class="order-detail-line">${ICONS.clock}${fmtDate(o.createdAt)}</div>
         <div class="order-actions">
+          ${startDeliveryBtn}
           <button class="btn btn-secondary btn-sm" onclick="viewOrder('${o.id}')">${ICONS.eye}Detay</button>
           <button class="btn btn-secondary btn-sm" onclick="openOrderModal('${o.id}')">${ICONS.edit}Düzenle</button>
           <button class="btn btn-primary btn-sm" onclick="openStatusModal('${o.id}')">${ICONS.refresh}Durum Güncelle</button>
@@ -1735,8 +1746,40 @@ window.submitStatusChange = async (id) => {
   btn.innerHTML = ICONS.spinner;
   try {
     const history = o.history || [];
-    history.push({ status: newStatus, timestamp: new Date().toISOString(), note: note || 'Durum admin tarafından güncellendi' });
-    await update(ref(database, `orders/${id}`), { status: newStatus, updatedAt: new Date().toISOString(), history });
+    history.push({ 
+      status: STATUS_LABELS[newStatus] || newStatus, 
+      timestamp: new Date().toISOString(), 
+      note: note || 'Durum admin tarafından güncellendi' 
+    });
+    
+    const updates = { 
+      status: newStatus, 
+      updatedAt: new Date().toISOString(), 
+      history 
+    };
+    
+    await update(ref(database, `orders/${id}`), updates);
+    
+    // Eğer "shipped" (yolda) durumuna geçildiyse ve courier atanmışsa
+    // Courier'in activeOrders listesine ekle
+    if (newStatus === 'shipped' && o.courier && o.courier.email) {
+      const courierEmail = o.courier.email;
+      const couriersList = Object.entries(couriers);
+      const courierEntry = couriersList.find(([cid, c]) => c.email === courierEmail);
+      
+      if (courierEntry) {
+        const [courierId, _] = courierEntry;
+        await set(ref(database, `couriers/${courierId}/activeOrders/${id}`), {
+          trackingCode: id,
+          assignedAt: new Date().toISOString(),
+          customerName: o.customerName,
+          address: o.address,
+          district: o.district
+        });
+        console.log('✅ Sipariş kurye paneline eklendi:', courierId);
+      }
+    }
+    
     closeModal();
     showToast('Sipariş durumu güncellendi.', 'success');
   } catch (err) {
@@ -1745,6 +1788,207 @@ window.submitStatusChange = async (id) => {
     btn.textContent = 'Kaydet';
   }
 };
+
+// ================= START DELIVERY (YOLA ÇIKTIM) =================
+let activeDeliveryWatchId = null;
+let activeDeliveryInterval = null;
+let activeDeliveryWakeLock = null;
+let activeDeliveryOrderId = null;
+
+window.startDelivery = async (orderId) => {
+  const order = orders[orderId];
+  if (!order) {
+    showToast('Sipariş bulunamadı', 'error');
+    return;
+  }
+  
+  // Konum izni kontrolü
+  if (!('geolocation' in navigator)) {
+    showToast('Tarayıcınız konum servislerini desteklemiyor!', 'error');
+    return;
+  }
+  
+  // Confirm dialog
+  showConfirm({
+    title: 'Teslimat Başlat',
+    message: 'Konum paylaşımı başlatılacak ve müşteri ile canlı olarak paylaşılacak. Devam edilsin mi?',
+    confirmLabel: 'Yola Çık',
+    danger: false,
+    onConfirm: async () => {
+      try {
+        // İzin iste
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          });
+        });
+        
+        console.log('✅ Konum izni alındı');
+        
+        // Wake Lock aktif et (ekran kilitli olsa bile çalışsın)
+        if ('wakeLock' in navigator) {
+          try {
+            activeDeliveryWakeLock = await navigator.wakeLock.request('screen');
+            console.log('✅ Wake Lock aktif - Ekran kilitli olsa bile konum gönderilecek');
+            
+            activeDeliveryWakeLock.addEventListener('release', () => {
+              console.log('⚠️ Wake Lock serbest bırakıldı');
+            });
+          } catch (err) {
+            console.warn('Wake Lock başarısız:', err);
+          }
+        }
+        
+        // İlk konumu gönder
+        await updateDeliveryLocation(position);
+        
+        // Continuous tracking başlat
+        activeDeliveryOrderId = orderId;
+        
+        activeDeliveryWatchId = navigator.geolocation.watchPosition(
+          updateDeliveryLocation,
+          handleDeliveryLocationError,
+          {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 15000
+          }
+        );
+        
+        // Her 10 saniyede bir manuel güncelleme (watchPosition bazen yavaş olabiliyor)
+        activeDeliveryInterval = setInterval(() => {
+          navigator.geolocation.getCurrentPosition(
+            updateDeliveryLocation,
+            (err) => console.warn('Manuel konum güncellemesi başarısız:', err),
+            {
+              enableHighAccuracy: true,
+              maximumAge: 0,
+              timeout: 10000
+            }
+          );
+        }, 10000);
+        
+        // Sipariş durumunu izle - delivered veya cancelled olunca durdur
+        const orderRef = ref(database, `orders/${orderId}`);
+        onValue(orderRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const updatedOrder = snapshot.val();
+            if (updatedOrder.status === 'delivered' || updatedOrder.status === 'cancelled') {
+              console.log('📦 Sipariş teslim edildi/iptal edildi - Konum tracking durduruluyor');
+              stopDeliveryTracking();
+              showToast('Teslimat tamamlandı - Konum paylaşımı durduruldu', 'success');
+            }
+          }
+        });
+        
+        showToast('✅ Teslimat başlatıldı! Konumunuz müşteri ile paylaşılıyor.', 'success');
+        
+      } catch (error) {
+        console.error('Teslimat başlatma hatası:', error);
+        
+        if (error.code === 1) {
+          showToast('Konum izni reddedildi! Lütfen tarayıcı ayarlarından izin verin.', 'error');
+        } else if (error.code === 2) {
+          showToast('Konum bilgisi alınamadı. GPS aktif mi kontrol edin.', 'error');
+        } else if (error.code === 3) {
+          showToast('Konum alma zaman aşımına uğradı. Tekrar deneyin.', 'error');
+        } else {
+          showToast('Teslimat başlatılamadı: ' + error.message, 'error');
+        }
+      }
+    }
+  });
+};
+
+async function updateDeliveryLocation(position) {
+  if (!currentUser) {
+    console.warn('⚠️ Kullanıcı giriş yapmamış');
+    return;
+  }
+  
+  const locationData = {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+    accuracy: position.coords.accuracy,
+    speed: position.coords.speed || 0,
+    heading: position.coords.heading || 0,
+    timestamp: new Date().toISOString(),
+    lastUpdate: Date.now()
+  };
+  
+  const emailKey = currentUser.email.replace(/[.@]/g, '_');
+  const locationRef = ref(database, `locations/${emailKey}`);
+  
+  try {
+    await set(locationRef, locationData);
+    console.log('📍 Konum güncellendi:', {
+      lat: locationData.latitude.toFixed(6),
+      lng: locationData.longitude.toFixed(6),
+      accuracy: Math.round(locationData.accuracy) + 'm',
+      orderId: activeDeliveryOrderId
+    });
+  } catch (error) {
+    console.error('❌ Konum kaydetme hatası:', error);
+  }
+}
+
+function handleDeliveryLocationError(error) {
+  console.error('Konum hatası:', error.message);
+  
+  // Kritik hatalarda tracking'i durdurma - sadece log tut
+  if (error.code === 1) {
+    console.error('İzin reddedildi - Tracking durduruluyor');
+    stopDeliveryTracking();
+    showToast('Konum izni reddedildi! Tracking durduruldu.', 'error');
+  }
+}
+
+function stopDeliveryTracking() {
+  if (activeDeliveryWatchId !== null) {
+    navigator.geolocation.clearWatch(activeDeliveryWatchId);
+    activeDeliveryWatchId = null;
+  }
+  
+  if (activeDeliveryInterval) {
+    clearInterval(activeDeliveryInterval);
+    activeDeliveryInterval = null;
+  }
+  
+  if (activeDeliveryWakeLock) {
+    activeDeliveryWakeLock.release().then(() => {
+      activeDeliveryWakeLock = null;
+      console.log('✅ Wake Lock serbest bırakıldı');
+    });
+  }
+  
+  activeDeliveryOrderId = null;
+  console.log('🛑 Teslimat tracking durduruldu');
+}
+
+// Sayfa kapatılırken tracking'i durdur
+window.addEventListener('beforeunload', () => {
+  stopDeliveryTracking();
+});
+
+// Visibility change - sayfa arka plana gitse bile çalışmaya devam et
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && activeDeliveryOrderId && !activeDeliveryWatchId) {
+    console.log('📱 Sayfa ön plana geldi - Tracking yeniden başlatılıyor');
+    
+    // Tracking devam etsin
+    activeDeliveryWatchId = navigator.geolocation.watchPosition(
+      updateDeliveryLocation,
+      handleDeliveryLocationError,
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 15000
+      }
+    );
+  }
+});
 
 window.confirmDeleteOrder = (id) => {
   const o = orders[id];

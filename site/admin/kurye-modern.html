@@ -350,6 +350,7 @@ let currentUser = null;
 let isTracking = false;
 let watchId = null;
 let wakeLock = null;
+let locationUpdateInterval = null;
 let allOrders = {};
 
 const ICONS = {
@@ -717,6 +718,14 @@ async function startTracking() {
   const options = { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 };
   navigator.geolocation.getCurrentPosition(updateLocation, onGeoError, options);
   watchId = navigator.geolocation.watchPosition(updateLocation, onGeoError, options);
+  
+  // Her 10 saniyede bir manuel güncelleme (watchPosition bazen yavaş olabiliyor)
+  if (locationUpdateInterval) clearInterval(locationUpdateInterval);
+  locationUpdateInterval = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(updateLocation, (err) => {
+      console.warn('Manuel konum güncellemesi başarısız:', err);
+    }, options);
+  }, 10000);
 }
 
 function stopTracking() {
@@ -732,6 +741,7 @@ function stopTracking() {
   document.getElementById('trackingBanner').style.display = 'none';
 
   if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  if (locationUpdateInterval) { clearInterval(locationUpdateInterval); locationUpdateInterval = null; }
   releaseWakeLock();
 }
 

@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, onValue, get, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getDatabase, ref, onValue, get, set, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 // Firebase config
@@ -873,9 +873,16 @@ window.addEventListener('resize', () => {
   }
 });
 
-// Page unload
+// Page unload - Stop tracking immediately
 window.addEventListener('beforeunload', () => {
   stopLocationTracking();
+  
+  // Konum verisini Firebase'den temizle
+  if (currentUser) {
+    const emailKey = currentUser.email.replace(/[.@]/g, '_');
+    const locationRef = ref(database, `locations/${emailKey}`);
+    remove(locationRef).catch(() => {});
+  }
 });
 
 // Check URL params for auto-search
