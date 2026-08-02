@@ -231,16 +231,21 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin: 24px 0; }
 .stat-card { 
   background: 
-    linear-gradient(135deg, rgba(79,70,229,0.16), rgba(168,85,247,0.12)),
-    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(139,92,246,0.28); 
+    radial-gradient(circle at 20% 30%, rgba(79,70,229,0.35), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(168,85,247,0.30), transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(124,58,237,0.25), transparent 70%),
+    linear-gradient(135deg, rgba(20,22,40,0.95), rgba(16,18,30,0.92));
+  backdrop-filter: blur(35px) saturate(190%);
+  -webkit-backdrop-filter: blur(35px) saturate(190%);
+  border: 1px solid rgba(139,92,246,0.35); 
   border-radius: var(--radius-lg); 
   padding: 22px; 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .stat-card::before {
   content: '';
@@ -255,12 +260,16 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 }
 .stat-card:hover { 
   transform: translateY(-6px) scale(1.02); 
-  border-color: rgba(255,255,255,0.25); 
-  background: linear-gradient(135deg, rgba(79,70,229,0.18), rgba(168,85,247,0.12));
+  border-color: rgba(168,85,247,0.6); 
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(79,70,229,0.45), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(168,85,247,0.40), transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(236,72,153,0.25), transparent 70%),
+    linear-gradient(135deg, rgba(25,27,45,0.98), rgba(20,22,40,0.95));
   box-shadow: 
-    0 20px 60px -12px rgba(79,70,229,0.35),
-    0 0 0 1px rgba(255,255,255,0.1) inset,
-    0 0 40px rgba(168,85,247,0.2);
+    0 20px 60px -12px rgba(79,70,229,0.5),
+    0 0 0 1px rgba(255,255,255,0.15) inset,
+    0 0 50px rgba(168,85,247,0.35);
 }
 .stat-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 .stat-value { font-size: 2rem; font-weight: 800; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.02em; }
@@ -338,12 +347,16 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 .products-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
 .product-card, .courier-card {
   background: 
-    linear-gradient(145deg, rgba(99,102,241,0.22), rgba(124,58,237,0.16)),
-    linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.10));
-  backdrop-filter: blur(35px) saturate(170%);
-  -webkit-backdrop-filter: blur(35px) saturate(170%);
-  border: 1px solid rgba(139,92,246,0.35); 
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.08); 
+    radial-gradient(circle at 30% 20%, rgba(99,102,241,0.38), transparent 65%),
+    radial-gradient(circle at 70% 80%, rgba(168,85,247,0.32), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(124,58,237,0.28), transparent 75%),
+    linear-gradient(135deg, rgba(18,20,35,0.96), rgba(14,16,28,0.94));
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(139,92,246,0.40); 
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.45), 
+    inset 0 1px 0 rgba(255,255,255,0.10); 
   border-radius: var(--radius); 
   overflow: hidden; 
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -363,12 +376,16 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 }
 .product-card:hover, .courier-card:hover { 
   transform: translateY(-6px) scale(1.02); 
-  border-color: rgba(168,85,247,0.6); 
+  border-color: rgba(168,85,247,0.7); 
   box-shadow: 
-    0 20px 50px -12px rgba(79,70,229,0.4),
-    0 0 0 1px rgba(255,255,255,0.15) inset,
-    0 0 60px rgba(168,85,247,0.3);
-  background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
+    0 20px 50px -12px rgba(79,70,229,0.55),
+    0 0 0 1px rgba(255,255,255,0.18) inset,
+    0 0 70px rgba(168,85,247,0.45);
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(99,102,241,0.48), transparent 65%),
+    radial-gradient(circle at 70% 80%, rgba(236,72,153,0.35), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(139,92,246,0.32), transparent 75%),
+    linear-gradient(135deg, rgba(22,24,42,0.98), rgba(18,20,35,0.96));
 }
 .product-image {
   width: 100%; 
@@ -461,15 +478,20 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 
 .order-card { 
   background: 
-    linear-gradient(135deg, rgba(99,102,241,0.11), rgba(139,92,246,0.07)),
-    linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.06));
-  backdrop-filter: blur(32px) saturate(170%);
-  -webkit-backdrop-filter: blur(32px) saturate(170%);
-  border: 1px solid rgba(124,58,237,0.22); 
+    radial-gradient(circle at 25% 25%, rgba(99,102,241,0.32), transparent 68%),
+    radial-gradient(circle at 75% 75%, rgba(139,92,246,0.28), transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(124,58,237,0.22), transparent 72%),
+    linear-gradient(135deg, rgba(16,18,32,0.94), rgba(12,14,26,0.92));
+  backdrop-filter: blur(38px) saturate(175%);
+  -webkit-backdrop-filter: blur(38px) saturate(175%);
+  border: 1px solid rgba(124,58,237,0.35); 
   border-radius: var(--radius); 
   padding: 18px;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  box-shadow: 
+    0 6px 28px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .order-card::before {
   content: '';
@@ -485,9 +507,16 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 }
 .order-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(255,255,255,0.22);
-  box-shadow: 0 12px 35px rgba(79,70,229,0.25);
-  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+  border-color: rgba(168,85,247,0.55);
+  box-shadow: 
+    0 12px 40px rgba(79,70,229,0.45),
+    0 0 0 1px rgba(255,255,255,0.12) inset,
+    0 0 45px rgba(168,85,247,0.3);
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(99,102,241,0.42), transparent 68%),
+    radial-gradient(circle at 75% 75%, rgba(168,85,247,0.36), transparent 65%),
+    radial-gradient(circle at 50% 50%, rgba(139,92,246,0.28), transparent 72%),
+    linear-gradient(135deg, rgba(20,22,38,0.96), rgba(16,18,32,0.94));
 }
 .order-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; }
 .order-customer { font-weight: 700; font-size: 1.02rem; margin-bottom: 3px; }
