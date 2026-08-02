@@ -327,45 +327,40 @@ function initMap(order) {
     }
   }
   
-  // Customer marker with modern gradient pin and icon
+  // Customer marker - Simple modern dot with pulse
   if (!customerMarker) {
     console.log('📍 Müşteri marker ekleniyor...');
     
     const customerIcon = L.divIcon({
       className: 'custom-marker-customer',
       html: `
-        <div style="position:relative;width:45px;height:55px;display:flex;align-items:flex-start;justify-content:center;">
-          <!-- Pin shape with gradient -->
+        <div style="position:relative;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+          <!-- Outer glow ring -->
+          <div style="
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+          "></div>
+          
+          <!-- Main dot -->
           <div style="
             position: relative;
-            width: 40px;
-            height: 50px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
+            width: 20px;
+            height: 20px;
+            background: #6366f1;
             border: 3px solid #ffffff;
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-          ">
-            <!-- Icon container -->
-            <div style="
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%) rotate(45deg);
-              color: #ffffff;
-              font-size: 18px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            ">
-              <i class="fas fa-home"></i>
-            </div>
-          </div>
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            z-index: 10;
+          "></div>
         </div>
       `,
-      iconSize: [45, 55],
-      iconAnchor: [22, 55],
-      popupAnchor: [0, -55]
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -16]
     });
     
     customerMarker = L.marker([customerLat, customerLng], {
@@ -377,7 +372,7 @@ function initMap(order) {
     customerMarker.bindPopup(`
       <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <i class="fas fa-home" style="color:#6366f1;font-size:18px;"></i>
+          <div style="width:12px;height:12px;background:#6366f1;border-radius:50%;"></div>
           <strong style="color:#6366f1;font-size:16px;">Teslimat Adresi</strong>
         </div>
         <span style="color:var(--text-secondary);font-size:14px;line-height:1.5;">${order.address}</span>
@@ -399,53 +394,42 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     const courierIcon = L.divIcon({
       className: 'custom-marker-courier',
       html: `
-        <div style="position:relative;width:60px;height:60px;display:flex;align-items:center;justify-content:center;">
-          <!-- Pulse ring animation -->
+        <div style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          <!-- Pulse ring 1 -->
           <div style="
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(16, 185, 129, 0.25);
+            background: rgba(16, 185, 129, 0.3);
             border-radius: 50%;
             animation: ripple 2.5s ease-out infinite;
           "></div>
           
-          <!-- Main courier circle with gradient -->
-          <div style="
-            position: relative;
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 50%;
-            border: 4px solid #ffffff;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-          ">
-            <!-- Delivery icon -->
-            <i class="fas fa-motorcycle" style="color:#ffffff;font-size:22px;"></i>
-          </div>
-          
-          <!-- Active indicator dot with pulse -->
+          <!-- Pulse ring 2 -->
           <div style="
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 14px;
-            height: 14px;
-            background: #10b981;
-            border: 3px solid white;
+            width: 100%;
+            height: 100%;
+            background: rgba(16, 185, 129, 0.3);
             border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            animation: pulse 2s ease-in-out infinite;
-            z-index: 11;
+            animation: ripple 2.5s ease-out 1.25s infinite;
+          "></div>
+          
+          <!-- Main courier dot -->
+          <div style="
+            position: relative;
+            width: 24px;
+            height: 24px;
+            background: #10b981;
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+            z-index: 10;
           "></div>
         </div>
       `,
-      iconSize: [60, 60],
-      iconAnchor: [30, 30]
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
     });
     
     courierMarker = L.marker([courierLat, courierLng], {
@@ -457,7 +441,7 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     courierMarker.bindPopup(`
       <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <div style="width:10px;height:10px;background:#10b981;border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
+          <div style="width:12px;height:12px;background:#10b981;border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
           <strong style="color:#10b981;font-size:16px;">Teslimatçı</strong>
         </div>
         <div style="color:var(--text-secondary);font-size:13px;margin-top:6px;">Canlı konum takibi</div>
