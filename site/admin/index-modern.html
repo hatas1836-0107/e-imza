@@ -1879,6 +1879,20 @@ window.startDelivery = async (orderId) => {
         
         console.log('✅ Konum izni alındı');
         
+        // Siparişe courier ata (eğer yoksa)
+        if (!order.courier || !order.courier.email) {
+          console.log('📝 Siparişe courier atanıyor...');
+          await update(ref(database, `orders/${orderId}`), {
+            courier: {
+              email: currentUser.email,
+              name: currentUser.displayName || currentUser.email.split('@')[0],
+              phone: currentUser.phoneNumber || '',
+              assignedAt: new Date().toISOString()
+            }
+          });
+          console.log('✅ Courier atandı:', currentUser.email);
+        }
+        
         // Wake Lock aktif et (ekran kilitli olsa bile çalışsın)
         if ('wakeLock' in navigator) {
           try {

@@ -50,11 +50,11 @@ const statusMap = {
 document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const trackingCode = document.getElementById('trackingCode').value.trim().toUpperCase();
+  const searchInput = document.getElementById('trackingCode').value.trim();
   const messageDiv = document.getElementById('searchMessage');
   const resultDiv = document.getElementById('trackingResult');
   
-  if (!trackingCode) {
+  if (!searchInput) {
     messageDiv.innerHTML = '<div class="alert alert-error">Lütfen takip kodu girin!</div>';
     return;
   }
@@ -63,7 +63,6 @@ document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
   resultDiv.style.display = 'none';
   
   try {
-    // Tüm siparişleri oku ve trackingCode'a göre filtrele
     const ordersRef = ref(database, 'orders');
     const snapshot = await get(ordersRef);
     
@@ -72,13 +71,21 @@ document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
       let foundOrder = null;
       let foundOrderId = null;
       
-      // trackingCode ile eşleşen siparişi bul
+      const searchUpper = searchInput.toUpperCase();
+      
+      // 1. Önce trackingCode ile ara
       for (const [orderId, orderData] of Object.entries(allOrders)) {
-        if (orderData.trackingCode && orderData.trackingCode.toUpperCase() === trackingCode) {
+        if (orderData.trackingCode && orderData.trackingCode.toUpperCase() === searchUpper) {
           foundOrder = orderData;
           foundOrderId = orderId;
           break;
         }
+      }
+      
+      // 2. Bulunamadıysa, order ID ile ara (backward compatibility)
+      if (!foundOrder && allOrders[searchInput]) {
+        foundOrder = allOrders[searchInput];
+        foundOrderId = searchInput;
       }
       
       if (foundOrder) {
