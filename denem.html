@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>E-İmza — Scroll Background Experience</title>
+<style>
+  :root{
+    --bg-top:#070b14;
+    --bg-bottom:#0a0f1c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{ background:#05070d; }
+  html,body{
+    width:100%;
+    overflow-x:hidden;
+    background:#05070d;
+  }
+
+  /* ================= FIXED BACKGROUND LAYER =================
+     This whole block is the reusable "background system".
+     It stays fixed behind whatever real page content you add.
+     Nothing here renders text or UI — purely the animated scene. */
+  #bg-root{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    height:100dvh;
+    z-index:-1;
+    overflow:hidden;
+    background:#05070d;
+  }
+  #webgl-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    outline:none;
+    opacity:0;
+    transition:opacity 0.6s ease;
+  }
+  #webgl-canvas.ready{ opacity:1; }
+  /* cinematic vignette, pure CSS, near-zero cost */
+  #vignette{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    box-shadow: inset 0 0 min(15vw,15vh) rgba(0,0,0,0.48), inset 0 0 3vw rgba(0,0,0,0.20);
+  }
+  /* faint film-grain to kill banding on dark gradients */
+  #grain{
+    position:absolute;
+    inset:-50%;
+    width:200%;
+    height:200%;
+    pointer-events:none;
+    opacity:0.035;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grainShift 1.4s steps(4) infinite;
+  }
+  @keyframes grainShift{
+    0%{transform:translate(0,0);} 25%{transform:translate(-1%,1%);}
+    50%{transform:translate(1%,-1%);} 75%{transform:translate(-1%,-1%);}
+    100%{transform:translate(0,0);}
+  }
+
+  /* No-WebGL / error graceful fallback */
+  #fallback-bg{
+    position:absolute;
+    inset:0;
+    display:none;
+    background:
+      radial-gradient(ellipse at 50% 15%, rgba(47,216,255,0.16), transparent 55%),
+      radial-gradient(ellipse at 60% 85%, rgba(138,92,255,0.14), transparent 55%),
+      linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  }
+  #fallback-bg.active{ display:block; }
+  #fallback-bg .crack{
+    position:absolute;
+    left:50%;
+    top:var(--fy,50%);
+    width:38vmin;
+    height:38vmin;
+    transform:translate(-50%,-50%);
+    border-radius:46% 54% 61% 39% / 42% 47% 53% 58%;
+    background:radial-gradient(circle, rgba(47,216,255,0.55), rgba(138,92,255,0.25) 55%, transparent 72%);
+    filter: blur(2px);
+    transition: top 0.15s linear;
+  }
+
+  /* ================= DEMO-ONLY SCROLL SPACE =================
+     Delete this element in production — real page content
+     supplies the scroll height there. Kept tall here so the
+     whole step sequence can be previewed end to end. */
+  #scroll-space{
+    position:relative;
+    width:100%;
+    height:650vh;
+  }
+  #demo-hint{
+    position:fixed;
+    left:50%;
+    bottom:22px;
+    transform:translateX(-50%);
+    z-index:5;
+    color:rgba(234,246,255,0.55);
+    font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    pointer-events:none;
+    opacity:1;
+    transition:opacity 0.5s ease;
+  }
+  /* Status banner — only appears if the WebGL scene fails to start and the
+     CSS fallback takes over, so a blank/dark screen never goes unexplained.
+     Safe to delete this rule + the #bg-diag div once you trust the setup. */
+  #bg-diag{
+    position:fixed;
+    left:12px;
+    bottom:12px;
+    z-index:6;
+    max-width:min(320px, 80vw);
+    font:500 11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:rgba(234,246,255,0.75);
+    background:rgba(5,7,13,0.6);
+    border:1px solid rgba(47,216,255,0.28);
+    border-radius:10px;
+    padding:9px 12px;
+    display:none;
+  }
+  #bg-diag.show{ display:block; }
+</style>
+</head>
+<body>
+
+  <div id="bg-root">
+    <canvas id="webgl-canvas"></canvas>
+    <div id="fallback-bg"><div class="crack"></div></div>
+    <div id="vignette"></div>
+    <div id="grain"></div>
+  </div>
+
+  <div id="scroll-space"></div>
+  <div id="demo-hint">Aşağı kaydır ↓ demo önizlemesi</div>
+  <div id="bg-diag"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+  (function(){
+    "use strict";
+
+    var canvas = document.getElementById('webgl-canvas');
+    var fallbackEl = document.getElementById('fallback-bg');
+    var demoHint = document.getElementById('demo-hint');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var isTouch = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    var isSmall = window.innerWidth < 820;
+    var isMobile = isTouch || isSmall;
+
+    var CONFIG = {
+      pixelRatio: Math.min(window.devicePixelRatio || 1, isMobile ? 1.75 : 2),
+      particleCount: isMobile ? 90 : 260,
+      boltPoolSize: isMobile ? 4 : 8,
+      boltFreqIdle: isMobile ? 0.55 : 0.9,
+      boltFreqIntense: isMobile ? 2.2 : 3.6,
+      extrudeSegments: isMobile ? 1 : 3,
+      curveSegments: isMobile ? 6 : 14,
+      dprCap: isMobile ? 1.75 : 2,
+      parallax: (isMobile || reduceMotion) ? 0 : 1,
+      scrollLerp: reduceMotion ? 10 : 5.5,
+      envMap: true,
+      colors: {
+        bgTop:      0x0a1220,
+        bgBottom:   0x060810,
+        accent1:    0x2fd8ff,
+        accent2:    0x8a5cff,
+        accent3:    0xeaf6ff,
+        tokenBody:  0x0b0e15,
+        tokenBody2: 0x11151f,
+        metal:      0xc7cfd8,
+        laptopBody: 0x171b23,
+        laptopBody2:0x0e1117,
+        screenA:    0x123049,
+        screenB:    0x2a1050
+      }
+    };
+
+    function clamp(v,a,b){ return Math.min(b, Math.max(a, v)); }
+    function lerp(a,b,t){ return a + (b - a) * t; }
+    function smoothstep(e0,e1,x){ var t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); }
+    function damp(current, target, lambda, dt){ return lerp(current, target, 1 - Math.exp(-lambda * dt)); }
+    function rand(a,b){ return a + Math.random() * (b - a); }
+
+    function hasWebGL(){
+      try{
+        var c = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+      }catch(e){ return false; }
+    }
+
+    var diagEl = document.getElementById('bg-diag');
+    function showDiag(msg){
+      if(!diagEl) return;
+      diagEl.textContent = msg;
+      diagEl.classList.add('show');
+    }
+
+    var fallbackActive = false;
+    function runFallback(reason){
+      if(fallbackActive) return;
+      fallbackActive = true;
+      canvas.style.display = 'none';
+      fallbackEl.classList.add('active');
+      showDiag('3D arka plan bu tarayıcıda başlatılamadı, basit sürüme geçildi.' + (reason ? (' (' + reason + ')') : ''));
+      var crack = fallbackEl.querySelector('.crack');
+      function onScroll(){
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - window.innerHeight;
+        var p = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+        var y = lerp(84, 30, p);
+        crack.style.setProperty('--fy', y + '%');
+        crack.style.opacity = String(0.5 + 0.5*Math.sin(Date.now()*0.004));
+        if(demoHint) demoHint.style.opacity = p > 0.02 ? '0' : '1';
+      }
+      window.addEventListener('scroll', onScroll, { passive:true });
+      onScroll();
+    }
+
+    if(!window.THREE){
+      runFallback('Three.js kütüphanesi yüklenemedi — CDN engellenmiş olabilir');
+      return;
+    }
+    if(!hasWebGL()){
+      runFallback('bu tarayıcı/cihaz WebGL desteklemiyor');
+      return;
+    }
+
+    try{
+      initEngine();
+    }catch(err){
+      if(window.console) console.error('[e-imza-bg] Sahne başlatılamadı, yedek plana geçiliyor:', err);
+      runFallback('kurulum hatası: ' + (err && err.message ? err.message : err));
+    }
+
+    function initEngine(){
+
+      var renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: !isMobile,
+        alpha: false,
+        powerPreference: 'high-performance',
+        stencil: false
+      });
+      renderer.setPixelRatio(CONFIG.dprCap);
+      renderer.autoClear = false;
+      if(renderer.outputEncoding !== undefined) renderer.outputEncoding = THREE.sRGBEncoding;
+      if(renderer.toneMapping !== undefined){
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+      }
+
+      canvas.addEventListener('webglcontextlost', function(e){
+        e.preventDefault();
+        running = false;
+        runFallback('WebGL context kaybedildi');
+      }, false);
+
+      var mainScene = new THREE.Scene();
+      var bgScene = new THREE.Scene();
+      var bgCamera = new THREE.Camera();
+
+      var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
+      camera.position.set(0, 0.2, 7.2);
+      var camBase = camera.position.clone();
+
+      function setSize(){
+        var w = window.innerWidth, h = window.innerHeight;
+        renderer.setSize(w, h, true);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      setSize();
+
+      function makeGlowTexture(){
+        var size = 128;
+        var c = document.createElement('canvas');
+        c.width = c.height = size;
+        var ctx = c.getContext('2d');
+        var g = ctx.createRadialGradient(size/2,size/2,0,size/2,size/2,size/2);
+        g.addColorStop(0,'rgba(255,255,255,1)');
+        g.addColorStop(0.35,'rgba(255,255,255,0.65)');
+        g.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,size,size);
+        return new THREE.CanvasTexture(c);
+      }
+      var glowTex = makeGlowTexture();
+
+      function roundRectPath(ctx,x,y,w,h,r){
+        ctx.beginPath();
+        ctx.moveTo(x+r,y);
+        ctx.arcTo(x+w,y,x+w,y+h,r);
+        ctx.arcTo(x+w,y+h,x,y+h,r);
+        ctx.arcTo(x,y+h,x,y,r);
+        ctx.arcTo(x,y,x+w,y,r);
+        ctx.closePath();
+      }
+
+      function makeKeyboardTexture(){
+        var w=640,h=380;
+        var c=document.createElement('canvas'); c.width=w; c.height=h;
+        var ctx=c.getContext('2d');
+        ctx.fillStyle='#12151c'; ctx.fillRect(0,0,w,h);
+        var cols=14, rows=5, pad=26;
+        var kw=(w-pad*2)/cols-6, kh=(h-pad*2)/rows-10;
+        for(var r=0;r<rows;r++){
+          for(var col=0; col<cols; col++){
+            var x = pad + col*(kw+6);
+            var y = pad + r*(kh+10);
+            ctx.fillStyle = 'rgba(255,255,255,0.05)';
+            roundRectPath(ctx,x,y,kw,kh,5);
+            ctx.fill();
+            ctx.strokeStyle='rgba(0,0,0,0.35)';
+            ctx.lineWidth=1;
+            ctx.stroke();
+          }
+        }
+        var tex = new THREE.CanvasTexture(c);
+        tex.anisotropy = 4;
+        return tex;
+      }
+
+      function makeCheckTexture(){
+        var s = 256;
+        var c = document.createElement('canvas'); c.width=c.height=s;
+        var ctx = c.getContext('2d');
+        ctx.clearRect(0,0,s,s);
+        ctx.strokeStyle = '#eaf6ff';
+        ctx.lineWidth = 20;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.shadowColor = 'rgba(47,216,255,0.95)';
+        ctx.shadowBlur = 26;
+        ctx.beginPath();
+        ctx.moveTo(54,132);
+        ctx.lineTo(104,184);
+        ctx.lineTo(202,68);
+        ctx.stroke();
+        return new THREE.CanvasTexture(c);
+      }
+
+      var bgUniforms = {
+        uTime:        { value: 0 },
+        uTearCenter:  { value: new THREE.Vector2(0.5, 0.82) },
+        uTearRadius:  { value: 0.0 },
+        uTear2Center: { value: new THREE.Vector2(0.5, 0.5) },
+        uTear2Radius: { value: 0.0 },
+        uEdgeGlow:    { value: 0.0 },
+        uColorTop:    { value: new THREE.Color(CONFIG.colors.bgTop) },
+        uColorBottom: { value: new THREE.Color(CONFIG.colors.bgBottom) },
+        uAccent1:     { value: new THREE.Color(CONFIG.colors.accent1) },
+        uAccent2:     { value: new THREE.Color(CONFIG.colors.accent2) },
+        uAspect:      { value: window.innerWidth / window.innerHeight }
+      };
+
+      var bgMat = new THREE.ShaderMaterial({
+        uniforms: bgUniforms,
+        depthTest:false,
+        depthWrite:false,
+        vertexShader: [
+          "varying vec2 vUv;",
+          "void main(){",
+          "  vUv = uv;",
+          "  gl_Position = vec4(position.xy, 0.0, 1.0);",
+          "}"
+        ].join("\n"),
+        fragmentShader: [
+          "precision highp float;",
+          "varying vec2 vUv;",
+          "uniform float uTime;",
+          "uniform vec2 uTearCenter;",
+          "uniform float uTearRadius;",
+          "uniform vec2 uTear2Center;",
+          "uniform float uTear2Radius;",
+          "uniform float uEdgeGlow;",
+          "uniform vec3 uColorTop;",
+          "uniform vec3 uColorBottom;",
+          "uniform vec3 uAccent1;",
+          "uniform vec3 uAccent2;",
+          "uniform float uAspect;",
+
+          "float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123); }",
+          "float noise(vec2 p){",
+          "  vec2 i=floor(p); vec2 f=fract(p);",
+          "  float a=hash(i), b=hash(i+vec2(1.0,0.0)), c=hash(i+vec2(0.0,1.0)), d=hash(i+vec2(1.0,1.0));",
+          "  vec2 u=f*f*(3.0-2.0*f);",
+          "  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;",
+          "}",
+
+          "float tearField(vec2 uv, vec2 center, float radius, float seed){",
+          "  vec2 d = uv - center;",
+          "  d.x *= uAspect;",
+          "  float ang = atan(d.y, d.x);",
+          "  float n = noise(vec2(cos(ang)*3.2+seed, sin(ang)*3.2+uTime*0.5+seed)) * 0.16;",
+          "  n += noise(vec2(cos(ang)*7.0-uTime*0.3, sin(ang)*7.0+seed*3.0)) * 0.06;",
+          "  float dist = length(d);",
+          "  return dist - (radius + n);",
+          "}",
+
+          "void main(){",
+          "  vec2 uv = vUv;",
+          "  vec3 base = mix(uColorBottom, uColorTop, uv.y);",
+
+          "  vec2 guv = uv * vec2(26.0, 46.0);",
+          "  float gx = smoothstep(0.985,1.0, abs(sin(guv.x*3.14159265)));",
+          "  float gy = smoothstep(0.985,1.0, abs(sin((guv.y+uTime*0.035)*3.14159265)));",
+          "  base += (gx+gy) * 0.028 * uAccent1;",
+
+          "  float vign = smoothstep(1.15, 0.25, distance(uv, vec2(0.5,0.55)));",
+          "  base *= mix(0.88, 1.05, vign);",
+
+          "  float f1 = tearField(uv, uTearCenter, uTearRadius, 0.0);",
+          "  float f2 = tearField(uv, uTear2Center, uTear2Radius, 5.0);",
+          "  float f = min(f1, f2);",
+
+          "  float hole = 1.0 - smoothstep(-0.015, 0.015, f);",
+          "  float rim  = 1.0 - smoothstep(0.0, 0.10, abs(f));",
+
+          "  vec3 core = mix(uAccent1, uAccent2, 0.5 + 0.5*sin(uTime*1.6 + f*14.0));",
+          "  vec3 col = mix(base, core*1.35, hole);",
+          "  col += rim * uAccent1 * (1.1 + uEdgeGlow*2.2);",
+          "  col += rim * rim * uAccent2 * 0.6;",
+
+          "  gl_FragColor = vec4(col, 1.0);",
+          "}"
+        ].join("\n")
+      });
+      var bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(2,2), bgMat);
+      bgPlane.frustumCulled = false;
+      bgScene.add(bgPlane);
+
+      mainScene.add(new THREE.AmbientLight(0x304060, 0.55));
+      var keyLight = new THREE.DirectionalLight(0xdfe9ff, 1.1);
+      keyLight.position.set(3, 5, 4);
+      mainScene.add(keyLight);
+      var rimLight = new THREE.PointLight(CONFIG.colors.accent2, 2.2, 14, 2);
+      rimLight.position.set(-3, 1, -2);
+      mainScene.add(rimLight);
+      var tokenGlowLight = new THREE.PointLight(CONFIG.colors.accent1, 1.6, 6, 2);
+      mainScene.add(tokenGlowLight);
+      var laptopGlowLight = new THREE.PointLight(CONFIG.colors.accent2, 0, 6, 2);
+      mainScene.add(laptopGlowLight);
+
+      function roundedRectShape(w,h,r){
+        var s = new THREE.Shape();
+        var x = -w/2, y = -h/2;
+        s.moveTo(x, y+r);
+        s.lineTo(x, y+h-r);
+        s.quadraticCurveTo(x, y+h, x+r, y+h);
+        s.lineTo(x+w-r, y+h);
+        s.quadraticCurveTo(x+w, y+h, x+w, y+h-r);
+        s.lineTo(x+w, y+r);
+        s.quadraticCurveTo(x+w, y, x+w-r, y);
+        s.lineTo(x+r, y);
+        s.quadraticCurveTo(x, y, x, y+r);
+        return s;
+      }
+
+      var tokenGroup = new THREE.Group();
+
+      var bodyShape = roundedRectShape(1.02, 2.35, 0.22);
+      var bodyGeo = new THREE.ExtrudeGeometry(bodyShape, {
+        depth: 0.34,
+        bevelEnabled: true,
+        bevelThickness: 0.045,
+        bevelSize: 0.045,
+        bevelSegments: CONFIG.extrudeSegments,
+        curveSegments: CONFIG.curveSegments
+      });
+      bodyGeo.center();
+      var bodyMat = new THREE.MeshPhysicalMaterial({
+        color: CONFIG.colors.tokenBody,
+        metalness: 0.55,
+        roughness: 0.34,
+        clearcoat: 0.65,
+        clearcoatRoughness: 0.22,
+        reflectivity: 0.5
+      });
+      var bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+      tokenGroup.add(bodyMesh);
+
+      var rimShellMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        uniforms: { uColor: { value: new THREE.Color(CONFIG.colors.accent1) } },
+        vertexShader: [
+          "varying vec3 vNormalV;",
+          "varying vec3 vViewDir;",
+          "void main(){",
+          "  vNormalV = normalize(normalMatrix * normal);",
+          "  vec4 mv = modelViewMatrix * vec4(position,1.0);",
+          "  vViewDir = normalize(-mv.xyz);",
+          "  gl_Position = projectionMatrix * mv;",
+          "}"
+        ].join("\n"),
+        fragmentShader: [
+          "precision mediump float;",
+          "varying vec3 vNormalV; varying vec3 vViewDir;",
+          "uniform vec3 uColor;",
+          "void main(){",
+          "  float fres = pow(1.0 - clamp(dot(normalize(vNormalV), normalize(vViewDir)), 0.0, 1.0), 2.2);",
+          "  gl_FragColor = vec4(uColor, fres * 0.85);",
+          "}"
+        ].join("\n")
+      });
+      var rimShellMesh = new THREE.Mesh(bodyGeo, rimShellMat);
+      rimShellMesh.scale.setScalar(1.05);
+      tokenGroup.add(rimShellMesh);
+
+      var connGeo = new THREE.BoxGeometry(0.62, 0.42, 0.20);
+      var connMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.metal, metalness: 1.0, roughness: 0.28 });
+      var connMesh = new THREE.Mesh(connGeo, connMat);
+      connMesh.position.set(0, -1.36, 0);
+      tokenGroup.add(connMesh);
+
+      var stripGeo = new THREE.BoxGeometry(0.14, 1.7, 0.03);
+      var stripMat = new THREE.MeshStandardMaterial({
+        color: CONFIG.colors.accent1,
+        emissive: new THREE.Color(CONFIG.colors.accent1),
+        emissiveIntensity: 1.4,
+        metalness: 0.2,
+        roughness: 0.4
+      });
+      var stripMesh = new THREE.Mesh(stripGeo, stripMat);
+      stripMesh.position.set(0, 0.05, 0.185);
+      tokenGroup.add(stripMesh);
+
+      var ledGeo = new THREE.CircleGeometry(0.07, 16);
+      var ledMat = new THREE.MeshStandardMaterial({
+        color: CONFIG.colors.accent3,
+        emissive: new THREE.Color(CONFIG.colors.accent1),
+        emissiveIntensity: 2.0
+      });
+      var ledMesh = new THREE.Mesh(ledGeo, ledMat);
+      ledMesh.position.set(0, -1.0, 0.181);
+      tokenGroup.add(ledMesh);
+
+      var ringGeo = new THREE.TorusGeometry(0.13, 0.028, 8, 20);
+      var ringMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.metal, metalness: 1.0, roughness: 0.35 });
+      var ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.position.set(0, 1.28, 0);
+      tokenGroup.add(ringMesh);
+
+      tokenGroup.scale.setScalar(0.62);
+      mainScene.add(tokenGroup);
+
+      var tokenGlowSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: glowTex, color: CONFIG.colors.accent1, transparent:true, depthWrite:false, blending: THREE.AdditiveBlending, opacity:0.55
+      }));
+      tokenGlowSprite.scale.setScalar(1.6);
+      tokenGroup.add(tokenGlowSprite);
+
+      var laptopGroup = new THREE.Group();
+
+      var baseGeo = new THREE.BoxGeometry(3.3, 0.14, 2.15);
+      var baseMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.laptopBody, metalness: 0.75, roughness: 0.35 });
+      var baseMesh = new THREE.Mesh(baseGeo, baseMat);
+      laptopGroup.add(baseMesh);
+
+      var kbTex = makeKeyboardTexture();
+      var kbGeo = new THREE.PlaneGeometry(2.9, 1.7);
+      var kbMat = new THREE.MeshStandardMaterial({ map: kbTex, roughness: 0.8, metalness: 0.1 });
+      var kbMesh = new THREE.Mesh(kbGeo, kbMat);
+      kbMesh.rotation.x = -Math.PI/2;
+      kbMesh.position.set(-0.05, 0.071, -0.05);
+      laptopGroup.add(kbMesh);
+
+      var padGeo = new THREE.PlaneGeometry(0.78, 0.5);
+      var padMat = new THREE.MeshStandardMaterial({ color: 0x0c0e13, roughness: 0.5, metalness: 0.3 });
+      var padMesh = new THREE.Mesh(padGeo, padMat);
+      padMesh.rotation.x = -Math.PI/2;
+      padMesh.position.set(-0.05, 0.073, 0.78);
+      laptopGroup.add(padMesh);
+
+      var portGeo = new THREE.BoxGeometry(0.10, 0.10, 0.34);
+      var portMat = new THREE.MeshStandardMaterial({ color: 0x030406, roughness: 0.9 });
+      var portMesh = new THREE.Mesh(portGeo, portMat);
+      var PORT_LOCAL = new THREE.Vector3(1.62, 0.03, 0.35);
+      portMesh.position.copy(PORT_LOCAL);
+      laptopGroup.add(portMesh);
+      var portRimMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.metal, metalness:1.0, roughness:0.3 });
+      var portRim = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.13,0.4), portRimMat);
+      portRim.position.copy(PORT_LOCAL).add(new THREE.Vector3(-0.02,0,0));
+      laptopGroup.add(portRim);
+
+      var hinge = new THREE.Group();
+      hinge.position.set(0, 0.07, -1.02);
+      laptopGroup.add(hinge);
+
+      var screenBackGeo = new THREE.BoxGeometry(3.3, 2.0, 0.10);
+      var screenBackMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.laptopBody2, metalness: 0.7, roughness: 0.4 });
+      var screenBackMesh = new THREE.Mesh(screenBackGeo, screenBackMat);
+      screenBackMesh.position.set(0, 1.0, -0.02);
+      hinge.add(screenBackMesh);
+
+      var screenUniforms = {
+        uTime:    { value: 0 },
+        uActive:  { value: 0.0 },
+        uOpacity: { value: 0.0 },
+        uColorA:  { value: new THREE.Color(CONFIG.colors.screenA) },
+        uColorB:  { value: new THREE.Color(CONFIG.colors.screenB) },
+        uAccent:  { value: new THREE.Color(CONFIG.colors.accent1) }
+      };
+      var screenMat = new THREE.ShaderMaterial({
+        uniforms: screenUniforms,
+        transparent: true,
+        depthWrite: true,
+        vertexShader: [
+          "varying vec2 vUv;",
+          "void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }"
+        ].join("\n"),
+        fragmentShader: [
+          "precision highp float;",
+          "varying vec2 vUv;",
+          "uniform float uTime; uniform float uActive; uniform float uOpacity;",
+          "uniform vec3 uColorA; uniform vec3 uColorB; uniform vec3 uAccent;",
+          "void main(){",
+          "  vec2 uv = vUv;",
+          "  vec3 base = mix(uColorA, uColorB, uv.y + 0.25*sin(uTime*0.15+uv.x*3.0));",
+          "  float scan = smoothstep(0.0,1.0, sin((uv.y*40.0 - uTime*0.6))*0.5+0.5) * 0.06;",
+          "  float pulse = 0.5+0.5*sin(uTime*1.4);",
+          "  vec3 col = mix(vec3(0.01,0.012,0.02), base + scan*uAccent, uActive);",
+          "  col += uAccent * uActive * pulse * 0.10;",
+          "  gl_FragColor = vec4(col, uOpacity);",
+          "}"
+        ].join("\n")
+      });
+      var screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 1.74), screenMat);
+      screenMesh.position.set(0, 1.0, 0.031);
+      hinge.add(screenMesh);
+
+      var checkTex = makeCheckTexture();
+      var checkMat = new THREE.MeshBasicMaterial({
+        map: checkTex, transparent:true, depthWrite:false,
+        blending: THREE.AdditiveBlending, opacity:0
+      });
+      var checkMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.7), checkMat);
+      checkMesh.name = 'checkGlyph';
+      checkMesh.position.set(0, 1.0, 0.05);
+      hinge.add(checkMesh);
+
+      hinge.rotation.x = -1.92;
+
+      laptopGroup.scale.setScalar(0.92);
+      var LAPTOP_REST_Y = -1.55;
+      laptopGroup.position.set(0.15, LAPTOP_REST_Y - 2.4, 0.3);
+      laptopGroup.rotation.y = -0.18;
+      mainScene.add(laptopGroup);
+
+      var reflectionGroup = laptopGroup.clone(true);
+      reflectionGroup.traverse(function(o){
+        if(o.name === 'checkGlyph'){ o.visible = false; return; }
+        if(!o.material) return;
+        if(o.material === screenMat){
+          o.material = new THREE.MeshBasicMaterial({
+            color: CONFIG.colors.screenA, transparent:true, opacity:0.08, depthWrite:false
+          });
+          return;
+        }
+        o.material = o.material.clone();
+        o.material.transparent = true;
+        o.material.opacity = 0.12;
+        if(o.material.emissiveIntensity !== undefined) o.material.emissiveIntensity *= 0.5;
+      });
+      reflectionGroup.scale.y *= -1;
+      mainScene.add(reflectionGroup);
+
+      function computePortWorld(){
+        var v = PORT_LOCAL.clone();
+        v.multiply(laptopGroup.scale);
+        v.applyEuler(new THREE.Euler(0, laptopGroup.rotation.y, 0));
+        v.add(new THREE.Vector3(laptopGroup.position.x, laptopGroup.position.y, laptopGroup.position.z));
+        return v;
+      }
+
+      if(CONFIG.envMap && THREE.PMREMGenerator){
+        try{
+          var pmrem = new THREE.PMREMGenerator(renderer);
+          var envScene = new THREE.Scene();
+          var envGeo = new THREE.SphereGeometry(6, 20, 20);
+          var posAttr = envGeo.attributes.position;
+          var envColors = new Float32Array(posAttr.count * 3);
+          var topC = new THREE.Color(CONFIG.colors.accent1);
+          var midC = new THREE.Color(CONFIG.colors.accent2);
+          var botC = new THREE.Color(0x02030a);
+          for(var vi=0; vi<posAttr.count; vi++){
+            var ny = clamp(posAttr.getY(vi) / 6, -1, 1) * 0.5 + 0.5;
+            var mixed = botC.clone().lerp(ny < 0.55 ? midC : topC, smoothstep(0.0, 1.0, ny));
+            envColors[vi*3] = mixed.r; envColors[vi*3+1] = mixed.g; envColors[vi*3+2] = mixed.b;
+          }
+          envGeo.setAttribute('color', new THREE.BufferAttribute(envColors, 3));
+          var envMat = new THREE.MeshBasicMaterial({ side: THREE.BackSide, vertexColors: true });
+          var envMesh = new THREE.Mesh(envGeo, envMat);
+          envScene.add(envMesh);
+          var envLight = new THREE.PointLight(CONFIG.colors.accent3, 3, 12);
+          envLight.position.set(2, 3, 2);
+          envScene.add(envLight);
+
+          var envRT = pmrem.fromScene(envScene, 0.035);
+          mainScene.environment = envRT.texture;
+
+          bodyMat.envMapIntensity = 0.75;
+          connMat.envMapIntensity = 1.1;
+          ringMat.envMapIntensity = 1.15;
+          portRimMat.envMapIntensity = 1.1;
+          baseMat.envMapIntensity = 0.5;
+
+          pmrem.dispose();
+          envGeo.dispose();
+          envMat.dispose();
+        }catch(envErr){
+          if(window.console) console.warn('[e-imza-bg] Ortam haritası atlandı:', envErr);
+        }
+      }
+
+      var pCount = CONFIG.particleCount;
+      var pPos = new Float32Array(pCount*3);
+      var pSeed = new Float32Array(pCount);
+      var pColor = new Float32Array(pCount*3);
+      var pSpeed = new Float32Array(pCount);
+      var c1 = new THREE.Color(CONFIG.colors.accent1);
+      var c2 = new THREE.Color(CONFIG.colors.accent2);
+      var boundsTop = 6.5, boundsBottom = -6.5, spreadX = 6.2, spreadZ = 4.0;
+      for(var i=0;i<pCount;i++){
+        var i3=i*3;
+        pPos[i3]   = rand(-spreadX/2, spreadX/2);
+        pPos[i3+1] = rand(boundsBottom, boundsTop);
+        pPos[i3+2] = rand(-spreadZ/2, 1.5);
+        pSeed[i] = Math.random();
+        pSpeed[i] = rand(0.25, 0.75);
+        var mixed2 = c1.clone().lerp(c2, Math.random());
+        if(Math.random() < 0.25) mixed2 = new THREE.Color(CONFIG.colors.accent3);
+        pColor[i3]=mixed2.r; pColor[i3+1]=mixed2.g; pColor[i3+2]=mixed2.b;
+      }
+      var pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+      pGeo.setAttribute('aColor', new THREE.BufferAttribute(pColor,3));
+      pGeo.setAttribute('aSeed', new THREE.BufferAttribute(pSeed,1));
+      var pUniforms = { uPixelRatio:{value:CONFIG.dprCap}, uIntensity:{value:0.7} };
+      var pMat = new THREE.ShaderMaterial({
+        uniforms: pUniforms,
+        transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+        vertexShader:[
+          "attribute float aSeed; attribute vec3 aColor;",
+          "varying vec3 vColor; varying float vAlpha;",
+          "uniform float uPixelRatio; uniform float uIntensity;",
+          "void main(){",
+          "  vec4 mv = modelViewMatrix * vec4(position,1.0);",
+          "  gl_Position = projectionMatrix * mv;",
+          "  float size = (1.0 + aSeed*2.2) * (140.0 / -mv.z) * uPixelRatio;",
+          "  gl_PointSize = size;",
+          "  vColor = aColor;",
+          "  vAlpha = (0.35 + 0.65*fract(sin(aSeed*91.7)*43758.5)) * uIntensity;",
+          "}"
+        ].join("\n"),
+        fragmentShader:[
+          "precision mediump float;",
+          "varying vec3 vColor; varying float vAlpha;",
+          "void main(){",
+          "  vec2 c = gl_PointCoord - vec2(0.5);",
+          "  float d = length(c);",
+          "  float a = smoothstep(0.5,0.0,d) * vAlpha;",
+          "  gl_FragColor = vec4(vColor, a);",
+          "}"
+        ].join("\n")
+      });
+      var particles = new THREE.Points(pGeo, pMat);
+      mainScene.add(particles);
+
+      function updateParticles(dt){
+        var pos = pGeo.attributes.position.array;
+        for(var i=0;i<pCount;i++){
+          var i3=i*3;
+          pos[i3+1] += dt * pSpeed[i];
+          pos[i3]   += Math.sin(elapsed*0.3 + pSeed[i]*6.2831)*0.0016;
+          if(pos[i3+1] > boundsTop){
+            pos[i3+1] = boundsBottom;
+            pos[i3]   = rand(-spreadX/2, spreadX/2);
+            pos[i3+2] = rand(-spreadZ/2, 1.5);
+          }
+        }
+        pGeo.attributes.position.needsUpdate = true;
+      }
+
+      function generateBoltPoints(start, end, iterations, displace){
+        var points = [start.clone(), end.clone()];
+        for(var it=0; it<iterations; it++){
+          var next = [points[0]];
+          for(var i=0;i<points.length-1;i++){
+            var a = points[i], b = points[i+1];
+            var mid = a.clone().lerp(b, 0.5);
+            var dir = b.clone().sub(a);
+            if(dir.lengthSq() < 0.0001) dir.set(0,1,0); else dir.normalize();
+            var perp = new THREE.Vector3(-dir.y, dir.x, dir.z*0.4).normalize();
+            mid.add(perp.multiplyScalar(rand(-1,1)*displace));
+            mid.z += rand(-1,1)*displace*0.35;
+            next.push(mid, b);
+          }
+          points = next;
+          displace *= 0.55;
+        }
+        return points;
+      }
+
+      var boltPool = [];
+      for(var bi=0; bi<CONFIG.boltPoolSize; bi++){
+        var boltMat = new THREE.LineBasicMaterial({
+          color: CONFIG.colors.accent3, transparent:true, opacity:0,
+          blending: THREE.AdditiveBlending, depthWrite:false
+        });
+        var boltGeo = new THREE.BufferGeometry();
+        var boltLine = new THREE.Line(boltGeo, boltMat);
+        boltLine.visible = false;
+        boltLine.frustumCulled = false;
+        mainScene.add(boltLine);
+        boltPool.push({ mesh: boltLine, life: 0, maxLife: 1 });
+      }
+      var boltSpawnAccum = 0;
+
+      function spawnBolt(origin, intensity){
+        var slot = null;
+        for(var i=0;i<boltPool.length;i++){ if(boltPool[i].life <= 0){ slot = boltPool[i]; break; } }
+        if(!slot) return;
+        var dir = new THREE.Vector3(rand(-1,1), rand(-1,-0.2), rand(-0.6,0.6)).normalize();
+        var len = rand(0.8, 1.8) * (0.6 + intensity*0.8);
+        var end = origin.clone().add(dir.multiplyScalar(len));
+        var pts = generateBoltPoints(origin, end, isMobile ? 3 : 4, 0.32);
+        slot.mesh.geometry.dispose();
+        slot.mesh.geometry = new THREE.BufferGeometry().setFromPoints(pts);
+        slot.mesh.material.color.copy(Math.random() < 0.5 ? new THREE.Color(CONFIG.colors.accent3) : new THREE.Color(CONFIG.colors.accent1));
+        slot.maxLife = rand(0.18, 0.34);
+        slot.life = slot.maxLife;
+        slot.mesh.visible = true;
+        slot.mesh.material.opacity = 1;
+      }
+
+      function updateBolts(dt){
+        for(var i=0;i<boltPool.length;i++){
+          var s = boltPool[i];
+          if(s.life > 0){
+            s.life -= dt;
+            s.mesh.material.opacity = clamp(s.life / s.maxLife, 0, 1) * 0.9;
+            if(s.life <= 0) s.mesh.visible = false;
+          }
+        }
+      }
+
+      var scrollProgressRaw = 0;
+      var scrollProgress = 0;
+      function computeScroll(){
+        var doc = document.documentElement;
+        var max = (doc.scrollHeight - window.innerHeight);
+        scrollProgressRaw = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+        if(demoHint) demoHint.style.opacity = scrollProgressRaw > 0.02 ? '0' : '1';
+      }
+      window.addEventListener('scroll', computeScroll, { passive:true });
+      computeScroll();
+
+      var mouseTarget = new THREE.Vector2(0,0);
+      var mouseCurrent = new THREE.Vector2(0,0);
+      if(CONFIG.parallax){
+        window.addEventListener('pointermove', function(e){
+          mouseTarget.x = (e.clientX / window.innerWidth - 0.5) * 2;
+          mouseTarget.y = (e.clientY / window.innerHeight - 0.5) * 2;
+        }, { passive:true });
+      }
+
+      var pathPoints = [
+        new THREE.Vector3( 0.25,  4.6, -0.6),
+        new THREE.Vector3( 0.15,  3.05, 0.35),
+        new THREE.Vector3(-0.95,  1.65, 0.65),
+        new THREE.Vector3( 0.95,  0.35, 0.15),
+        new THREE.Vector3(-0.55, -0.85, 0.55),
+        new THREE.Vector3( 0.35, -1.65, 0.30)
+      ];
+      var curve = new THREE.CatmullRomCurve3(pathPoints, false, 'catmullrom', 0.4);
+
+      // Boşta bekleme durumu için yedek kıvılcım kaynağı: token henüz
+      // görünür olmadan önce (p küçükken) token'ın gerçek yol başlangıcı
+      // (y=4.6) kamera görüş alanının dışında kalıyordu, yani kaydırma
+      // başlamadan önceki "sessiz" kıvılcımlar ekranın dışında doğup boşa
+      // gidiyordu. Bu nokta her zaman görüş alanı içinde.
+      var IDLE_SPARK_ANCHOR = new THREE.Vector3(0, 2.3, -0.2);
+
+      var portWorldPos = null;
+      var INSERT_AXIS_LOCAL = new THREE.Vector3(0,-1,0);
+      var approachDir = new THREE.Vector3(1, 0.12, -0.35).normalize();
+      var targetQuat = new THREE.Quaternion().setFromUnitVectors(INSERT_AXIS_LOCAL, approachDir);
+
+      var hasClicked = false;
+      var clickTimer = 0;
+      var shake = 0;
+
+      var clock = new THREE.Clock();
+      var elapsed = 0;
+
+      function updateScene(dt){
+        elapsed += dt;
+        bgUniforms.uTime.value = elapsed;
+        screenUniforms.uTime.value = elapsed;
+
+        scrollProgress = damp(scrollProgress, scrollProgressRaw, CONFIG.scrollLerp, dt);
+        var p = scrollProgress;
+
+        var emergeT   = smoothstep(0.0, 0.045, p);
+        var curveT    = smoothstep(0.03, 0.86, p);
+        var alignT    = smoothstep(0.80, 0.94, p);
+        var insertT   = smoothstep(0.945, 1.0, p);
+
+        var basePos = curve.getPointAt(clamp(curveT, 0, 1));
+        var bob = (1 - alignT) * (reduceMotion ? 0 : 1) * (Math.sin(elapsed*1.6)*0.05 + Math.sin(elapsed*0.7)*0.03);
+        tokenGroup.position.set(basePos.x, basePos.y + bob, basePos.z);
+
+        var spinSpeed = reduceMotion ? 0.3 : (1.1 - alignT*0.9);
+        tokenGroup.userData.spinY = (tokenGroup.userData.spinY || 0) + dt * spinSpeed * 1.4;
+        tokenGroup.userData.spinX = (tokenGroup.userData.spinX || 0) + dt * spinSpeed * 0.55;
+        var spinQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(tokenGroup.userData.spinX*0.4, tokenGroup.userData.spinY, 0));
+        var outQuat = spinQuat.clone();
+        outQuat.slerp(targetQuat, alignT);
+        tokenGroup.quaternion.copy(outQuat);
+
+        if(portWorldPos && insertT > 0){
+          var forward = INSERT_AXIS_LOCAL.clone().applyQuaternion(tokenGroup.quaternion);
+          var settle = portWorldPos.clone().sub(forward.clone().multiplyScalar(0.55));
+          tokenGroup.position.lerp(settle, alignT*0.9);
+          tokenGroup.position.add(forward.clone().multiplyScalar(0.5 * insertT));
+        }
+
+        // ölçek artık 0'dan sürekli olarak büyüyor (önceden emergeT=0'da
+        // bile %50 boyuttaydı ve görünürlük ayrı bir sert eşikle
+        // yönetiliyordu — bu da p=0.004'te ani bir "pop" a yol açıyordu)
+        var scalePop = 0.62 * emergeT;
+        if(!hasClicked && p > 0.975){ hasClicked = true; clickTimer = 0; shake = 0.14; }
+        if(hasClicked){
+          clickTimer += dt;
+          scalePop *= 1 + 0.07*Math.exp(-clickTimer*9)*Math.sin(clickTimer*26);
+        }
+        tokenGroup.scale.setScalar(scalePop);
+        tokenGroup.visible = emergeT > 0.001;
+
+        tokenGlowLight.position.copy(tokenGroup.position);
+        tokenGlowLight.intensity = 1.2 + 0.6*Math.sin(elapsed*3.0) + alignT*1.4;
+
+        var laptopT = smoothstep(0.55, 0.82, p);
+        laptopGroup.position.y = lerp(LAPTOP_REST_Y - 2.2, LAPTOP_REST_Y, laptopT);
+        laptopGroup.traverse(function(o){
+          if(!o.material || o.material === screenMat || o.material === checkMat) return;
+          if(laptopT < 0.999){
+            o.material.transparent = true;
+            o.material.opacity = laptopT;
+          }else if(o.material.transparent){
+            o.material.opacity = 1;
+            o.material.transparent = false;
+          }
+        });
+        screenUniforms.uOpacity.value = laptopT;
+        laptopGroup.scale.setScalar(lerp(0.8, 0.92, laptopT));
+        reflectionGroup.position.copy(laptopGroup.position);
+        reflectionGroup.position.y = -laptopGroup.position.y - 3.02;
+        reflectionGroup.rotation.copy(laptopGroup.rotation);
+        reflectionGroup.scale.set(laptopGroup.scale.x, -laptopGroup.scale.y, laptopGroup.scale.z);
+        reflectionGroup.visible = laptopT > 0.05;
+
+        if(laptopT > 0.02){
+          portWorldPos = computePortWorld();
+        }
+
+        var screenActive = smoothstep(0.85, 0.97, p);
+        screenUniforms.uActive.value = screenActive;
+        laptopGlowLight.position.set(laptopGroup.position.x, laptopGroup.position.y+1.3, laptopGroup.position.z+0.2);
+        laptopGlowLight.intensity = screenActive * (1.4 + 0.5*Math.sin(elapsed*2.2));
+
+        var checkOpacity = smoothstep(0.965, 0.995, p);
+        var checkPop = 1 + (hasClicked ? 0.14*Math.exp(-clickTimer*8)*Math.sin(clickTimer*22) : 0);
+        checkMat.opacity = checkOpacity;
+        checkMesh.scale.setScalar(checkPop);
+
+        var tearY = lerp(0.86, 0.30, smoothstep(0.0, 0.88, p));
+        var tearX = 0.5 + Math.sin(p*7.2)*0.10*(1-alignT*0.6);
+        bgUniforms.uTearCenter.value.set(tearX, tearY);
+        var burst = hasClicked ? Math.exp(-clickTimer*5)*0.35 : 0;
+        // scroll=0'da bile küçük, nefes alan bir çatlak açık kalsın —
+        // önceki sürümde yarıçap tam sıfırdı, yani kaydırmadan önce
+        // ekranda gerçekten hiçbir görsel enerji yoktu
+        var tearRadiusBase = lerp(0.045, 0.155, smoothstep(0.0,0.05,p));
+        tearRadiusBase = lerp(tearRadiusBase, 0.135, smoothstep(0.85,1.0,p));
+        bgUniforms.uTearRadius.value = tearRadiusBase + burst;
+        bgUniforms.uEdgeGlow.value = 0.35 + 0.5*Math.sin(elapsed*2.4) + burst*1.5;
+
+        var t2 = (elapsed*0.13) % 1;
+        bgUniforms.uTear2Center.value.set(0.22 + 0.56*Math.sin(elapsed*0.21), 0.28 + 0.4*Math.cos(elapsed*0.17));
+        var stageIntensity = smoothstep(0.28,0.5,p)*smoothstep(0.62,0.5,p) + smoothstep(0.9,1.0,p);
+        bgUniforms.uTear2Radius.value = 0.05 * Math.max(0, Math.sin(t2*Math.PI)) * (0.4+stageIntensity);
+
+        var intensity = clamp(
+          smoothstep(0.0,0.06,p)*(1-smoothstep(0.06,0.12,p))*1.4 +
+          0.35 +
+          alignT*0.8 + insertT*2.2 + burst*3.0
+        , 0, 3);
+        boltSpawnAccum += dt * lerp(CONFIG.boltFreqIdle, CONFIG.boltFreqIntense, clamp(intensity/2.4,0,1));
+        while(boltSpawnAccum > 1){
+          boltSpawnAccum -= 1;
+          var originRef;
+          if(p > 0.9){ originRef = portWorldPos || tokenGroup.position; }
+          else if(p < 0.05){ originRef = IDLE_SPARK_ANCHOR; }
+          else{ originRef = tokenGroup.position; }
+          spawnBolt(originRef.clone().add(new THREE.Vector3(rand(-0.2,0.2),rand(-0.2,0.2),rand(-0.1,0.1))), intensity);
+        }
+        updateBolts(dt);
+
+        tokenGlowSprite.material.opacity = 0.4 + 0.3*Math.sin(elapsed*2.6) + burst;
+
+        pUniforms.uIntensity.value = damp(pUniforms.uIntensity.value, 0.55 + intensity*0.25, 4, dt);
+        updateParticles(dt);
+
+        shake = damp(shake, 0, 6, dt);
+        mouseCurrent.x = damp(mouseCurrent.x, mouseTarget.x, 4, dt);
+        mouseCurrent.y = damp(mouseCurrent.y, mouseTarget.y, 4, dt);
+        var camDrift = reduceMotion ? 0 : 1;
+        var camY = camBase.y + (0.35 - p*0.55) * 0.6 + mouseCurrent.y*0.12*CONFIG.parallax*camDrift;
+        var camX = camBase.x + Math.sin(elapsed*0.08)*0.06*camDrift + mouseCurrent.x*0.16*CONFIG.parallax*camDrift;
+        var camZ = camBase.z - p*0.5 + (hasClicked? Math.exp(-clickTimer*6)*0.25 : 0);
+        camera.position.set(
+          camX + (Math.random()-0.5)*shake,
+          camY + (Math.random()-0.5)*shake,
+          camZ
+        );
+        camera.lookAt(0, lerp(0.4,-0.6,p)*0.6, 0);
+      }
+
+      var running = true;
+      var firstFrameShown = false;
+      // Bekçi: her ne sebeple olursa olsun ilk kare 3 saniye içinde
+      // çizilmezse (sessizce takılı kalan bir "kara ekran" senaryosu),
+      // otomatik olarak yedek plana düş ve sebebini ekranda göster.
+      var readyWatchdog = setTimeout(function(){
+        if(!firstFrameShown){
+          if(window.console) console.error('[e-imza-bg] İlk kare 3 saniye içinde çizilemedi, yedek plana geçiliyor.');
+          running = false;
+          runFallback('ilk kare zaman aşımına uğradı');
+        }
+      }, 3000);
+      function frame(){
+        if(!running) return;
+        try{
+          var dt = Math.min(clock.getDelta(), 0.05);
+          updateScene(dt);
+
+          renderer.autoClear = true;
+          renderer.render(bgScene, bgCamera);
+          renderer.autoClear = false;
+          renderer.clearDepth();
+          renderer.render(mainScene, camera);
+
+          if(!firstFrameShown){
+            firstFrameShown = true;
+            clearTimeout(readyWatchdog);
+            canvas.classList.add('ready');
+          }
+        }catch(frameErr){
+          if(window.console) console.error('[e-imza-bg] Render hatası, yedek plana geçiliyor:', frameErr);
+          running = false;
+          runFallback('render hatası: ' + (frameErr && frameErr.message ? frameErr.message : frameErr));
+          return;
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      document.addEventListener('visibilitychange', function(){
+        if(document.hidden){ running = false; }
+        else if(!running && !fallbackActive){ running = true; clock.getDelta(); requestAnimationFrame(frame); }
+      });
+
+      var resizeTimer = null;
+      function onResize(){
+        setSize();
+        bgUniforms.uAspect.value = window.innerWidth / window.innerHeight;
+        pUniforms.uPixelRatio.value = renderer.getPixelRatio();
+      }
+      window.addEventListener('resize', function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(onResize, 120);
+      }, { passive:true });
+      window.addEventListener('orientationchange', onResize);
+    }
+
+  })();
+  </script>
+</body>
+</html>

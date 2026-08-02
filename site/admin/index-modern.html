@@ -1444,29 +1444,64 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
         </h2>
       </div>
       
-      <div style="max-width: 900px; margin: 0 auto;">
-        <div class="glass" style="padding: 32px;">
-          <div style="text-align: center; margin-bottom: 32px;">
-            <h3 style="font-size: 1.5rem; margin-bottom: 12px;">Sosyal Medya Paylaşım Görseli</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">
-              Facebook, Twitter, LinkedIn gibi platformlarda siteniz paylaşıldığında görünecek görseli yükleyin.
-              <br><strong>Önerilen boyut:</strong> 1200x630 piksel
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <!-- Info Card -->
+        <div style="background: linear-gradient(135deg, rgba(79,70,229,0.12), rgba(168,85,247,0.08)); border: 1px solid rgba(139,92,246,0.25); border-radius: 16px; padding: 24px; margin-bottom: 32px; display: flex; gap: 20px; align-items: start;">
+          <div style="width: 48px; height: 48px; background: var(--gradient-brand); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
+            </svg>
+          </div>
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text);">Sosyal Medya Paylaşım Görseli</h3>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
+              Facebook, Twitter, LinkedIn gibi platformlarda siteniz paylaşıldığında görünecek özel görsel. 
+              Görsel otomatik olarak <strong style="color: var(--primary);">1200x630 piksel</strong> boyutuna kırpılır ve optimize edilir.
             </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-muted);">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Otomatik kırpma</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Akıllı sıkıştırma</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>1200x630 çıktı</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Area -->
+        <div style="background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.15), transparent 60%), radial-gradient(circle at 70% 80%, rgba(168,85,247,0.12), transparent 60%), linear-gradient(135deg, rgba(18,20,35,0.85), rgba(14,16,28,0.85)); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 20px; padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">Mevcut Görsel</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Sosyal medyada böyle görünecek</p>
           </div>
           
-          <div id="ogImagePreview" style="margin-bottom: 24px; text-align: center;">
-            <div style="background: rgba(255,255,255,0.03); border: 1.5px dashed var(--border-strong); border-radius: 12px; padding: 48px; min-height: 280px; display: flex; align-items: center; justify-content: center;">
-              <span style="color: var(--text-faint);">Yükleniyor...</span>
+          <div id="ogImagePreview" style="margin-bottom: 24px;">
+            <div style="background: rgba(255,255,255,0.03); border: 2px dashed rgba(139,92,246,0.3); border-radius: 16px; padding: 64px 32px; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
+              <div class="spinner"></div>
+              <span style="color: var(--text-muted); font-size: 0.95rem;">Yükleniyor...</span>
             </div>
           </div>
           
-          <div class="form-actions" style="justify-content: center; gap: 12px;">
-            <label class="btn btn-primary" style="cursor: pointer;">
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <label class="btn btn-primary" style="cursor: pointer; min-width: 200px;">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/></svg>
               Yeni Görsel Yükle
-              <input type="file" id="ogImageInput" accept="image/*" style="display: none;">
+              <input type="file" id="ogImageInput" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;">
             </label>
-            <button class="btn btn-secondary" onclick="deleteOGImage()" id="deleteOGBtn" style="display: none;">
+            <button class="btn btn-danger" onclick="deleteOGImage()" id="deleteOGBtn" style="display: none; min-width: 160px;">
               <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
               Görseli Sil
             </button>
@@ -1486,7 +1521,7 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getDatabase, ref, set, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getDatabase, ref, get, set, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
@@ -2992,9 +3027,8 @@ function loadCurrentOGImage() {
   
   preview.innerHTML = '<div style="color:var(--text-faint);"><svg class="icon" style="width:24px;height:24px;margin-bottom:8px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 6zm0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/></svg><br>Yükleniyor...</div>';
   
-  // Use modular SDK syntax - import get function
-  import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ get }) => {
-    get(ref(database, 'settings/ogImage')).then(snapshot => {
+  // Directly use get function (already imported at top)
+  get(ref(database, 'settings/ogImage')).then(snapshot => {
       const url = snapshot.val();
       
       if (url) {
@@ -3019,52 +3053,128 @@ function loadCurrentOGImage() {
       }
     }).catch(err => {
       console.error('OG Image yükleme hatası:', err);
-      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Hata: ${err.message}<br><small>Admin olarak giriş yaptığınızdan emin olun</small></div>`;
+      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Veritabanı hatası: ${err.message}</div>`;
     });
-  }).catch(err => {
-    console.error('Firebase modül hatası:', err);
-    preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Firebase modülü yüklenemedi</div>`;
-  });
 }
 
-document.getElementById('ogImageInput')?.addEventListener('change', function(e) {
+document.getElementById('ogImageInput')?.addEventListener('change', async function(e) {
   const file = e.target.files[0];
   if (!file) return;
   
   // Validate file type
   if (!file.type.startsWith('image/')) {
     showToast('Lütfen geçerli bir görsel dosyası seçin', 'error');
+    e.target.value = '';
     return;
   }
   
-  // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('Dosya boyutu 5MB\'dan küçük olmalıdır', 'error');
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('Dosya boyutu 10MB\'dan küçük olmalıdır', 'error');
+    e.target.value = '';
     return;
   }
   
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    const base64 = event.target.result;
-    
-    // Save to Firebase using modular SDK
-    const preview = document.getElementById('ogImagePreview');
-    if (preview) {
-      preview.innerHTML = '<div style="color:var(--text-faint); padding:48px;"><div class="spinner" style="margin:0 auto 12px;"></div><br>Yükleniyor...</div>';
-    }
-    
-    set(ref(database, 'settings/ogImage'), base64).then(() => {
-      showToast('OG Image başarıyla yüklendi!', 'success');
-      loadCurrentOGImage();
-    }).catch(err => {
-      showToast('Yükleme hatası: ' + err.message, 'error');
-      loadCurrentOGImage();
-    });
-  };
+  const preview = document.getElementById('ogImagePreview');
+  if (preview) {
+    preview.innerHTML = '<div style="color:var(--text-faint); padding:48px;"><div class="spinner" style="margin:0 auto 12px;"></div><br>Görsel işleniyor...</div>';
+  }
   
-  reader.readAsDataURL(file);
+  try {
+    // Process image: resize and crop to 1200x630
+    const processedBase64 = await processOGImage(file);
+    
+    // Save to Firebase
+    await set(ref(database, 'settings/ogImage'), processedBase64);
+    showToast('OG Image başarıyla yüklendi ve optimize edildi!', 'success');
+    loadCurrentOGImage();
+  } catch (err) {
+    console.error('OG Image işleme hatası:', err);
+    showToast('Hata: ' + err.message, 'error');
+    loadCurrentOGImage();
+  }
+  
   e.target.value = ''; // Reset input
 });
+
+// Process and optimize OG Image to 1200x630
+async function processOGImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onerror = () => reject(new Error('Dosya okunamadı'));
+    
+    reader.onload = (e) => {
+      const img = new Image();
+      
+      img.onerror = () => reject(new Error('Görsel yüklenemedi'));
+      
+      img.onload = () => {
+        try {
+          const targetWidth = 1200;
+          const targetHeight = 630;
+          const targetRatio = targetWidth / targetHeight;
+          const imgRatio = img.width / img.height;
+          
+          // Calculate dimensions for cover-fit (crop to fill)
+          let sourceWidth, sourceHeight, sourceX, sourceY;
+          
+          if (imgRatio > targetRatio) {
+            // Image is wider - crop sides
+            sourceHeight = img.height;
+            sourceWidth = img.height * targetRatio;
+            sourceX = (img.width - sourceWidth) / 2;
+            sourceY = 0;
+          } else {
+            // Image is taller - crop top/bottom
+            sourceWidth = img.width;
+            sourceHeight = img.width / targetRatio;
+            sourceX = 0;
+            sourceY = (img.height - sourceHeight) / 2;
+          }
+          
+          // Create canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          const ctx = canvas.getContext('2d');
+          
+          // Fill with white background
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, targetWidth, targetHeight);
+          
+          // Draw cropped and resized image
+          ctx.drawImage(
+            img,
+            sourceX, sourceY, sourceWidth, sourceHeight,
+            0, 0, targetWidth, targetHeight
+          );
+          
+          // Convert to JPEG with quality optimization
+          let quality = 0.92;
+          let dataUrl = canvas.toDataURL('image/jpeg', quality);
+          
+          // Reduce quality if too large (target < 500KB)
+          const maxSize = 500 * 1024; // 500KB in bytes
+          let attempts = 0;
+          while (dataUrl.length > maxSize && quality > 0.5 && attempts < 10) {
+            quality -= 0.08;
+            dataUrl = canvas.toDataURL('image/jpeg', quality);
+            attempts++;
+          }
+          
+          resolve(dataUrl);
+        } catch (err) {
+          reject(new Error('Görsel işlenirken hata: ' + err.message));
+        }
+      };
+      
+      img.src = e.target.result;
+    };
+    
+    reader.readAsDataURL(file);
+  });
+}
 
 window.deleteOGImage = function() {
   showConfirm({
