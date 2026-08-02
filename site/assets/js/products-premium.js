@@ -72,8 +72,13 @@
 
       void main() {
         vec2 uv = gl_FragCoord.xy / iResolution.xy;
-        uv.x *= 1.5;
-        uv.x -= 0.25;
+        
+        // Aspect ratio correction - keep circles round on all screen sizes
+        float aspectRatio = iResolution.x / iResolution.y;
+        uv.x *= aspectRatio;
+        
+        // Center the effect
+        uv.x -= (aspectRatio - 1.0) * 0.5;
 
         float mask = 0.0;
         float radius = 0.35;
