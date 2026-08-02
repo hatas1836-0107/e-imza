@@ -282,11 +282,12 @@
         </div>
       ` : '';
 
-      // VAT label - if vatIncluded is true, don't show anything (price includes VAT)
-      // if vatIncluded is false/undefined, show "+KDV"
-      const vatLabel = product.vatIncluded === true 
-        ? '' 
-        : '<span class="period">+KDV</span>';
+      // VAT label logic:
+      // If vatIncluded is FALSE (switch OFF) -> show "+KDV"
+      // If vatIncluded is TRUE (switch ON) -> don't show anything
+      const vatLabel = product.vatIncluded !== true 
+        ? '<span class="period">+KDV</span>' 
+        : '';
 
       // Features
       const features = (product.features || [])
