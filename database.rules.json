@@ -5,6 +5,36 @@
       ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'huseyin.atas@gmail.com' || auth.token.email == 'hüseyinataş@gmail.com' || auth.token.email == 'admin@zirveeimza.com' || auth.token.email == '2sthillman@gmail.com')",
       ".indexOn": ["status", "price", "createdAt", "category", "popular"]
     },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'huseyin.atas@gmail.com' || auth.token.email == 'hüseyinataş@gmail.com' || auth.token.email == 'admin@zirveeimza.com' || auth.token.email == '2sthillman@gmail.com')",
+      "ogImage": {
+        "base64": {
+          ".validate": "newData.isString()"
+        },
+        "width": {
+          ".validate": "newData.isNumber()"
+        },
+        "height": {
+          ".validate": "newData.isNumber()"
+        },
+        "fileName": {
+          ".validate": "newData.isString()"
+        },
+        "fileSize": {
+          ".validate": "newData.isNumber()"
+        },
+        "fileType": {
+          ".validate": "newData.isString()"
+        },
+        "uploadedAt": {
+          ".validate": "newData.isString()"
+        },
+        "uploadedBy": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
     "orders": {
       ".read": true,
       ".indexOn": ["status", "createdAt", "customerPhone", "customerEmail", "district"],

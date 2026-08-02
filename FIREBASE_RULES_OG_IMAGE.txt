@@ -1,0 +1,41 @@
+======================================
+FİREBASE REALTIME DATABASE RULES
+OG IMAGE DESTEĞI İLE GÜNCELLENDİ
+======================================
+
+Aşağıdaki kuralları Firebase Console'a kopyalayın:
+https://console.firebase.google.com/project/e-imza-4c867/database/e-imza-4c867-default-rtdb/rules
+
+VEYA
+
+Terminal'den şu komutu çalıştırın (Firebase Console'da login olmalısınız):
+firebase deploy --only database
+
+======================================
+GÜNCEL KURALLAR (database.rules.json):
+======================================
+
+Bu kurallar şunları içerir:
+✓ Ürün yönetimi (products)
+✓ Sipariş yönetimi (orders) 
+✓ Kurye yönetimi (couriers)
+✓ Konum takibi (locations)
+✓ YENİ: OG Image yönetimi (settings/ogImage)
+
+settings/ogImage bölümü:
+- Admin kullanıcıları tarafından yazılabilir
+- Herkes tarafından okunabilir
+- Base64 formatında resim saklar
+- Boyut, dosya adı, yükleme tarihi gibi meta datalar içerir
+
+======================================
+ÖNEMLİ NOTLAR:
+======================================
+
+1. OG Image admin panelden yüklenebilir
+2. Resim Realtime Database'e base64 olarak kaydedilir
+3. Maksimum dosya boyutu: 5MB
+4. Desteklenen formatlar: PNG, JPG, WEBP
+5. Önerilen boyut: 1200x630px
+
+======================================
