@@ -1351,34 +1351,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 console.log('✅ [ANASAYFA] Firebase initialized');
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
-  authDomain: "e-imza-4c867.firebaseapp.com",
-  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
-  projectId: "e-imza-4c867",
-  storageBucket: "e-imza-4c867.firebasestorage.app",
-  messagingSenderId: "856535109805",
-  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
-};
-
-const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+console.log('✅ [ANASAYFA] Database connected');
 
 // Initialize WebGL background for home page
 if (window.initProductsBackground) {
   window.initProductsBackground('homeBgCanvas', 'homeBgFallback');
+  console.log('✅ [ANASAYFA] WebGL background initialized');
+} else {
+  console.warn('⚠️ [ANASAYFA] initProductsBackground not found');
 }
 
 const productsRef = ref(database, 'products');
+console.log('📦 [ANASAYFA] Products ref oluşturuldu, dinleniyor...');
 
 onValue(productsRef, (snapshot) => {
+  console.log('🔄 [ANASAYFA] onValue tetiklendi');
+  
   const productsData = snapshot.val();
+  console.log('📊 [ANASAYFA] Firebase\'den gelen veri:', productsData);
+  
   const products = productsData || {};
   const allProducts = Object.entries(products).map(([id, data]) => ({ id, ...data }));
+  console.log('📋 [ANASAYFA] Tüm ürünler:', allProducts);
   
   const activeProducts = allProducts
     .filter(p => p.status === 'active')
@@ -1389,31 +1384,46 @@ onValue(productsRef, (snapshot) => {
   const loading = document.getElementById('homeProductsLoadingPremium');
   const container = document.getElementById('homeProductsContainerPremium');
 
+  console.log('🎯 [ANASAYFA] DOM elementleri:', { loading, container });
+
+  if (!loading || !container) {
+    console.error('❌ [ANASAYFA] DOM elementleri bulunamadı!');
+    return;
+  }
+
   if (activeProducts.length === 0) {
     console.warn('⚠️ [ANASAYFA] Aktif ürün bulunamadı!');
     loading.innerHTML = '<p style="color:var(--text-muted);">Şu anda gösterilecek ürün bulunmamaktadır.</p>';
     return;
   }
 
+  console.log(`🎨 [ANASAYFA] ${activeProducts.length} ürün render ediliyor...`);
+
   loading.style.display = 'none';
   container.style.display = 'block';
 
   // Render premium cards
   if (window.renderPremiumProducts) {
+    console.log('🎨 [ANASAYFA] renderPremiumProducts çağrılıyor...');
     window.renderPremiumProducts(activeProducts, 'homeProductsContainerPremium');
+    console.log('✅ [ANASAYFA] Ürünler başarıyla render edildi!');
+  } else {
+    console.error('❌ [ANASAYFA] renderPremiumProducts fonksiyonu bulunamadı!');
+    loading.innerHTML = '<p style="color:#f43f5e;">Render fonksiyonu yüklenemedi.</p>';
   }
-  
-  console.log('✅ [ANASAYFA] Ürünler başarıyla render edildi!');
   
 }, (error) => {
   console.error('❌ [ANASAYFA] Firebase error:', error);
-  document.getElementById('homeProductsLoadingPremium').innerHTML = '<p style="color:#f43f5e;">Ürünler yüklenirken bir hata oluştu.</p>';
+  const loading = document.getElementById('homeProductsLoadingPremium');
+  if (loading) {
+    loading.innerHTML = '<p style="color:#f43f5e;">Ürünler yüklenirken bir hata oluştu.</p>';
+  }
 });
+
+console.log('✅ [ANASAYFA] Firebase listener kuruldu');
 </script>
 
-<script src="assets/js/products-premium.js"></script>
-
 <script src="assets/js/main.js"></script>
-<script src="assets/js/products.js"></script>
+<script src="assets/js/products-premium.js"></script>
 </body>
 </html>
