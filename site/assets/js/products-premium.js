@@ -282,8 +282,10 @@
         </div>
       ` : '';
 
-      // VAT label - if vatIncluded is true, show "KDV Dahil", else show "+KDV"
-      const vatLabel = product.vatIncluded ? '<span class="vat-included">KDV Dahil</span>' : '<span>+KDV</span>';
+      // VAT label - show "KDV Dahil" if true, "+KDV" if false or undefined
+      const vatLabel = product.vatIncluded === true 
+        ? '<span class="period vat-included">KDV Dahil</span>' 
+        : '<span class="period">+KDV</span>';
 
       // Features
       const features = (product.features || [])
@@ -306,7 +308,7 @@
             <div class="desc">${product.description || ''}</div>
             <div class="product-price">
               <span class="amount">${Number(product.price || 0).toLocaleString('tr-TR')}₺</span>
-              <span class="period">${vatLabel}</span>
+              ${vatLabel}
             </div>
             <div class="product-divider"></div>
             <ul class="product-features">${features}</ul>
