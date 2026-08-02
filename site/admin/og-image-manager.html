@@ -155,6 +155,10 @@ body {
   color: #fca5a5;
 }
 </style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 <div class="container">
@@ -215,6 +219,21 @@ body {
 </div>
 
 <script>
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD8cL9x5GcMvPDRJXKp0aYLKbD2x8P3yTc",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+
+firebase.initializeApp(firebaseConfig);
+const storage = firebase.storage();
+const storageRef = storage.ref();
+
 let selectedFile = null;
 
 // Load current image dimensions
@@ -222,6 +241,13 @@ const img = document.getElementById('currentImage');
 img.onload = function() {
   document.getElementById('imageDimensions').textContent = `${this.naturalWidth}x${this.naturalHeight}px`;
 };
+
+// Reload current image on page load
+function loadCurrentImage() {
+  const timestamp = new Date().getTime();
+  img.src = `../og-image.png?v=${timestamp}`;
+}
+loadCurrentImage();
 
 // Upload area interactions
 const uploadArea = document.getElementById('uploadArea');
@@ -281,7 +307,7 @@ function handleFile(file) {
       document.getElementById('imageDimensions').textContent = dimensions;
       
       if (this.width !== 1200 || this.height !== 630) {
-        showAlert(`⚠️ Boyut ${dimensions} - Önerilen 1200x630px`, 'error');
+        showAlert(`⚠️ Uyarı: Boyut ${dimensions} - Önerilen 1200x630px. Yine de yükleyebilirsiniz.`, 'error');
       } else {
         showAlert('✓ Mükemmel! Boyut tam olarak 1200x630px', 'success');
       }
@@ -293,23 +319,59 @@ function handleFile(file) {
   reader.readAsDataURL(file);
 }
 
-function uploadImage() {
+async function uploadImage() {
   if (!selectedFile) {
     showAlert('Lütfen önce bir dosya seçin', 'error');
     return;
   }
 
-  showAlert('📤 Yükleniyor... (Bu işlev için Firebase Storage gerekli)', 'error');
-  
-  // Note: Gerçek implementasyon için Firebase Storage kullanılmalı
-  // Şimdilik sadece local preview gösteriyoruz
-  
-  showAlert('ℹ️ Not: Gerçek yükleme için Firebase Storage entegrasyonu gerekli. Şu an sadece önizleme modu.', 'error');
+  try {
+    showAlert('📤 Yükleniyor...', 'success');
+    
+    // Upload to Firebase Storage
+    const ogImageRef = storageRef.child('og-image.png');
+    const uploadTask = ogImageRef.put(selectedFile, {
+      contentType: selectedFile.type,
+      cacheControl: 'public, max-age=31536000',
+      customMetadata: {
+        'uploadedAt': new Date().toISOString(),
+        'originalName': selectedFile.name
+      }
+    });
+
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        showAlert(`📤 Yükleniyor: ${Math.round(progress)}%`, 'success');
+      },
+      (error) => {
+        console.error('Upload error:', error);
+        showAlert('❌ Yükleme hatası: ' + error.message, 'error');
+      },
+      async () => {
+        // Upload completed successfully
+        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+        showAlert('✅ Başarıyla yüklendi! Sayfa yenileniyor...', 'success');
+        
+        // Reload image after 2 seconds
+        setTimeout(() => {
+          loadCurrentImage();
+          document.getElementById('actionButtons').style.display = 'none';
+          selectedFile = null;
+          fileInput.value = '';
+        }, 2000);
+      }
+    );
+
+  } catch (error) {
+    console.error('Error:', error);
+    showAlert('❌ Hata: ' + error.message, 'error');
+  }
 }
 
 function cancelUpload() {
   selectedFile = null;
-  document.getElementById('currentImage').src = '../assets/img/og-image.png';
+  loadCurrentImage();
   document.getElementById('actionButtons').style.display = 'none';
   fileInput.value = '';
   showAlert('İşlem iptal edildi', 'success');
