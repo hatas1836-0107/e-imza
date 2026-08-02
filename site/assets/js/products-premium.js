@@ -151,9 +151,12 @@
       gl.uniform1i(themeLoc, isLight);
       if (isLight) {
         gl.uniform3fv(bgLoc, new Float32Array([0.98, 0.984, 0.988])); // Light background
+        console.log('🎨 [WebGL] Light theme background:', [0.98, 0.984, 0.988]);
       } else {
         // Dark background - #0b0e1a (RGB: 11, 14, 26) normalized to 0-1 range
-        gl.uniform3fv(bgLoc, new Float32Array([11/255, 14/255, 26/255]));
+        const bgColor = [11/255, 14/255, 26/255];
+        gl.uniform3fv(bgLoc, new Float32Array(bgColor));
+        console.log('🎨 [WebGL] Dark theme background:', bgColor, '(#0b0e1a)');
       }
     }
 
