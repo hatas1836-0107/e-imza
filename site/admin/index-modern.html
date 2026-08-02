@@ -56,7 +56,7 @@ body {
   min-height: 100vh;
 }
 
-/* Subtle Bokeh Background - Modern & Elegant */
+/* Subtle Bokeh Background - Modern & Elegant - Multi Layer */
 body::before {
   content: '';
   position: fixed;
@@ -64,29 +64,53 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 25% 20%, rgba(79,70,229,0.08), transparent 50%),
-    radial-gradient(circle at 75% 25%, rgba(124,58,237,0.06), transparent 55%),
-    radial-gradient(circle at 50% 70%, rgba(99,102,241,0.05), transparent 60%),
-    radial-gradient(circle at 80% 75%, rgba(139,92,246,0.04), transparent 50%);
+    radial-gradient(circle at 25% 20%, rgba(79,70,229,0.09), transparent 45%),
+    radial-gradient(circle at 75% 25%, rgba(124,58,237,0.07), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(99,102,241,0.06), transparent 55%),
+    radial-gradient(circle at 20% 75%, rgba(139,92,246,0.05), transparent 48%),
+    radial-gradient(circle at 85% 70%, rgba(168,85,247,0.04), transparent 50%);
   filter: blur(100px);
-  opacity: 0.6;
+  opacity: 0.7;
   animation: subtleFloat 30s ease-in-out infinite;
+}
+
+/* Second layer for depth - center focused */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(79,70,229,0.05), transparent 60%),
+    radial-gradient(ellipse at 60% 55%, rgba(124,58,237,0.04), transparent 65%),
+    radial-gradient(circle at 40% 60%, rgba(99,102,241,0.03), transparent 55%);
+  filter: blur(120px);
+  opacity: 0.5;
+  animation: centerGlow 35s ease-in-out infinite alternate;
+  display: block;
 }
 
 @keyframes subtleFloat {
   0%, 100% { 
     transform: translate(0, 0);
-    opacity: 0.6;
+    opacity: 0.7;
   }
   50% { 
-    transform: translate(10px, -10px);
-    opacity: 0.7;
+    transform: translate(8px, -8px);
+    opacity: 0.75;
   }
 }
 
-/* Remove the after pseudo-element */
-body::after {
-  display: none;
+@keyframes centerGlow {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.6;
+  }
 }
 
 /* Noise/Grain texture overlay for depth */
