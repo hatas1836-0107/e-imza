@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test Admin - Basit</title>
+</head>
+<body>
+<h1>Test Admin Panel</h1>
+<div id="status">Yükleniyor...</div>
+<div id="user">-</div>
+<div id="data">-</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+console.log('Firebase initializing...');
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+setPersistence(auth, browserLocalPersistence);
+
+console.log('Waiting for auth state...');
+
+onAuthStateChanged(auth, (user) => {
+  console.log('AUTH STATE CHANGED');
+  console.log('User:', user);
+  
+  if (user) {
+    console.log('User email:', user.email);
+    document.getElementById('status').textContent = 'Giriş yapıldı!';
+    document.getElementById('user').textContent = 'Email: ' + user.email;
+    
+    // Load products
+    const productsRef = ref(database, 'products');
+    onValue(productsRef, (snapshot) => {
+      const products = snapshot.val();
+      console.log('Products:', products);
+      
+      if (products) {
+        const count = Object.keys(products).length;
+        document.getElementById('data').innerHTML = `<h2>${count} ürün bulundu!</h2><pre>${JSON.stringify(products, null, 2)}</pre>`;
+      } else {
+        document.getElementById('data').textContent = 'Ürün yok';
+      }
+    }, (error) => {
+      console.error('Products error:', error);
+      document.getElementById('data').textContent = 'Hata: ' + error.message;
+    });
+    
+  } else {
+    console.log('No user - redirecting');
+    document.getElementById('status').textContent = 'Giriş yapılmamış - yönlendiriliyor...';
+    setTimeout(() => {
+      window.location.href = '../giris.html';
+    }, 2000);
+  }
+});
+</script>
+</body>
+</html>

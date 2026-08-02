@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Verisi Yükle - Zirve E-İmza</title>
+<style>
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  margin: 0;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+h1 {
+  color: #333;
+  margin-bottom: 8px;
+}
+.subtitle {
+  color: #666;
+  margin-bottom: 24px;
+}
+button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-right: 12px;
+  margin-bottom: 12px;
+}
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+.btn-success {
+  background: #10b981;
+  color: white;
+}
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+.btn-secondary {
+  background: #6b7280;
+  color: white;
+}
+.result {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  display: none;
+}
+.result.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+.result.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+.result.show {
+  display: block;
+}
+.info {
+  background: #e0e7ff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-left: 4px solid #667eea;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🔧 Test Verisi Yükleyici</h1>
+  <p class="subtitle">Admin paneli için örnek ürün, sipariş ve kurye verileri yükleyin</p>
+  
+  <div class="info">
+    <strong>ℹ️ Bilgi:</strong> Bu sayfa Firebase veritabanınıza test verileri ekler. Sadece ilk kurulum veya test için kullanın.
+  </div>
+  
+  <div>
+    <button class="btn-primary" onclick="loadProducts()">📦 Ürünleri Yükle (3 adet)</button>
+    <button class="btn-primary" onclick="loadOrders()">📋 Siparişleri Yükle (2 adet)</button>
+    <button class="btn-primary" onclick="loadCouriers()">👤 Kuryeleri Yükle (2 adet)</button>
+    <button class="btn-success" onclick="loadAll()">✨ Hepsini Yükle</button>
+    <br>
+    <button class="btn-danger" onclick="clearAll()">🗑️ Tüm Verileri Temizle</button>
+    <button class="btn-secondary" onclick="window.location.href='kurye-modern.html'">← Admin Panel'e Dön</button>
+  </div>
+  
+  <div id="result" class="result"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getDatabase, ref, set, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+// Auth persistence ayarla
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error('Persistence error:', error);
+});
+
+// Admin kontrolü
+const ADMIN_EMAILS = [
+  'huseyinatas@gmail.com',
+  'huseyin.atas@gmail.com',
+  'hüseyinataş@gmail.com',  // Türkçe karakterli versiyon
+  'admin@zirveeimza.com',
+  '2sthillman@gmail.com'
+];
+
+let isAuthChecked = false;
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+  console.log('Auth durumu değişti:', user ? user.email : 'Kullanıcı yok');
+  
+  if (!user) {
+    if (!isAuthChecked) {
+      isAuthChecked = true;
+      alert('Giriş yapmanız gerekiyor!');
+      window.location.href = '../giris.html';
+    }
+    return;
+  }
+  
+  currentUser = user;
+  const userEmail = user.email.toLowerCase();
+  console.log('Kullanıcı email:', userEmail);
+  console.log('Admin mi?', ADMIN_EMAILS.includes(userEmail));
+  
+  if (!ADMIN_EMAILS.includes(userEmail)) {
+    if (!isAuthChecked) {
+      isAuthChecked = true;
+      alert('Bu sayfaya sadece admin kullanıcılar erişebilir!');
+      window.location.href = '../giris.html';
+    }
+  } else {
+    isAuthChecked = true;
+    console.log('Admin erişimi onaylandı');
+  }
+});
+
+function showResult(message, isSuccess) {
+  const result = document.getElementById('result');
+  result.textContent = message;
+  result.className = `result ${isSuccess ? 'success' : 'error'} show`;
+  setTimeout(() => result.classList.remove('show'), 5000);
+}
+
+window.loadProducts = async () => {
+  try {
+    const products = {
+      'prod-1': {
+        id: 'prod-1',
+        name: 'E-İmza Standart',
+        description: 'Bireysel kullanım için temel e-imza paketi',
+        price: '299',
+        duration: '1 Yıl',
+        status: 'active',
+        features: [
+          'Tek kullanıcı',
+          '1 yıl geçerlilik',
+          '7/24 teknik destek',
+          'Mobil uygulama',
+          'Sınırsız imzalama'
+        ],
+        createdAt: new Date().toISOString()
+      },
+      'prod-2': {
+        id: 'prod-2',
+        name: 'E-İmza Premium',
+        description: 'Kurumsal kullanım için gelişmiş e-imza paketi',
+        price: '599',
+        duration: '1 Yıl',
+        status: 'active',
+        features: [
+          '5 kullanıcı',
+          '1 yıl geçerlilik',
+          'Öncelikli destek',
+          'API entegrasyonu',
+          'Toplu imzalama'
+        ],
+        createdAt: new Date().toISOString()
+      },
+      'prod-3': {
+        id: 'prod-3',
+        name: 'E-İmza Enterprise',
+        description: 'Büyük organizasyonlar için kurumsal çözüm',
+        price: '1999',
+        duration: '1 Yıl',
+        status: 'active',
+        features: [
+          'Sınırsız kullanıcı',
+          '1 yıl geçerlilik',
+          'Özel hesap yöneticisi',
+          'Özel entegrasyon',
+          'SLA garantisi'
+        ],
+        createdAt: new Date().toISOString()
+      }
+    };
+    
+    for (const [id, data] of Object.entries(products)) {
+      await set(ref(database, `products/${id}`), data);
+    }
+    
+    showResult('✅ 3 ürün başarıyla yüklendi!', true);
+  } catch (error) {
+    showResult('❌ Hata: ' + error.message, false);
+  }
+};
+
+window.loadOrders = async () => {
+  try {
+    const orders = {
+      'order-1': {
+        id: 'order-1',
+        customerName: 'Ahmet Yılmaz',
+        customerEmail: 'ahmet@example.com',
+        customerPhone: '+90 532 111 22 33',
+        productName: 'E-İmza Standart',
+        productPrice: '299',
+        address: 'Atatürk Caddesi No:123',
+        district: 'Çankaya',
+        city: 'Ankara',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      'order-2': {
+        id: 'order-2',
+        customerName: 'Ayşe Demir',
+        customerEmail: 'ayse@example.com',
+        customerPhone: '+90 533 444 55 66',
+        productName: 'E-İmza Premium',
+        productPrice: '599',
+        address: 'İstiklal Caddesi No:45',
+        district: 'Kadıköy',
+        city: 'İstanbul',
+        status: 'confirmed',
+        createdAt: new Date(Date.now() - 3600000).toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    };
+    
+    for (const [id, data] of Object.entries(orders)) {
+      await set(ref(database, `orders/${id}`), data);
+    }
+    
+    showResult('✅ 2 sipariş başarıyla yüklendi!', true);
+  } catch (error) {
+    showResult('❌ Hata: ' + error.message, false);
+  }
+};
+
+window.loadCouriers = async () => {
+  try {
+    const couriers = {
+      'courier-1': {
+        id: 'courier-1',
+        name: 'Mehmet Kurye',
+        email: 'mehmet@example.com',
+        phone: '+90 534 777 88 99',
+        isActive: true,
+        activeOrders: {}
+      },
+      'courier-2': {
+        id: 'courier-2',
+        name: 'Fatma Hızlı',
+        email: 'fatma@example.com',
+        phone: '+90 535 222 33 44',
+        isActive: true,
+        activeOrders: {}
+      }
+    };
+    
+    for (const [id, data] of Object.entries(couriers)) {
+      await set(ref(database, `couriers/${id}`), data);
+    }
+    
+    showResult('✅ 2 kurye başarıyla yüklendi!', true);
+  } catch (error) {
+    showResult('❌ Hata: ' + error.message, false);
+  }
+};
+
+window.loadAll = async () => {
+  try {
+    await window.loadProducts();
+    await window.loadOrders();
+    await window.loadCouriers();
+    showResult('✅ Tüm test verileri başarıyla yüklendi!', true);
+  } catch (error) {
+    showResult('❌ Hata: ' + error.message, false);
+  }
+};
+
+window.clearAll = async () => {
+  if (!confirm('⚠️ Tüm ürün, sipariş ve kurye verilerini silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+    return;
+  }
+  
+  try {
+    await remove(ref(database, 'products'));
+    await remove(ref(database, 'orders'));
+    await remove(ref(database, 'couriers'));
+    showResult('✅ Tüm veriler temizlendi!', true);
+  } catch (error) {
+    showResult('❌ Hata: ' + error.message, false);
+  }
+};
+
+</script>
+
+</body>
+</html>

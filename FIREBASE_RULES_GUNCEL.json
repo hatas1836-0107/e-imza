@@ -7,7 +7,6 @@
     },
     "orders": {
       ".read": true,
-      ".indexOn": ["status", "createdAt", "customerPhone", "customerEmail", "district"],
       "$orderId": {
         ".write": true,
         "id": {
@@ -64,18 +63,6 @@
         "longitude": {
           ".validate": "!newData.exists() || newData.isString()"
         },
-        "queuePosition": {
-          ".validate": "!newData.exists() || newData.isNumber()"
-        },
-        "totalAmount": {
-          ".validate": "!newData.exists() || newData.isNumber()"
-        },
-        "paymentMethod": {
-          ".validate": "!newData.exists() || newData.isString()"
-        },
-        "paymentStatus": {
-          ".validate": "!newData.exists() || newData.isString()"
-        },
         "courier": {
           ".validate": "!newData.exists() || newData.hasChildren(['email', 'name'])",
           "email": {
@@ -91,15 +78,24 @@
             ".validate": "!newData.exists() || newData.isString()"
           }
         },
-        "$other": {
-          ".validate": true
-        }
+        "queuePosition": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "totalAmount": {
+          ".validate": "!newData.exists() || newData.isNumber()"
+        },
+        "paymentMethod": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "paymentStatus": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        ".indexOn": ["status", "createdAt", "customerPhone", "customerEmail", "district"]
       }
     },
     "couriers": {
       ".read": "auth != null",
       ".write": "auth != null",
-      ".indexOn": ["email", "name", "isActive"],
       "$courierId": {
         "email": {
           ".validate": "!newData.exists() || newData.isString()"
@@ -109,12 +105,6 @@
         },
         "phone": {
           ".validate": "!newData.exists() || newData.isString()"
-        },
-        "isActive": {
-          ".validate": "!newData.exists() || newData.isBoolean()"
-        },
-        "stats": {
-          ".validate": "!newData.exists() || newData.hasChildren()"
         },
         "location": {
           ".read": true,
@@ -143,7 +133,14 @@
               ".validate": "!newData.exists() || newData.isString()"
             }
           }
-        }
+        },
+        "stats": {
+          ".validate": "!newData.exists() || newData.hasChildren()"
+        },
+        "isActive": {
+          ".validate": "!newData.exists() || newData.isBoolean()"
+        },
+        ".indexOn": ["email", "name", "isActive"]
       }
     },
     "locations": {

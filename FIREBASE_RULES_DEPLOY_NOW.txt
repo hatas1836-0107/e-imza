@@ -1,0 +1,25 @@
+🔥 ACİL: FIREBASE DATABASE RULES GÜNCELLEME
+
+SORUN: 
+Admin email listesinde Türkçe karakterli email adresi eksik.
+hüseyinataş@gmail.com adresi Firebase kurallarına eklenmeli.
+
+ÇÖZÜM:
+1. Firebase Console'a gidin:
+   https://console.firebase.google.com/project/e-imza-4c867/database/e-imza-4c867-default-rtdb/rules
+
+2. Sol menüden "Realtime Database" > "Rules" sekmesine tıklayın
+
+3. "products" bölümündeki ".write" satırını bulun ve şu şekilde güncelleyin:
+
+ESKİ:
+".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'huseyin.atas@gmail.com' || auth.token.email == 'admin@zirveeimza.com' || auth.token.email == '2sthillman@gmail.com')"
+
+YENİ:
+".write": "auth != null && (auth.token.email == 'huseyinatas@gmail.com' || auth.token.email == 'huseyin.atas@gmail.com' || auth.token.email == 'hüseyinataş@gmail.com' || auth.token.email == 'admin@zirveeimza.com' || auth.token.email == '2sthillman@gmail.com')"
+
+4. Sağ üstteki "Publish" (Yayınla) butonuna tıklayın
+
+5. Sayfayı yenileyin ve tekrar deneyin
+
+NOT: Tüm güncellenmiş kurallar database.rules.json dosyasında mevcut.

@@ -1,504 +1,510 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Girişi | Zirve E-İmza</title>
-<style>
-:root {
-  --primary: #4f46e5;
-  --primary-dark: #4338ca;
-  --bg: #0b0e1a;
-  --surface: rgba(255,255,255,0.05);
-  --border: rgba(255,255,255,0.1);
-  --text: #f3f4f8;
-  --text-muted: #9ca3af;
-  --success: #10b981;
-  --error: #ef4444;
-}
+  <!DOCTYPE html>
+  <html lang="tr">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Girişi | Zirve E-İmza</title>
+  <style>
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --bg: #0b0e1a;
+    --surface: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+    --text: #f3f4f8;
+    --text-muted: #9ca3af;
+    --success: #10b981;
+    --error: #ef4444;
+  }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
 
-.login-container {
-  width: 100%;
-  max-width: 420px;
-  background: var(--surface);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 40px 32px;
-}
-
-.logo {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 24px;
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo svg {
-  width: 32px;
-  height: 32px;
-  color: white;
-}
-
-h1 {
-  text-align: center;
-  font-size: 1.75rem;
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-bottom: 32px;
-}
-
-.alert {
-  padding: 12px 16px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-  display: none;
-}
-
-.alert.show {
-  display: block;
-}
-
-.alert-success {
-  background: rgba(16,185,129,0.1);
-  border: 1px solid rgba(16,185,129,0.3);
-  color: var(--success);
-}
-
-.alert-error {
-  background: rgba(239,68,68,0.1);
-  border: 1px solid rgba(239,68,68,0.3);
-  color: var(--error);
-}
-
-.btn {
-  width: 100%;
-  padding: 14px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.btn-google {
-  background: white;
-  color: #1f2937;
-  margin-bottom: 20px;
-}
-
-.btn-google:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
-  color: white;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(79,70,229,0.4);
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  margin: 24px 0;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid var(--border);
-}
-
-.divider span {
-  padding: 0 12px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 14px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 1rem;
-  font-family: inherit;
-  transition: all 0.3s;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
-  background: rgba(255,255,255,0.08);
-}
-
-.form-group input::placeholder {
-  color: var(--text-muted);
-}
-
-.back-link {
-  display: block;
-  text-align: center;
-  margin-top: 24px;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s;
-}
-
-.back-link:hover {
-  color: var(--primary);
-}
-
-.loading {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  border-top-color: currentColor;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@media (max-width: 480px) {
   .login-container {
-    padding: 32px 24px;
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px 32px;
   }
-  
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo svg {
+    width: 32px;
+    height: 32px;
+    color: white;
+  }
+
   h1 {
-    font-size: 1.5rem;
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 8px;
   }
-  
-  .btn {
-    padding: 12px 18px;
+
+  .subtitle {
+    text-align: center;
+    color: var(--text-muted);
     font-size: 0.95rem;
+    margin-bottom: 32px;
   }
-}
-</style>
-</head>
-<body>
 
-<div class="login-container">
-  <div class="logo">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-    </svg>
-  </div>
-  
-  <h1>Hoş Geldiniz</h1>
-  <p class="subtitle">Admin hesabınızla giriş yapın</p>
-  
-  <div id="message" class="alert"></div>
-  
-  <!-- Google Sign-In -->
-  <button id="googleBtn" class="btn btn-google">
-    <svg width="20" height="20" viewBox="0 0 18 18">
-      <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18Z"/>
-      <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17Z"/>
-      <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07Z"/>
-      <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3Z"/>
-    </svg>
-    <span id="googleBtnText">Google ile Giriş Yap</span>
-  </button>
-  
-  <div class="divider"><span>veya</span></div>
-  
-  <!-- Email/Password Login -->
-  <form id="loginForm" novalidate>
-    <div class="form-group">
-      <label>E-posta</label>
-      <input type="email" id="email" required placeholder="ornek@gmail.com">
-    </div>
-    <div class="form-group">
-      <label>Şifre</label>
-      <input type="password" id="password" required placeholder="••••••••">
-    </div>
-    <button type="submit" class="btn btn-primary">
-      <span id="loginBtnText">Giriş Yap</span>
-    </button>
-  </form>
-  
-  <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
-</div>
-
-<script type="module">
-// Firebase imports
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
-// Firebase config
-import { firebaseConfig } from './admin/firebase-config.js';
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
-const googleProvider = new GoogleAuthProvider();
-
-console.log('✅ Firebase initialized');
-
-// ADMIN EMAIL LISTESI - Normalize edilmiş
-const ADMIN_EMAILS = [
-  'huseyinatas@gmail.com',  // Normalize edilmiş
-  'huseyin.atas@gmail.com',
-  '2sthillman@gmail.com',
-  'admin@zirveeimza.com'
-];
-
-// Email normalization - Türkçe karakterleri temizle
-function normalizeEmail(email) {
-  if (!email) return '';
-  
-  const turkishMap = {
-    'ı': 'i', 'İ': 'i', 'ğ': 'g', 'Ğ': 'g',
-    'ü': 'u', 'Ü': 'u', 'ş': 's', 'Ş': 's',
-    'ö': 'o', 'Ö': 'o', 'ç': 'c', 'Ç': 'c'
-  };
-  
-  return email.toLowerCase().split('').map(char => turkishMap[char] || char).join('');
-}
-
-// Check if email is admin
-function isAdminEmail(email) {
-  if (!email) return false;
-  const normalized = normalizeEmail(email);
-  console.log('🔍 Checking admin:', email, '→ normalized:', normalized);
-  return ADMIN_EMAILS.some(admin => normalizeEmail(admin) === normalized);
-}
-
-// Show message
-function showMessage(msg, type = 'error') {
-  const messageDiv = document.getElementById('message');
-  messageDiv.className = `alert alert-${type} show`;
-  messageDiv.textContent = msg;
-  
-  setTimeout(() => {
-    messageDiv.classList.remove('show');
-  }, 5000);
-}
-
-// Check user role
-async function checkUserRole(email) {
-  console.log('🔍 checkUserRole called for:', email);
-  
-  const isAdmin = isAdminEmail(email);
-  console.log('🔍 isAdmin result:', isAdmin);
-  
-  if (isAdmin) {
-    console.log('✅ User is ADMIN');
-    return 'admin';
+  .alert {
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    display: none;
   }
-  
-  // Courier kontrolünü dene, hata olursa admin olmadığını döndür
-  try {
-    const courierKey = email.replace(/[.@]/g, '_');
-    console.log('🔍 Checking courier:', courierKey);
-    const courierRef = ref(database, `couriers/${courierKey}`);
-    const snap = await get(courierRef);
-    
-    if (snap.exists()) {
-      console.log('✅ User is COURIER');
-      return 'courier';
+
+  .alert.show {
+    display: block;
+  }
+
+  .alert-success {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--success);
+  }
+
+  .alert-error {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: var(--error);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-google {
+    background: white;
+    color: #1f2937;
+    margin-bottom: 20px;
+  }
+
+  .btn-google:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79,70,229,0.4);
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .divider span {
+    padding: 0 12px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    background: rgba(255,255,255,0.08);
+  }
+
+  .form-group input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+
+  .back-link:hover {
+    color: var(--primary);
+  }
+
+  .loading {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: currentColor;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 32px 24px;
     }
-  } catch (error) {
-    // Permission denied veya başka hata - admin değilse null döndür
-    console.warn('Courier check failed (expected for non-couriers):', error.code);
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    .btn {
+      padding: 12px 18px;
+      font-size: 0.95rem;
+    }
   }
-  
-  // Admin değilse ve courier değilse
-  console.log('❌ User is neither admin nor courier');
-  return null;
-}
+  </style>
+  </head>
+  <body>
 
-// Redirect user
-async function redirectUser(role) {
-  console.log('🚀 redirectUser called with role:', role);
-  
-  if (role === 'admin') {
-    console.log('🚀 Redirecting to admin panel...');
-    // Session storage'a işaretle
-    sessionStorage.setItem('justLoggedIn', 'true');
-    sessionStorage.setItem('userRole', 'admin');
+  <div class="login-container">
+    <div class="logo">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
     
-    // Yönlendirme
-    console.log('🚀 window.location.href = admin/index-modern.html');
-    window.location.href = 'admin/index-modern.html';
-  } else if (role === 'courier') {
-    console.log('🚀 Redirecting to courier panel...');
-    // Session storage'a işaretle
-    sessionStorage.setItem('justLoggedIn', 'true');
-    sessionStorage.setItem('userRole', 'courier');
-    window.location.href = 'admin/kurye.html';
-  } else {
-    console.log('❌ Invalid role, signing out...');
-    showMessage('❌ Yetkisiz erişim! Bu sistemi kullanma yetkiniz yok.', 'error');
-    await auth.signOut();
+    <h1>Hoş Geldiniz</h1>
+    <p class="subtitle">Admin hesabınızla giriş yapın</p>
+    
+    <div id="message" class="alert"></div>
+    
+    <!-- Google Sign-In -->
+    <button id="googleBtn" class="btn btn-google">
+      <svg width="20" height="20" viewBox="0 0 18 18">
+        <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18Z"/>
+        <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17Z"/>
+        <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07Z"/>
+        <path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3Z"/>
+      </svg>
+      <span id="googleBtnText">Google ile Giriş Yap</span>
+    </button>
+    
+    <div class="divider"><span>veya</span></div>
+    
+    <!-- Email/Password Login -->
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="email" required placeholder="ornek@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span id="loginBtnText">Giriş Yap</span>
+      </button>
+    </form>
+    
+    <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+  </div>
+
+  <script type="module">
+  // Firebase imports
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  // Firebase config
+  import { firebaseConfig } from './admin/firebase-config.js';
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // Auth persistence ayarla - Oturum tarayıcı kapanana kadar kalır
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error('Persistence error:', error);
+  });
+
+  console.log('✅ Firebase initialized');
+
+  // ADMIN EMAIL LISTESI - Normalize edilmiş
+  const ADMIN_EMAILS = [
+    'huseyinatas@gmail.com',  // Normalize edilmiş
+    'huseyin.atas@gmail.com',
+    'hüseyinataş@gmail.com',  // Türkçe karakterli versiyon
+    '2sthillman@gmail.com',
+    'admin@zirveeimza.com'
+  ];
+
+  // Email normalization - Türkçe karakterleri temizle
+  function normalizeEmail(email) {
+    if (!email) return '';
+    
+    const turkishMap = {
+      'ı': 'i', 'İ': 'i', 'ğ': 'g', 'Ğ': 'g',
+      'ü': 'u', 'Ü': 'u', 'ş': 's', 'Ş': 's',
+      'ö': 'o', 'Ö': 'o', 'ç': 'c', 'Ç': 'c'
+    };
+    
+    return email.toLowerCase().split('').map(char => turkishMap[char] || char).join('');
   }
-}
 
-// Google Login
-document.getElementById('googleBtn').addEventListener('click', async () => {
-  const btnText = document.getElementById('googleBtnText');
-  const btn = document.getElementById('googleBtn');
-  
-  btn.disabled = true;
-  btnText.innerHTML = '<div class="loading"></div> Giriş yapılıyor...';
-  
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    console.log('✅ Google login success:', result.user.email);
+  // Check if email is admin
+  function isAdminEmail(email) {
+    if (!email) return false;
+    const normalized = normalizeEmail(email);
+    console.log('🔍 Checking admin:', email, '→ normalized:', normalized);
+    return ADMIN_EMAILS.some(admin => normalizeEmail(admin) === normalized);
+  }
+
+  // Show message
+  function showMessage(msg, type = 'error') {
+    const messageDiv = document.getElementById('message');
+    messageDiv.className = `alert alert-${type} show`;
+    messageDiv.textContent = msg;
     
-    const role = await checkUserRole(result.user.email);
+    setTimeout(() => {
+      messageDiv.classList.remove('show');
+    }, 5000);
+  }
+
+  // Check user role
+  async function checkUserRole(email) {
+    console.log('🔍 checkUserRole called for:', email);
     
-    if (role) {
-      // HEMEN yönlendir (bekleme yok)
-      redirectUser(role);
+    const isAdmin = isAdminEmail(email);
+    console.log('🔍 isAdmin result:', isAdmin);
+    
+    if (isAdmin) {
+      console.log('✅ User is ADMIN');
+      return 'admin';
+    }
+    
+    // Courier kontrolünü dene, hata olursa admin olmadığını döndür
+    try {
+      const courierKey = email.replace(/[.@]/g, '_');
+      console.log('🔍 Checking courier:', courierKey);
+      const courierRef = ref(database, `couriers/${courierKey}`);
+      const snap = await get(courierRef);
+      
+      if (snap.exists()) {
+        console.log('✅ User is COURIER');
+        return 'courier';
+      }
+    } catch (error) {
+      // Permission denied veya başka hata - admin değilse null döndür
+      console.warn('Courier check failed (expected for non-couriers):', error.code);
+    }
+    
+    // Admin değilse ve courier değilse
+    console.log('❌ User is neither admin nor courier');
+    return null;
+  }
+
+  // Redirect user
+  async function redirectUser(role) {
+    console.log('🚀 redirectUser called with role:', role);
+    
+    if (role === 'admin') {
+      console.log('🚀 Redirecting to admin panel...');
+      // Session storage'a işaretle
+      sessionStorage.setItem('justLoggedIn', 'true');
+      sessionStorage.setItem('userRole', 'admin');
+      
+      // Yönlendirme
+      console.log('🚀 window.location.href = admin/index-modern.html');
+      window.location.href = 'admin/index-modern.html';
+    } else if (role === 'courier') {
+      console.log('🚀 Redirecting to courier panel...');
+      // Session storage'a işaretle
+      sessionStorage.setItem('justLoggedIn', 'true');
+      sessionStorage.setItem('userRole', 'courier');
+      window.location.href = 'admin/kurye.html';
     } else {
-      showMessage('❌ Yetkisiz erişim!', 'error');
+      console.log('❌ Invalid role, signing out...');
+      showMessage('❌ Yetkisiz erişim! Bu sistemi kullanma yetkiniz yok.', 'error');
+      await auth.signOut();
+    }
+  }
+
+  // Google Login
+  document.getElementById('googleBtn').addEventListener('click', async () => {
+    const btnText = document.getElementById('googleBtnText');
+    const btn = document.getElementById('googleBtn');
+    
+    btn.disabled = true;
+    btnText.innerHTML = '<div class="loading"></div> Giriş yapılıyor...';
+    
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log('✅ Google login success:', result.user.email);
+      
+      const role = await checkUserRole(result.user.email);
+      
+      if (role) {
+        // HEMEN yönlendir (bekleme yok)
+        redirectUser(role);
+      } else {
+        showMessage('❌ Yetkisiz erişim!', 'error');
+        btn.disabled = false;
+        btnText.textContent = 'Google ile Giriş Yap';
+      }
+    } catch (error) {
+      console.error('❌ Google login error:', error);
+      
+      let msg = 'Google ile giriş başarısız!';
+      if (error.code === 'auth/popup-closed-by-user') {
+        msg = 'Giriş penceresi kapatıldı.';
+      } else if (error.code === 'auth/popup-blocked') {
+        msg = 'Pop-up engellendi. Lütfen popup izni verin.';
+      } else if (error.code === 'auth/unauthorized-domain') {
+        msg = 'Bu domain Firebase\'de yetkili değil.';
+      }
+      
+      showMessage(msg, 'error');
       btn.disabled = false;
       btnText.textContent = 'Google ile Giriş Yap';
     }
-  } catch (error) {
-    console.error('❌ Google login error:', error);
-    
-    let msg = 'Google ile giriş başarısız!';
-    if (error.code === 'auth/popup-closed-by-user') {
-      msg = 'Giriş penceresi kapatıldı.';
-    } else if (error.code === 'auth/popup-blocked') {
-      msg = 'Pop-up engellendi. Lütfen popup izni verin.';
-    } else if (error.code === 'auth/unauthorized-domain') {
-      msg = 'Bu domain Firebase\'de yetkili değil.';
-    }
-    
-    showMessage(msg, 'error');
-    btn.disabled = false;
-    btnText.textContent = 'Google ile Giriş Yap';
-  }
-});
+  });
 
-// Email/Password Login
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  let email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const btnText = document.getElementById('loginBtnText');
-  const btn = e.target.querySelector('button[type="submit"]');
-  
-  console.log('🔐 Giriş denemesi:', email);
-  
-  btn.disabled = true;
-  btnText.innerHTML = '<div class="loading"></div> Giriş yapılıyor...';
-  
-  try {
-    console.log('📡 Firebase signInWithEmailAndPassword çağrılıyor...');
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    console.log('✅ Email login success:', result.user.email);
-    console.log('✅ User UID:', result.user.uid);
+  // Email/Password Login
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
     
-    console.log('🔍 Rol kontrol ediliyor...');
-    const role = await checkUserRole(result.user.email);
-    console.log('✅ Kullanıcı rolü:', role);
+    let email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btnText = document.getElementById('loginBtnText');
+    const btn = e.target.querySelector('button[type="submit"]');
     
-    if (role) {
-      console.log('✅ Yönlendirme yapılıyor:', role);
-      // HEMEN yönlendir (bekleme yok)
-      redirectUser(role);
-    } else {
-      console.log('❌ Rol bulunamadı!');
-      showMessage('❌ Yetkisiz erişim!', 'error');
-      await auth.signOut();
+    console.log('🔐 Giriş denemesi:', email);
+    
+    btn.disabled = true;
+    btnText.innerHTML = '<div class="loading"></div> Giriş yapılıyor...';
+    
+    try {
+      console.log('📡 Firebase signInWithEmailAndPassword çağrılıyor...');
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      console.log('✅ Email login success:', result.user.email);
+      console.log('✅ User UID:', result.user.uid);
+      
+      console.log('🔍 Rol kontrol ediliyor...');
+      const role = await checkUserRole(result.user.email);
+      console.log('✅ Kullanıcı rolü:', role);
+      
+      if (role) {
+        console.log('✅ Yönlendirme yapılıyor:', role);
+        // HEMEN yönlendir (bekleme yok)
+        redirectUser(role);
+      } else {
+        console.log('❌ Rol bulunamadı!');
+        showMessage('❌ Yetkisiz erişim!', 'error');
+        await auth.signOut();
+        btn.disabled = false;
+        btnText.textContent = 'Giriş Yap';
+      }
+    } catch (error) {
+      console.error('❌ Email login error:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      
+      let msg = 'Giriş başarısız!';
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+        msg = 'E-posta veya şifre hatalı!';
+      } else if (error.code === 'auth/invalid-credential') {
+        msg = 'Geçersiz e-posta veya şifre!';
+      } else if (error.code === 'auth/too-many-requests') {
+        msg = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
+      } else {
+        msg = 'Giriş başarısız: ' + error.message;
+      }
+      
+      showMessage(msg, 'error');
       btn.disabled = false;
       btnText.textContent = 'Giriş Yap';
     }
-  } catch (error) {
-    console.error('❌ Email login error:', error);
-    console.error('❌ Error code:', error.code);
-    console.error('❌ Error message:', error.message);
-    
-    let msg = 'Giriş başarısız!';
-    if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-      msg = 'E-posta veya şifre hatalı!';
-    } else if (error.code === 'auth/invalid-credential') {
-      msg = 'Geçersiz e-posta veya şifre!';
-    } else if (error.code === 'auth/too-many-requests') {
-      msg = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
-    } else {
-      msg = 'Giriş başarısız: ' + error.message;
-    }
-    
-    showMessage(msg, 'error');
-    btn.disabled = false;
-    btnText.textContent = 'Giriş Yap';
-  }
-});
+  });
 
-console.log('✅ Giriş sayfası hazır');
-</script>
+  console.log('✅ Giriş sayfası hazır');
+  </script>
 
-</body>
-</html>
+  </body>
+  </html>

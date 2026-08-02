@@ -30,6 +30,10 @@
 
 </head>
 <body>
+<!-- Custom Cursor -->
+<div class="custom-cursor" style="position:fixed;pointer-events:none;z-index:9999;"></div>
+<div class="custom-cursor-dot" style="position:fixed;pointer-events:none;z-index:10000;"></div>
+
 <a class="skip-link" href="#main">İçeriğe geç</a>
 <div class="mesh-bg" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -41,9 +45,10 @@
       <span>Zirve E-İmza<small>Aynı Gün Kurye ile Teslim</small></span>
     </a>
     <nav class="main-nav" aria-label="Ana menü">
-        <a href="fiyatlandirma.html">Fiyatlar</a>
+        <a href="index.html">Ana Sayfa</a>
+        <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
+        <a href="fiyatlandirma.html">Fiyatlandırma</a>
         <a href="takip.html">Sipariş Takip</a>
-        <a href="hizmetlerimiz.html">Hizmetler</a>
         <a href="iletisim.html">İletişim</a>
     </nav>
     <div class="header-actions">
@@ -95,45 +100,133 @@
 
 <section class="section" style="padding-top:10px;">
   <div class="container">
-    <div class="grid grid-3 reveal-stagger">
-      <div class="price-card card glass reveal" style="--i:0">
-        <div class="price-name">1 Yıllık</div>
-        <div class="price-value">1.250₺<span>+KDV</span></div>
-        <div class="price-note">Bireysel nitelikli e-imza</div>
-        <ul class="price-features">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Akıllı kart + okuyucu dahil</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Bilgisayara online kurulum</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Telefonla kurulum desteği</li>
-        </ul>
-        <a href="/iletisim.html" class="btn btn-ghost btn-block">Teklif Al</a>
-      </div>
-      <div class="price-card card glass featured reveal" style="--i:1">
-        <div class="price-name">2 Yıllık</div>
-        <div class="price-value">1.850₺<span>+KDV</span></div>
-        <div class="price-note">En çok tercih edilen süre</div>
-        <ul class="price-features">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Akıllı kart + okuyucu dahil</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Aynı gün kurye önceliği</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Yerinde kurulum ve test</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Ücretsiz telefon desteği</li>
-        </ul>
-        <a href="/iletisim.html" class="btn btn-primary btn-block">Teklif Al</a>
-      </div>
-      <div class="price-card card glass reveal" style="--i:2">
-        <div class="price-name">3 Yıllık</div>
-        <div class="price-value">2.450₺<span>+KDV</span></div>
-        <div class="price-note">Uzun vadeli kullanım için</div>
-        <ul class="price-features">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Akıllı kart + okuyucu dahil</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Aynı gün kurye önceliği</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Yenileme hatırlatma servisi</li>
-        </ul>
-        <a href="/iletisim.html" class="btn btn-ghost btn-block">Teklif Al</a>
-      </div>
+    <div id="productsLoading" style="text-align:center;padding:40px;">
+      <div style="display:inline-block;width:40px;height:40px;border:4px solid rgba(79,70,229,0.2);border-radius:50%;border-top-color:#4f46e5;animation:spin 0.8s linear infinite;"></div>
+      <p style="margin-top:16px;color:#888ca8;">Ürünler yükleniyor...</p>
     </div>
-    <p style="text-align:center;font-size:.78rem;margin-top:22px;">Fiyatlara akıllı kart ve okuyucu dahildir. Örnek/başlangıç fiyatlarıdır; güncel tarife için bizimle iletişime geçin.</p>
+    <div id="productsGrid" class="grid grid-3 reveal-stagger" style="display:none;"></div>
+    <p id="priceNote" style="text-align:center;font-size:.78rem;margin-top:22px;display:none;">Fiyatlara akıllı kart ve okuyucu dahildir. Örnek/başlangıç fiyatlarıdır; güncel tarife için bizimle iletişime geçin.</p>
   </div>
 </section>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+console.log('🔥 [FIYATLANDIRMA] Firebase ürün scripti başlatılıyor...');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+const app = initializeApp(firebaseConfig);
+console.log('✅ [FIYATLANDIRMA] Firebase initialized');
+
+const database = getDatabase(app);
+console.log('✅ [FIYATLANDIRMA] Database connected');
+
+const productsRef = ref(database, 'products');
+console.log('📦 [FIYATLANDIRMA] Products ref oluşturuldu, dinleniyor...');
+
+onValue(productsRef, (snapshot) => {
+  console.log('🔄 [FIYATLANDIRMA] onValue tetiklendi');
+  
+  const productsData = snapshot.val();
+  console.log('📊 [FIYATLANDIRMA] Firebase\'den gelen veri:', productsData);
+  
+  const products = productsData || {};
+  const allProducts = Object.entries(products).map(([id, data]) => ({ id, ...data }));
+  console.log('📋 [FIYATLANDIRMA] Tüm ürünler:', allProducts);
+  
+  const activeProducts = allProducts
+    .filter(p => {
+      console.log(`🔍 [FIYATLANDIRMA] Ürün kontrolü: ${p.name} - status: ${p.status}`);
+      return p.status === 'active';
+    })
+    .sort((a, b) => (a.price || 0) - (b.price || 0));
+  
+  console.log('✅ [FIYATLANDIRMA] Aktif ürünler:', activeProducts);
+
+  const loading = document.getElementById('productsLoading');
+  const grid = document.getElementById('productsGrid');
+  const note = document.getElementById('priceNote');
+
+  console.log('🎯 [FIYATLANDIRMA] DOM elementleri:', { loading, grid, note });
+
+  if (activeProducts.length === 0) {
+    console.warn('⚠️ [FIYATLANDIRMA] Aktif ürün bulunamadı!');
+    loading.innerHTML = '<p style="color:#888ca8;">Şu anda gösterilecek ürün bulunmamaktadır.</p>';
+    return;
+  }
+
+  console.log(`🎨 [FIYATLANDIRMA] ${activeProducts.length} ürün render ediliyor...`);
+
+  loading.style.display = 'none';
+  grid.style.display = 'grid';
+  note.style.display = 'block';
+  
+  // Reveal animasyonunu tetikle
+  setTimeout(() => {
+    const cards = grid.querySelectorAll('.reveal');
+    cards.forEach(card => {
+      card.classList.add('in');
+    });
+  }, 100);
+
+  grid.innerHTML = activeProducts.map((product, idx) => {
+    console.log(`🎨 [FIYATLANDIRMA] Ürün kartı oluşturuluyor: ${product.name}`);
+    
+    const features = (product.features || []).map(f => 
+      `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ${f}</li>`
+    ).join('');
+
+    const featuredClass = idx === 1 ? ' featured' : '';
+    const btnClass = idx === 1 ? 'btn-primary' : 'btn-ghost';
+
+    return `
+      <div class="price-card card glass reveal${featuredClass}" style="--i:${idx}">
+        ${product.imageUrl ? `<div style="width:100%;height:180px;overflow:hidden;border-radius:12px 12px 0 0;"><img src="${product.imageUrl}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;"></div>` : ''}
+        <div style="padding:${product.imageUrl ? '16px 20px 20px' : '20px'};">
+          <div class="price-name">${product.name || 'Ürün'}</div>
+          <div class="price-value">${Number(product.price || 0).toLocaleString('tr-TR')}₺<span>+KDV</span></div>
+          ${product.description ? `<div class="price-note">${product.description}</div>` : ''}
+          ${features ? `<ul class="price-features">${features}</ul>` : ''}
+          <a href="./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}&duration=${encodeURIComponent(product.duration || '')}" class="btn ${btnClass} btn-block">Sipariş Oluştur</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  console.log('✅ [FIYATLANDIRMA] Ürünler başarıyla render edildi!');
+  
+  // DOM debug
+  console.log('🔍 [FIYATLANDIRMA] Grid HTML uzunluğu:', grid.innerHTML.length);
+  console.log('🔍 [FIYATLANDIRMA] Grid display:', grid.style.display);
+  console.log('🔍 [FIYATLANDIRMA] Grid classList:', grid.classList.toString());
+  console.log('🔍 [FIYATLANDIRMA] Loading display:', loading.style.display);
+  console.log('🔍 [FIYATLANDIRMA] Note display:', note.style.display);
+  
+  // Grid'in ilk 500 karakterini göster
+  console.log('🔍 [FIYATLANDIRMA] Grid içeriği (ilk 500 char):', grid.innerHTML.substring(0, 500));
+  
+}, (error) => {
+  console.error('❌ [FIYATLANDIRMA] Firebase error:', error);
+  document.getElementById('productsLoading').innerHTML = '<p style="color:#f43f5e;">Ürünler yüklenirken bir hata oluştu.</p>';
+});
+
+console.log('✅ [FIYATLANDIRMA] Firebase listener kuruldu');
+</script>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+.price-card img { display: block; }
+</style>
 
 <section class="section" style="padding-top:0;">
   <div class="container">
