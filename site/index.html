@@ -37,6 +37,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/testimonials-new.css">
+<link rel="stylesheet" href="assets/css/products-premium.css">
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -321,27 +322,30 @@
   </div>
 </section>
 
-<!-- Ürünler Section - Firebase'den Dinamik Yükleme -->
-<section class="section" id="products-section">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="badge-soft badge-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> E-İmza Paketleri</span>
-      <h2>İhtiyacınıza uygun e-imza paketini seçin</h2>
-      <p>Bireysel, kurumsal ve mobil imza çözümlerini aynı gün teslimat ile alın.</p>
+<!-- Ürünler Section - Premium Design with WebGL -->
+<section class="products-premium-section">
+  <div class="products-bg-fallback" id="homeBgFallback"></div>
+  <canvas id="homeBgCanvas" class="products-bg-canvas" aria-hidden="true"></canvas>
+  
+  <div class="products-container">
+    <div class="products-hero">
+      <h1>İhtiyacınıza Uygun <span class="accent">E-İmza Paketi</span></h1>
+      <p>Bireysel, kurumsal ve mobil imza çözümlerini aynı gün teslimat garantisi ile sunuyoruz.</p>
     </div>
     
-    <div id="homeProductsLoading" style="text-align:center;padding:40px;">
-      <div style="display:inline-block;width:40px;height:40px;border:4px solid rgba(79,70,229,0.2);border-radius:50%;border-top-color:#4f46e5;animation:spin 0.8s linear infinite;"></div>
-      <p style="margin-top:16px;color:#888ca8;">Paketler yükleniyor...</p>
+    <div id="homeProductsLoadingPremium" style="text-align:center;padding:60px 20px;">
+      <div style="display:inline-block;width:48px;height:48px;border:4px solid rgba(79,70,229,0.2);border-radius:50%;border-top-color:#4f46e5;animation:spin 0.8s linear infinite;"></div>
+      <p style="margin-top:20px;color:var(--text-muted);font-size:1.05rem;">Paketler yükleniyor...</p>
     </div>
-    <div id="homeProductsGrid" class="grid grid-3 reveal-stagger" style="display:none;"></div>
-    <p id="homeProductsNote" style="text-align:center;font-size:.78rem;margin-top:22px;display:none;">Fiyatlara akıllı kart ve okuyucu dahildir. Örnek/başlangıç fiyatlarıdır; güncel tarife için bizimle iletişime geçin.</p>
+    
+    <div id="homeProductsContainerPremium" style="display:none;">
+      <div class="products-grid"></div>
+      <p style="text-align:center;font-size:0.85rem;margin-top:32px;color:var(--text-muted);max-width:700px;margin-left:auto;margin-right:auto;">
+        Fiyatlara akıllı kart ve okuyucu dahildir. Detaylı bilgi için <a href="fiyatlandirma.html" style="color:var(--primary);text-decoration:underline;">fiyatlandırma sayfasını</a> ziyaret edin.
+      </p>
+    </div>
   </div>
 </section>
-
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
 
 <section class="section">
   <div class="container">
@@ -1347,100 +1351,67 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 console.log('✅ [ANASAYFA] Firebase initialized');
 
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADykV8-GjNNoK30CUkPlqCNMjR7Ggc1M8",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.firebasestorage.app",
+  messagingSenderId: "856535109805",
+  appId: "1:856535109805:web:39f6fa2e23275f7be77624"
+};
+
+const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-console.log('✅ [ANASAYFA] Database connected');
+
+// Initialize WebGL background for home page
+if (window.initProductsBackground) {
+  window.initProductsBackground('homeBgCanvas', 'homeBgFallback');
+}
 
 const productsRef = ref(database, 'products');
-console.log('📦 [ANASAYFA] Products ref oluşturuldu, dinleniyor...');
 
 onValue(productsRef, (snapshot) => {
-  console.log('🔄 [ANASAYFA] onValue tetiklendi');
-  
   const productsData = snapshot.val();
-  console.log('📊 [ANASAYFA] Firebase\'den gelen veri:', productsData);
-  
   const products = productsData || {};
   const allProducts = Object.entries(products).map(([id, data]) => ({ id, ...data }));
-  console.log('📋 [ANASAYFA] Tüm ürünler:', allProducts);
   
   const activeProducts = allProducts
-    .filter(p => {
-      console.log(`🔍 [ANASAYFA] Ürün kontrolü: ${p.name} - status: ${p.status}`);
-      return p.status === 'active';
-    })
+    .filter(p => p.status === 'active')
     .sort((a, b) => (a.price || 0) - (b.price || 0));
   
   console.log('✅ [ANASAYFA] Aktif ürünler:', activeProducts);
 
-  const loading = document.getElementById('homeProductsLoading');
-  const grid = document.getElementById('homeProductsGrid');
-  const note = document.getElementById('homeProductsNote');
-
-  console.log('🎯 [ANASAYFA] DOM elementleri:', { loading, grid, note });
+  const loading = document.getElementById('homeProductsLoadingPremium');
+  const container = document.getElementById('homeProductsContainerPremium');
 
   if (activeProducts.length === 0) {
     console.warn('⚠️ [ANASAYFA] Aktif ürün bulunamadı!');
-    loading.innerHTML = '<p style="color:#888ca8;">Şu anda gösterilecek ürün bulunmamaktadır.</p>';
+    loading.innerHTML = '<p style="color:var(--text-muted);">Şu anda gösterilecek ürün bulunmamaktadır.</p>';
     return;
   }
 
-  console.log(`🎨 [ANASAYFA] ${activeProducts.length} ürün render ediliyor...`);
-  
   loading.style.display = 'none';
-  grid.style.display = 'grid';
-  note.style.display = 'block';
-  
-  // Reveal animasyonunu tetikle
-  setTimeout(() => {
-    const cards = grid.querySelectorAll('.reveal');
-    cards.forEach(card => {
-      card.classList.add('in');
-    });
-  }, 100);
+  container.style.display = 'block';
 
-  grid.innerHTML = activeProducts.map((product, idx) => {
-    console.log(`🎨 [ANASAYFA] Ürün kartı oluşturuluyor: ${product.name}`);
-    
-    const features = (product.features || []).map(f => 
-      `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> ${f}</li>`
-    ).join('');
-
-    const featuredClass = idx === 1 ? ' featured' : '';
-    const btnClass = idx === 1 ? 'btn-primary' : 'btn-ghost';
-
-    return `
-      <div class="price-card card glass reveal${featuredClass}" style="--i:${idx}">
-        ${product.imageUrl ? `<div style="width:100%;height:180px;overflow:hidden;border-radius:12px 12px 0 0;"><img src="${product.imageUrl}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;"></div>` : ''}
-        <div style="padding:${product.imageUrl ? '16px 20px 20px' : '20px'};">
-          <div class="price-name">${product.name || 'Ürün'}</div>
-          <div class="price-value">${Number(product.price || 0).toLocaleString('tr-TR')}₺<span>+KDV</span></div>
-          ${product.description ? `<div class="price-note">${product.description}</div>` : ''}
-          ${features ? `<ul class="price-features">${features}</ul>` : ''}
-          <a href="fiyatlandirma.html" class="btn ${btnClass} btn-block">Detaylı Bilgi</a>
-        </div>
-      </div>
-    `;
-  }).join('');
+  // Render premium cards
+  if (window.renderPremiumProducts) {
+    window.renderPremiumProducts(activeProducts, 'homeProductsContainerPremium');
+  }
   
   console.log('✅ [ANASAYFA] Ürünler başarıyla render edildi!');
   
-  // DOM debug
-  console.log('🔍 [ANASAYFA] Grid HTML uzunluğu:', grid.innerHTML.length);
-  console.log('🔍 [ANASAYFA] Grid display:', grid.style.display);
-  console.log('🔍 [ANASAYFA] Grid classList:', grid.classList.toString());
-  console.log('🔍 [ANASAYFA] Loading display:', loading.style.display);
-  console.log('🔍 [ANASAYFA] Note display:', note.style.display);
-  
-  // Grid'in ilk 500 karakterini göster
-  console.log('🔍 [ANASAYFA] Grid içeriği (ilk 500 char):', grid.innerHTML.substring(0, 500));
-  
 }, (error) => {
   console.error('❌ [ANASAYFA] Firebase error:', error);
-  document.getElementById('homeProductsLoading').innerHTML = '<p style="color:#f43f5e;">Ürünler yüklenirken bir hata oluştu.</p>';
+  document.getElementById('homeProductsLoadingPremium').innerHTML = '<p style="color:#f43f5e;">Ürünler yüklenirken bir hata oluştu.</p>';
 });
-
-console.log('✅ [ANASAYFA] Firebase listener kuruldu');
 </script>
+
+<script src="assets/js/products-premium.js"></script>
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/products.js"></script>
