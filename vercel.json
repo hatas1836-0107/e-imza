@@ -1,73 +1,18 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "site/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/site/index.html"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/site/index.html"
-    },
-    {
-      "src": "/hakkimizda.html",
-      "dest": "/site/hakkimizda.html"
-    },
-    {
-      "src": "/hizmetlerimiz.html",
-      "dest": "/site/hizmetlerimiz.html"
-    },
-    {
-      "src": "/fiyatlandirma.html",
-      "dest": "/site/fiyatlandirma.html"
-    },
-    {
-      "src": "/bolgeler.html",
-      "dest": "/site/bolgeler.html"
-    },
-    {
-      "src": "/iletisim.html",
-      "dest": "/site/iletisim.html"
-    },
-    {
-      "src": "/sss.html",
-      "dest": "/site/sss.html"
-    },
-    {
-      "src": "/takip.html",
-      "dest": "/site/takip.html"
-    },
-    {
-      "src": "/giris.html",
-      "dest": "/site/giris.html"
-    },
-    {
-      "src": "/kullanim-kosullari.html",
-      "dest": "/site/kullanim-kosullari.html"
-    },
-    {
-      "src": "/gizlilik-politikasi.html",
-      "dest": "/site/gizlilik-politikasi.html"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "/site/admin/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/site/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/site/$1"
-    }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  "rewrites": [
+    { "source": "/", "destination": "/site/index.html" },
+    { "source": "/index.html", "destination": "/site/index.html" },
+    { "source": "/hakkimizda.html", "destination": "/site/hakkimizda.html" },
+    { "source": "/hizmetlerimiz.html", "destination": "/site/hizmetlerimiz.html" },
+    { "source": "/fiyatlandirma.html", "destination": "/site/fiyatlandirma.html" },
+    { "source": "/bolgeler.html", "destination": "/site/bolgeler.html" },
+    { "source": "/iletisim.html", "destination": "/site/iletisim.html" },
+    { "source": "/sss.html", "destination": "/site/sss.html" },
+    { "source": "/takip.html", "destination": "/site/takip.html" },
+    { "source": "/giris.html", "destination": "/site/giris.html" },
+    { "source": "/kullanim-kosullari.html", "destination": "/site/kullanim-kosullari.html" },
+    { "source": "/gizlilik-politikasi.html", "destination": "/site/gizlilik-politikasi.html" },
+    { "source": "/admin/:path*", "destination": "/site/admin/:path*" },
+    { "source": "/assets/:path*", "destination": "/site/assets/:path*" }
+  ]
 }
