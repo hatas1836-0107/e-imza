@@ -2992,9 +2992,9 @@ function loadCurrentOGImage() {
   
   preview.innerHTML = '<div style="color:var(--text-faint);"><svg class="icon" style="width:24px;height:24px;margin-bottom:8px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 6zm0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/></svg><br>Yükleniyor...</div>';
   
-  // Use modular SDK syntax
-  import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ get, ref: dbRef }) => {
-    get(dbRef(database, 'settings/ogImage')).then(snapshot => {
+  // Use modular SDK syntax - import get function
+  import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ get }) => {
+    get(ref(database, 'settings/ogImage')).then(snapshot => {
       const url = snapshot.val();
       
       if (url) {
@@ -3018,8 +3018,12 @@ function loadCurrentOGImage() {
         deleteBtn.style.display = 'none';
       }
     }).catch(err => {
-      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Hata: ${err.message}</div>`;
+      console.error('OG Image yükleme hatası:', err);
+      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Hata: ${err.message}<br><small>Admin olarak giriş yaptığınızdan emin olun</small></div>`;
     });
+  }).catch(err => {
+    console.error('Firebase modül hatası:', err);
+    preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Firebase modülü yüklenemedi</div>`;
   });
 }
 
