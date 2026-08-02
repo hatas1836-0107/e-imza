@@ -63,32 +63,52 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 15% 20%, rgba(79,70,229,0.35), transparent 45%),
-    radial-gradient(circle at 85% 15%, rgba(124,58,237,0.28), transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(168,85,247,0.22), transparent 55%),
-    radial-gradient(circle at 90% 75%, rgba(34,197,94,0.15), transparent 45%),
-    radial-gradient(circle at 10% 85%, rgba(59,130,246,0.18), transparent 40%);
-  filter: blur(80px);
-  opacity: 0.65;
-  animation: bokehFloat 20s ease-in-out infinite;
+    radial-gradient(circle at 15% 20%, rgba(79,70,229,0.45), transparent 42%),
+    radial-gradient(circle at 85% 15%, rgba(124,58,237,0.38), transparent 48%),
+    radial-gradient(circle at 50% 80%, rgba(168,85,247,0.32), transparent 52%),
+    radial-gradient(circle at 90% 75%, rgba(34,197,94,0.22), transparent 43%),
+    radial-gradient(circle at 10% 85%, rgba(59,130,246,0.28), transparent 38%),
+    radial-gradient(circle at 60% 35%, rgba(236,72,153,0.18), transparent 45%);
+  filter: blur(100px);
+  opacity: 0.75;
+  animation: bokehFloat 25s ease-in-out infinite;
+}
+
+/* Additional gradient layer for depth */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.15), transparent 60%),
+    radial-gradient(ellipse at 70% 60%, rgba(147,51,234,0.12), transparent 55%);
+  filter: blur(120px);
+  opacity: 0.6;
+  animation: bokehFloat 30s ease-in-out infinite reverse;
 }
 
 @keyframes bokehFloat {
   0%, 100% { 
-    transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.75;
+  }
+  20% { 
+    transform: translate(25px, -30px) scale(1.08) rotate(2deg);
+    opacity: 0.8;
+  }
+  40% { 
+    transform: translate(-15px, 20px) scale(0.95) rotate(-1deg);
     opacity: 0.65;
   }
-  25% { 
-    transform: translate(15px, -20px) scale(1.05);
-    opacity: 0.7;
+  60% { 
+    transform: translate(30px, 15px) scale(1.05) rotate(1.5deg);
+    opacity: 0.72;
   }
-  50% { 
-    transform: translate(-10px, 15px) scale(0.98);
-    opacity: 0.6;
-  }
-  75% { 
-    transform: translate(20px, 10px) scale(1.03);
-    opacity: 0.68;
+  80% { 
+    transform: translate(-20px, -10px) scale(1.02) rotate(-0.5deg);
+    opacity: 0.78;
   }
 }
 
@@ -138,12 +158,34 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin: 24px 0; }
-.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; transition: transform 0.25s, border-color 0.25s; }
-.stat-card:hover { transform: translateY(-3px); border-color: var(--border-strong); }
+.stat-card { 
+  background: rgba(255,255,255,0.04); 
+  backdrop-filter: blur(20px); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-lg); 
+  padding: 22px; 
+  transition: all 0.3s ease; 
+}
+.stat-card:hover { 
+  transform: translateY(-4px); 
+  border-color: var(--border-strong); 
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 12px 40px rgba(79,70,229,0.2);
+}
 .stat-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 .stat-value { font-size: 2rem; font-weight: 800; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.02em; }
 
-.tabs { display: flex; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; margin: 24px 0; overflow-x: auto; }
+.tabs { 
+  display: flex; 
+  gap: 6px; 
+  background: rgba(255,255,255,0.04); 
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border); 
+  border-radius: var(--radius); 
+  padding: 6px; 
+  margin: 24px 0; 
+  overflow-x: auto; 
+}
 .tabs::-webkit-scrollbar { display: none; }
 .tab-btn {
   flex: 1; min-width: 130px; padding: 12px 18px; border: none; background: transparent; color: var(--text-muted);
@@ -155,7 +197,14 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 .tab-count { background: rgba(255,255,255,0.15); padding: 1px 7px; border-radius: 999px; font-size: 0.72rem; }
 .tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
 
-.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.section { 
+  background: rgba(255,255,255,0.04); 
+  backdrop-filter: blur(20px); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-lg); 
+  padding: 24px; 
+  margin-bottom: 24px; 
+}
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; gap: 16px; flex-wrap: wrap; }
 .section-title { font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: -0.01em; }
 
@@ -178,9 +227,19 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 
 .products-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
 .product-card, .courier-card {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.25s;
+  background: rgba(255,255,255,0.04); 
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border); 
+  border-radius: var(--radius); 
+  overflow: hidden; 
+  transition: all 0.3s ease;
 }
-.product-card:hover, .courier-card:hover { transform: translateY(-2px); border-color: rgba(79,70,229,0.4); box-shadow: 0 10px 26px rgba(79,70,229,0.15); }
+.product-card:hover, .courier-card:hover { 
+  transform: translateY(-3px); 
+  border-color: rgba(79,70,229,0.5); 
+  box-shadow: 0 12px 32px rgba(79,70,229,0.22);
+  background: rgba(255,255,255,0.06);
+}
 .product-image {
   width: 100%; height: 150px; background: linear-gradient(135deg, rgba(79,70,229,0.12), rgba(168,85,247,0.1));
   display: flex; align-items: center; justify-content: center; color: var(--text-faint); position: relative;
@@ -209,7 +268,19 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 .card-actions.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 .card-actions .btn { width: 100%; justify-content: center; font-size: 0.82rem; }
 
-.order-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.order-card { 
+  background: rgba(255,255,255,0.04); 
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border); 
+  border-radius: var(--radius); 
+  padding: 18px;
+  transition: all 0.3s ease;
+}
+.order-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 24px rgba(79,70,229,0.15);
+}
 .order-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; }
 .order-customer { font-weight: 700; font-size: 1.02rem; margin-bottom: 3px; }
 .order-meta { color: var(--text-muted); font-size: 0.85rem; }
@@ -232,8 +303,16 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
 }
 .modal-overlay.active { display: flex; }
 .modal-content {
-  background: #10121e; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 28px;
-  width: 100%; max-width: 560px; position: relative; box-shadow: var(--shadow-lg); animation: modalIn 0.18s ease-out;
+  background: rgba(16,18,30,0.95); 
+  backdrop-filter: blur(40px);
+  border: 1px solid var(--border-strong); 
+  border-radius: var(--radius-lg); 
+  padding: 28px;
+  width: 100%; 
+  max-width: 560px; 
+  position: relative; 
+  box-shadow: var(--shadow-lg); 
+  animation: modalIn 0.18s ease-out;
 }
 .modal-content.narrow { max-width: 420px; }
 @keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -2660,33 +2739,38 @@ function loadCurrentOGImage() {
   const preview = document.getElementById('ogImagePreview');
   const deleteBtn = document.getElementById('deleteOGBtn');
   
+  if (!preview || !deleteBtn) return;
+  
   preview.innerHTML = '<div style="color:var(--text-faint);"><svg class="icon" style="width:24px;height:24px;margin-bottom:8px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 6zm0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/></svg><br>Yükleniyor...</div>';
   
-  db.ref('settings/ogImage').once('value', snapshot => {
-    const url = snapshot.val();
-    
-    if (url) {
-      preview.innerHTML = `
-        <div style="position:relative; display:inline-block;">
-          <img src="${url}" alt="OG Image" style="max-width:100%; height:auto; border-radius:12px; box-shadow:var(--shadow);">
-          <div style="margin-top:12px; font-size:0.85rem; color:var(--text-muted);">
-            Mevcut OG Image (1200x630)
+  // Use modular SDK syntax
+  import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js').then(({ get, ref: dbRef }) => {
+    get(dbRef(database, 'settings/ogImage')).then(snapshot => {
+      const url = snapshot.val();
+      
+      if (url) {
+        preview.innerHTML = `
+          <div style="position:relative; display:inline-block;">
+            <img src="${url}" alt="OG Image" style="max-width:100%; height:auto; border-radius:12px; box-shadow:var(--shadow);">
+            <div style="margin-top:12px; font-size:0.85rem; color:var(--text-muted);">
+              Mevcut OG Image (1200x630)
+            </div>
           </div>
-        </div>
-      `;
-      deleteBtn.style.display = 'inline-flex';
-    } else {
-      preview.innerHTML = `
-        <div style="background: rgba(255,255,255,0.03); border: 1.5px dashed var(--border-strong); border-radius: 12px; padding: 48px; min-height: 280px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
-          <svg class="icon" style="width:48px; height:48px; color:var(--text-faint);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          <span style="color: var(--text-faint); font-size: 1.05rem;">Henüz OG Image yüklenmemiş</span>
-          <span style="color: var(--text-muted); font-size: 0.85rem;">Aşağıdaki butona tıklayarak görsel yükleyin</span>
-        </div>
-      `;
-      deleteBtn.style.display = 'none';
-    }
-  }, err => {
-    preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Hata: ${err.message}</div>`;
+        `;
+        deleteBtn.style.display = 'inline-flex';
+      } else {
+        preview.innerHTML = `
+          <div style="background: rgba(255,255,255,0.03); border: 1.5px dashed var(--border-strong); border-radius: 12px; padding: 48px; min-height: 280px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
+            <svg class="icon" style="width:48px; height:48px; color:var(--text-faint);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
+            <span style="color: var(--text-faint); font-size: 1.05rem;">Henüz OG Image yüklenmemiş</span>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">Aşağıdaki butona tıklayarak görsel yükleyin</span>
+          </div>
+        `;
+        deleteBtn.style.display = 'none';
+      }
+    }).catch(err => {
+      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Hata: ${err.message}</div>`;
+    });
   });
 }
 
@@ -2696,13 +2780,13 @@ document.getElementById('ogImageInput')?.addEventListener('change', function(e) 
   
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    showToast('Lütfen geçerli bir görsel dosyası seçin', 'danger');
+    showToast('Lütfen geçerli bir görsel dosyası seçin', 'error');
     return;
   }
   
   // Validate file size (max 5MB)
   if (file.size > 5 * 1024 * 1024) {
-    showToast('Dosya boyutu 5MB\'dan küçük olmalıdır', 'danger');
+    showToast('Dosya boyutu 5MB\'dan küçük olmalıdır', 'error');
     return;
   }
   
@@ -2710,14 +2794,17 @@ document.getElementById('ogImageInput')?.addEventListener('change', function(e) 
   reader.onload = function(event) {
     const base64 = event.target.result;
     
-    // Save to Firebase
-    document.getElementById('ogImagePreview').innerHTML = '<div style="color:var(--text-faint); padding:48px;"><svg class="icon rotating" style="width:32px;height:32px;margin-bottom:12px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg><br>Yükleniyor...</div>';
+    // Save to Firebase using modular SDK
+    const preview = document.getElementById('ogImagePreview');
+    if (preview) {
+      preview.innerHTML = '<div style="color:var(--text-faint); padding:48px;"><div class="spinner" style="margin:0 auto 12px;"></div><br>Yükleniyor...</div>';
+    }
     
-    db.ref('settings/ogImage').set(base64).then(() => {
+    set(ref(database, 'settings/ogImage'), base64).then(() => {
       showToast('OG Image başarıyla yüklendi!', 'success');
       loadCurrentOGImage();
     }).catch(err => {
-      showToast('Yükleme hatası: ' + err.message, 'danger');
+      showToast('Yükleme hatası: ' + err.message, 'error');
       loadCurrentOGImage();
     });
   };
@@ -2726,16 +2813,22 @@ document.getElementById('ogImageInput')?.addEventListener('change', function(e) 
   e.target.value = ''; // Reset input
 });
 
-function deleteOGImage() {
-  if (!confirm('OG Image\'i silmek istediğinizden emin misiniz?')) return;
-  
-  db.ref('settings/ogImage').remove().then(() => {
-    showToast('OG Image silindi', 'success');
-    loadCurrentOGImage();
-  }).catch(err => {
-    showToast('Silme hatası: ' + err.message, 'danger');
+window.deleteOGImage = function() {
+  showConfirm({
+    title: 'OG Image\'i Sil',
+    message: 'Mevcut OG Image kalıcı olarak silinecek. Devam edilsin mi?',
+    confirmLabel: 'Sil',
+    onConfirm: async () => {
+      try {
+        await remove(ref(database, 'settings/ogImage'));
+        showToast('OG Image silindi', 'success');
+        loadCurrentOGImage();
+      } catch (err) {
+        showToast('Silme hatası: ' + err.message, 'error');
+      }
+    }
   });
-}
+};
 </script>
 
 <!-- Image Cropper Modal -->
