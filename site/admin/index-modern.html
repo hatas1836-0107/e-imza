@@ -50,6 +50,8 @@ body {
   color: var(--text);
   position: relative;
   overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Bokeh/Gradient Background - Behind everything */
@@ -87,10 +89,6 @@ body::before {
     transform: translate(20px, 10px) scale(1.03);
     opacity: 0.68;
   }
-}
-  line-height: 1.6;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
@@ -1172,6 +1170,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+const db = database; // Alias for compatibility
 
 let products = {}, orders = {}, couriers = {};
 let pendingImageDataUrl = null;
