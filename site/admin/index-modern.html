@@ -1690,7 +1690,9 @@ window.viewOrder = (id) => {
       </div>
     </div>`).join('') : '<div class="confirm-text">Henüz geçmiş yok.</div>';
   
-  const trackingUrl = `${window.location.origin}/takip.html?kod=${id}`;
+  // Takip kodu - trackingCode varsa onu göster, yoksa ID'yi göster
+  const displayTrackingCode = o.trackingCode || id;
+  const trackingUrl = `${window.location.origin}/takip.html?kod=${encodeURIComponent(displayTrackingCode)}`;
 
   openModal(`
     <div class="modal-header">
@@ -1701,8 +1703,8 @@ window.viewOrder = (id) => {
     <div style="background:rgba(79,70,229,0.08);border:2px solid rgba(79,70,229,0.3);border-radius:12px;padding:16px;margin-bottom:20px;">
       <div style="font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">📋 Takip Kodu</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <div style="flex:1;font-size:1.1rem;font-weight:800;font-family:monospace;color:var(--primary);letter-spacing:0.02em;">${id}</div>
-        <button class="btn btn-primary btn-sm" onclick="copyTrackingCode('${id}')" style="white-space:nowrap;">
+        <div style="flex:1;font-size:1.1rem;font-weight:800;font-family:monospace;color:var(--primary);letter-spacing:0.02em;">${displayTrackingCode}</div>
+        <button class="btn btn-primary btn-sm" onclick="copyTrackingCode('${displayTrackingCode}')" style="white-space:nowrap;">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Kopyala
         </button>

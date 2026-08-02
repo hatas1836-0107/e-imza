@@ -63,24 +63,42 @@ document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
   resultDiv.style.display = 'none';
   
   try {
-    const orderRef = ref(database, `orders/${trackingCode}`);
-    const snapshot = await get(orderRef);
+    // Tüm siparişleri oku ve trackingCode'a göre filtrele
+    const ordersRef = ref(database, 'orders');
+    const snapshot = await get(ordersRef);
     
     if (snapshot.exists()) {
-      messageDiv.innerHTML = '';
-      currentOrder = { id: trackingCode, ...snapshot.val() };
-      displayOrderInfo(currentOrder);
-      resultDiv.style.display = 'block';
+      const allOrders = snapshot.val();
+      let foundOrder = null;
+      let foundOrderId = null;
       
-      // Realtime updates
-      startRealtimeTracking(trackingCode);
+      // trackingCode ile eşleşen siparişi bul
+      for (const [orderId, orderData] of Object.entries(allOrders)) {
+        if (orderData.trackingCode && orderData.trackingCode.toUpperCase() === trackingCode) {
+          foundOrder = orderData;
+          foundOrderId = orderId;
+          break;
+        }
+      }
       
-      // Scroll to result
-      setTimeout(() => {
-        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      if (foundOrder) {
+        messageDiv.innerHTML = '';
+        currentOrder = { id: foundOrderId, ...foundOrder };
+        displayOrderInfo(currentOrder);
+        resultDiv.style.display = 'block';
+        
+        // Realtime updates
+        startRealtimeTracking(foundOrderId);
+        
+        // Scroll to result
+        setTimeout(() => {
+          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        messageDiv.innerHTML = '<div class="alert alert-error">Takip kodu bulunamadı. Lütfen kontrol edip tekrar deneyin.</div>';
+      }
     } else {
-      messageDiv.innerHTML = '<div class="alert alert-error">Takip kodu bulunamadı. Lütfen kontrol edip tekrar deneyin.</div>';
+      messageDiv.innerHTML = '<div class="alert alert-error">Henüz kayıtlı sipariş bulunmamaktadır.</div>';
     }
   } catch (error) {
     console.error('Tracking error:', error);
@@ -90,7 +108,9 @@ document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
 
 // Display order information
 function displayOrderInfo(order) {
-  document.getElementById('orderCode').textContent = order.id;
+  // Takip kodunu göster - trackingCode varsa onu, yoksa ID'yi göster
+  const displayCode = order.trackingCode || order.id;
+  document.getElementById('orderCode').textContent = displayCode;
   
   const status = statusMap[order.status] || statusMap.pending;
   document.getElementById('orderStatus').innerHTML = `

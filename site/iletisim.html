@@ -470,7 +470,13 @@ document.getElementById('quoteForm')?.addEventListener('submit', async function(
   const productMatch = mesaj.match(/Ürün: (.+?)(?:\n|$)/);
   const priceMatch = mesaj.match(/Fiyat: (.+?)(?:\n|$)/);
   
+  // İnsan-dostu takip kodu üret (ZE-2024-1001 formatında)
+  const year = new Date().getFullYear();
+  const randomNum = Math.floor(1000 + Math.random() * 9000); // 1000-9999 arası
+  const trackingCode = `ZE-${year}-${randomNum}`;
+  
   const orderData = {
+    trackingCode: trackingCode,
     customerName: formData.get('Ad Soyad'),
     customerPhone: formData.get('Telefon'),
     customerEmail: formData.get('E-posta') || '',
@@ -493,9 +499,11 @@ document.getElementById('quoteForm')?.addEventListener('submit', async function(
     await db.ref('orders/' + orderId).set(orderData);
     
     console.log('✅ Sipariş Firebase\'e kaydedildi:', orderId);
+    console.log('📋 Takip Kodu:', trackingCode);
     
     // Temiz WhatsApp mesajı oluştur
     let msg = `🔷 *YENİ SİPARİŞ*\n\n`;
+    msg += `📋 *Takip Kodu:* ${trackingCode}\n\n`;
     
     if (orderData.productName) {
       msg += `📦 *${orderData.productName}*\n`;
