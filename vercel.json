@@ -2,22 +2,32 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/hakkimizda.html", "destination": "/site/hakkimizda.html" },
     { "source": "/hakkimizda", "destination": "/site/hakkimizda.html" },
+    { "source": "/hizmetlerimiz.html", "destination": "/site/hizmetlerimiz.html" },
     { "source": "/hizmetlerimiz", "destination": "/site/hizmetlerimiz.html" },
+    { "source": "/fiyatlandirma.html", "destination": "/site/fiyatlandirma.html" },
     { "source": "/fiyatlandirma", "destination": "/site/fiyatlandirma.html" },
+    { "source": "/bolgeler.html", "destination": "/site/bolgeler.html" },
     { "source": "/bolgeler", "destination": "/site/bolgeler.html" },
+    { "source": "/iletisim.html", "destination": "/site/iletisim.html" },
     { "source": "/iletisim", "destination": "/site/iletisim.html" },
+    { "source": "/sss.html", "destination": "/site/sss.html" },
     { "source": "/sss", "destination": "/site/sss.html" },
+    { "source": "/takip.html", "destination": "/site/takip.html" },
     { "source": "/takip", "destination": "/site/takip.html" },
+    { "source": "/giris.html", "destination": "/site/giris.html" },
     { "source": "/giris", "destination": "/site/giris.html" },
+    { "source": "/kullanim-kosullari.html", "destination": "/site/kullanim-kosullari.html" },
     { "source": "/kullanim-kosullari", "destination": "/site/kullanim-kosullari.html" },
+    { "source": "/gizlilik-politikasi.html", "destination": "/site/gizlilik-politikasi.html" },
     { "source": "/gizlilik-politikasi", "destination": "/site/gizlilik-politikasi.html" },
     { "source": "/admin/:path*", "destination": "/site/admin/:path*" },
     { "source": "/assets/:path*", "destination": "/site/assets/:path*" }
   ],
   "headers": [
     {
-      "source": "/site/assets/img/og-image.png",
+      "source": "/og-image.png",
       "headers": [
         {
           "key": "Cache-Control",
