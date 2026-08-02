@@ -327,40 +327,56 @@ function initMap(order) {
     }
   }
   
-  // Customer marker - Simple modern dot with pulse
+  // Customer marker - Purple gradient laptop pin
   if (!customerMarker) {
     console.log('📍 Müşteri marker ekleniyor...');
     
     const customerIcon = L.divIcon({
       className: 'custom-marker-customer',
       html: `
-        <div style="position:relative;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-          <!-- Outer glow ring -->
-          <div style="
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            background: rgba(99, 102, 241, 0.2);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-          "></div>
-          
-          <!-- Main dot -->
-          <div style="
-            position: relative;
-            width: 20px;
-            height: 20px;
-            background: #6366f1;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-            z-index: 10;
-          "></div>
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" width="48" height="60">
+          <defs>
+            <linearGradient id="bodyGradCustomer" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#c68bff"/>
+              <stop offset="55%" stop-color="#8b3dff"/>
+              <stop offset="100%" stop-color="#4d17c9"/>
+            </linearGradient>
+            <linearGradient id="topHighlightC" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+              <stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="dropCustomer" x="-60%" y="-60%" width="220%" height="220%">
+              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0d0518" flood-opacity="0.5"/>
+            </filter>
+            <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#2a2438"/>
+              <stop offset="100%" stop-color="#181320"/>
+            </linearGradient>
+            <linearGradient id="ledGradC" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e2c2ff"/>
+              <stop offset="100%" stop-color="#8b3dff"/>
+            </linearGradient>
+          </defs>
+          <rect x="48" y="88" width="24" height="24" rx="6" fill="url(#bodyGradCustomer)" transform="rotate(45 60 100)" filter="url(#dropCustomer)"/>
+          <rect x="10" y="6" width="100" height="100" rx="30" fill="url(#bodyGradCustomer)" filter="url(#dropCustomer)"/>
+          <rect x="10" y="6" width="100" height="100" rx="30" fill="url(#topHighlightC)"/>
+          <rect x="11.5" y="7.5" width="97" height="97" rx="28.5" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5"/>
+          <rect x="21" y="17" width="78" height="78" rx="22" fill="#15131c" fill-opacity="0.5"/>
+          <g>
+            <rect x="42" y="34" width="36" height="26" rx="4" fill="#ffffff"/>
+            <rect x="45.5" y="37.5" width="29" height="19" rx="1.5" fill="url(#screenGrad)"/>
+            <rect x="49" y="42" width="15" height="2.2" rx="1.1" fill="#ffffff" fill-opacity="0.55"/>
+            <rect x="49" y="47" width="10" height="2.2" rx="1.1" fill="#ffffff" fill-opacity="0.3"/>
+            <circle cx="60" cy="36.6" r="0.9" fill="#8b8698"/>
+            <path d="M35 62 L85 62 L91 70.5 Q91.8 72.5 89.5 72.5 L30.5 72.5 Q28.2 72.5 29 70.5 Z" fill="#ffffff"/>
+            <rect x="54" y="65.5" width="12" height="2.4" rx="1.2" fill="url(#ledGradC)"/>
+            <path d="M47 38.5 L52 38.5 L46 55 L44.3 55 Z" fill="#ffffff" fill-opacity="0.12"/>
+          </g>
+        </svg>
       `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-      popupAnchor: [0, -16]
+      iconSize: [48, 60],
+      iconAnchor: [24, 60],
+      popupAnchor: [0, -60]
     });
     
     customerMarker = L.marker([customerLat, customerLng], {
@@ -372,8 +388,8 @@ function initMap(order) {
     customerMarker.bindPopup(`
       <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <div style="width:12px;height:12px;background:#6366f1;border-radius:50%;"></div>
-          <strong style="color:#6366f1;font-size:16px;">Teslimat Adresi</strong>
+          <div style="width:12px;height:12px;background:#8b3dff;border-radius:50%;"></div>
+          <strong style="color:#8b3dff;font-size:16px;">Teslimat Adresi</strong>
         </div>
         <span style="color:var(--text-secondary);font-size:14px;line-height:1.5;">${order.address}</span>
       </div>
@@ -394,42 +410,47 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     const courierIcon = L.divIcon({
       className: 'custom-marker-courier',
       html: `
-        <div style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
-          <!-- Pulse ring 1 -->
-          <div style="
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(16, 185, 129, 0.3);
-            border-radius: 50%;
-            animation: ripple 2.5s ease-out infinite;
-          "></div>
-          
-          <!-- Pulse ring 2 -->
-          <div style="
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(16, 185, 129, 0.3);
-            border-radius: 50%;
-            animation: ripple 2.5s ease-out 1.25s infinite;
-          "></div>
-          
-          <!-- Main courier dot -->
-          <div style="
-            position: relative;
-            width: 24px;
-            height: 24px;
-            background: #10b981;
-            border: 4px solid #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
-            z-index: 10;
-          "></div>
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" width="48" height="60">
+          <defs>
+            <linearGradient id="bodyGradCourier" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffb35c"/>
+              <stop offset="55%" stop-color="#ff5b3c"/>
+              <stop offset="100%" stop-color="#d81f4b"/>
+            </linearGradient>
+            <linearGradient id="topHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+              <stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="dropCourier" x="-60%" y="-60%" width="220%" height="220%">
+              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1a0505" flood-opacity="0.5"/>
+            </filter>
+            <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#f3f2f6"/>
+              <stop offset="100%" stop-color="#c9c6d2"/>
+            </linearGradient>
+            <linearGradient id="ledGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffd08a"/>
+              <stop offset="100%" stop-color="#ff5b3c"/>
+            </linearGradient>
+          </defs>
+          <rect x="48" y="88" width="24" height="24" rx="6" fill="url(#bodyGradCourier)" transform="rotate(45 60 100)" filter="url(#dropCourier)"/>
+          <rect x="10" y="6" width="100" height="100" rx="30" fill="url(#bodyGradCourier)" filter="url(#dropCourier)"/>
+          <rect x="10" y="6" width="100" height="100" rx="30" fill="url(#topHighlight)"/>
+          <rect x="11.5" y="7.5" width="97" height="97" rx="28.5" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5"/>
+          <rect x="21" y="17" width="78" height="78" rx="22" fill="#15131c" fill-opacity="0.5"/>
+          <g>
+            <circle cx="60" cy="34" r="3" fill="none" stroke="url(#capGrad)" stroke-width="2.4"/>
+            <rect x="49.5" y="38" width="21" height="19" rx="5" fill="url(#capGrad)"/>
+            <line x1="54" y1="47.5" x2="66" y2="47.5" stroke="#9a97a6" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="54" y1="51.5" x2="66" y2="51.5" stroke="#9a97a6" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="43" y="53" width="34" height="33" rx="8" fill="#ffffff"/>
+            <circle cx="60" cy="64" r="3.2" fill="url(#ledGrad)"/>
+            <path d="M48 55 L54 55 L47 80 L45 80 Z" fill="#e9e7ee" fill-opacity="0.7"/>
+          </g>
+        </svg>
       `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20]
+      iconSize: [48, 60],
+      iconAnchor: [24, 60]
     });
     
     courierMarker = L.marker([courierLat, courierLng], {
@@ -441,8 +462,8 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     courierMarker.bindPopup(`
       <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <div style="width:12px;height:12px;background:#10b981;border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
-          <strong style="color:#10b981;font-size:16px;">Teslimatçı</strong>
+          <div style="width:12px;height:12px;background:#ff5b3c;border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
+          <strong style="color:#ff5b3c;font-size:16px;">Teslimatçı</strong>
         </div>
         <div style="color:var(--text-secondary);font-size:13px;margin-top:6px;">Canlı konum takibi</div>
         <div style="color:var(--text-muted);font-size:12px;margin-top:4px;">Doğruluk: ~${Math.round(locationData.accuracy || 0)}m</div>
@@ -451,8 +472,8 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     
     courierCircle = L.circle([courierLat, courierLng], {
       radius: Math.min(locationData.accuracy || 50, 80),
-      color: '#10b981',
-      fillColor: '#10b981',
+      color: '#ff5b3c',
+      fillColor: '#ff5b3c',
       fillOpacity: 0.15,
       weight: 2,
       opacity: 0.4
