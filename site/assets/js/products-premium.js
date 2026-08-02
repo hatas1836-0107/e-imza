@@ -282,9 +282,10 @@
         </div>
       ` : '';
 
-      // VAT label - show "KDV Dahil" if true, "+KDV" if false or undefined
+      // VAT label - if vatIncluded is true, don't show anything (price includes VAT)
+      // if vatIncluded is false/undefined, show "+KDV"
       const vatLabel = product.vatIncluded === true 
-        ? '<span class="period vat-included">KDV Dahil</span>' 
+        ? '' 
         : '<span class="period">+KDV</span>';
 
       // Features
