@@ -308,8 +308,24 @@
   color: rgba(255,255,255,0.62);
 }
 
+.product-price .vat-included {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--products-cyan);
+  background: rgba(34,211,238,0.12);
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(34,211,238,0.25);
+}
+
 [data-theme="light"] .product-price .period {
   color: rgba(15,23,42,0.6);
+}
+
+[data-theme="light"] .product-price .vat-included {
+  color: var(--products-accent);
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.2);
 }
 
 /* Divider */

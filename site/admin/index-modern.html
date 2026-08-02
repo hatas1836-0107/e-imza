@@ -1431,6 +1431,13 @@ window.openProductModal = (id) => {
       <textarea id="pfFeatures" placeholder="Örn: Hızlı teslimat, 7/24 destek, Ücretsiz kurulum">${(product?.features || []).join(', ')}</textarea>
     </div>
     <div class="toggle-row">
+      <span>KDV Dahil</span>
+      <label class="switch">
+        <input type="checkbox" id="pfVatIncluded" ${product?.vatIncluded ? 'checked' : ''}>
+        <span class="slider-track"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
       <span>Ürün Aktif</span>
       <label class="switch">
         <input type="checkbox" id="pfStatus" ${!product || product.status === 'active' ? 'checked' : ''}>
@@ -1484,6 +1491,7 @@ window.submitProduct = async (id) => {
   const description = document.getElementById('pfDescription').value.trim();
   const featuresRaw = document.getElementById('pfFeatures').value.trim();
   const isActive = document.getElementById('pfStatus').checked;
+  const vatIncluded = document.getElementById('pfVatIncluded').checked;
   const errorEl = document.getElementById('pfError');
   const submitBtn = document.getElementById('pfSubmit');
 
@@ -1507,7 +1515,9 @@ window.submitProduct = async (id) => {
     const data = {
       name, description, price: parseFloat(price), duration: duration || '1 yıl',
       features: featuresRaw ? featuresRaw.split(',').map(f => f.trim()).filter(Boolean) : [],
-      status: isActive ? 'active' : 'passive', imageUrl,
+      status: isActive ? 'active' : 'passive', 
+      vatIncluded: vatIncluded,
+      imageUrl,
       updatedAt: new Date().toISOString(),
       createdAt: id ? (products[id]?.createdAt || new Date().toISOString()) : new Date().toISOString()
     };
