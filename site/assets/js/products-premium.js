@@ -152,7 +152,8 @@
       if (isLight) {
         gl.uniform3fv(bgLoc, new Float32Array([0.98, 0.984, 0.988])); // Light background
       } else {
-        gl.uniform3fv(bgLoc, new Float32Array([0.043, 0.055, 0.102])); // Dark background - matches homepage #0b0e1a
+        // Dark background - #0b0e1a (RGB: 11, 14, 26) normalized to 0-1 range
+        gl.uniform3fv(bgLoc, new Float32Array([11/255, 14/255, 26/255]));
       }
     }
 
