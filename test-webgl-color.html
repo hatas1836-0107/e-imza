@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Background Color Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0b0e1a;
+      color: white;
+      font-family: system-ui;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .color-box {
+      width: 200px;
+      height: 200px;
+      margin: 20px;
+      border: 2px solid white;
+      display: inline-block;
+      position: relative;
+    }
+    .label {
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 14px;
+    }
+    canvas {
+      border: 2px solid yellow;
+    }
+    code {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WebGL Arka Plan Renk Testi</h1>
+    
+    <h2>1. Anasayfa Arka Plan Rengi (CSS)</h2>
+    <div class="color-box" style="background: #0b0e1a;">
+      <div class="label"><code>#0b0e1a</code> (anasayfa)</div>
+    </div>
+    
+    <h2>2. Products Section Canvas (WebGL)</h2>
+    <canvas id="testCanvas" width="800" height="400"></canvas>
+    
+    <h2>3. Console Output</h2>
+    <div id="output" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('testCanvas');
+    const gl = canvas.getContext('webgl');
+    const output = document.getElementById('output');
+    
+    if (!gl) {
+      output.innerHTML = '<p style="color:red;">❌ WebGL desteklenmiyor!</p>';
+    } else {
+      // Test: #0b0e1a rengini WebGL'de göster
+      const r = 11/255;
+      const g = 14/255;
+      const b = 26/255;
+      
+      gl.clearColor(r, g, b, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      
+      output.innerHTML = `
+        <p>✅ WebGL başarıyla başlatıldı!</p>
+        <p><strong>Renk değerleri:</strong></p>
+        <ul>
+          <li>Hex: <code>#0b0e1a</code></li>
+          <li>RGB: <code>rgb(11, 14, 26)</code></li>
+          <li>WebGL (0-1): <code>[${r.toFixed(6)}, ${g.toFixed(6)}, ${b.toFixed(6)}]</code></li>
+        </ul>
+        <p><strong>Canvas rengi:</strong> Sarı çerçeve içindeki canvas, CSS'deki kutucukla aynı renkde olmalı.</p>
+      `;
+      
+      console.log('🎨 WebGL Test - Background color:', [r, g, b], '#0b0e1a');
+    }
+  </script>
+</body>
+</html>
