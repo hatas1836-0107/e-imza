@@ -327,26 +327,26 @@ function initMap(order) {
     }
   }
   
-  // Customer marker with emoji
+  // Customer marker with modern SVG pin
   if (!customerMarker) {
     console.log('📍 Müşteri marker ekleniyor...');
     
     const customerIcon = L.divIcon({
       className: 'custom-marker-customer',
       html: `
-        <div style="
-          width: 50px;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 40px;
-          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
-          cursor: pointer;
-        ">📍</div>
+        <div style="position:relative;width:40px;height:50px;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" width="40" height="50" style="filter:drop-shadow(0 4px 12px rgba(79,70,229,0.4));">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                  fill="#6366f1" 
+                  stroke="#fff" 
+                  stroke-width="1.5"/>
+            <circle cx="12" cy="9" r="3" fill="#fff"/>
+          </svg>
+        </div>
       `,
-      iconSize: [50, 50],
-      iconAnchor: [25, 45]
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -50]
     });
     
     customerMarker = L.marker([customerLat, customerLng], {
@@ -356,12 +356,15 @@ function initMap(order) {
     }).addTo(map);
     
     customerMarker.bindPopup(`
-      <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;">
+      <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="font-size:20px;">🏠</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
           <strong style="color:#6366f1;font-size:16px;">Teslimat Adresi</strong>
         </div>
-        <span style="color:#4b5563;font-size:14px;line-height:1.5;">${order.address}</span>
+        <span style="color:var(--text-secondary);font-size:14px;line-height:1.5;">${order.address}</span>
       </div>
     `, { closeButton: false });
     
@@ -380,35 +383,31 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     const courierIcon = L.divIcon({
       className: 'custom-marker-courier',
       html: `
-        <div style="position:relative;width:60px;height:60px;">
+        <div style="position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">
+          <!-- Pulse ring animation -->
           <div style="
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background: rgba(16, 185, 129, 0.25);
             border-radius: 50%;
             animation: ripple 2.5s ease-out infinite;
           "></div>
-          <div style="
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.5));
-            cursor: pointer;
-            position: relative;
-            z-index: 10;
-          ">🏍️</div>
+          
+          <!-- Main courier icon -->
+          <svg viewBox="0 0 24 24" width="36" height="36" style="position:relative;z-index:10;filter:drop-shadow(0 4px 12px rgba(16,185,129,0.4));">
+            <circle cx="12" cy="12" r="11" fill="#10b981" stroke="#fff" stroke-width="2"/>
+            <path d="M8 12h8M8 8h8M8 16h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 16l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          
+          <!-- Active indicator dot -->
           <div style="
             position: absolute;
             top: 2px;
             right: 2px;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: #10b981;
             border: 3px solid white;
             border-radius: 50%;
@@ -418,8 +417,8 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
           "></div>
         </div>
       `,
-      iconSize: [60, 60],
-      iconAnchor: [30, 50]
+      iconSize: [50, 50],
+      iconAnchor: [25, 25]
     });
     
     courierMarker = L.marker([courierLat, courierLng], {
@@ -429,13 +428,13 @@ function updateCourierLocation(locationData, customerLat, customerLng) {
     }).addTo(map);
     
     courierMarker.bindPopup(`
-      <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;">
+      <div style="padding:14px;min-width:220px;font-family:system-ui,-apple-system,sans-serif;background:var(--surface-strong);border-radius:12px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
           <div style="width:10px;height:10px;background:#10b981;border-radius:50%;animation:pulse 2s ease-in-out infinite;"></div>
           <strong style="color:#10b981;font-size:16px;">Teslimatçı</strong>
         </div>
-        <div style="color:#4b5563;font-size:13px;margin-top:6px;">Canlı konum takibi</div>
-        <div style="color:#9ca3af;font-size:12px;margin-top:4px;">Doğruluk: ~${Math.round(locationData.accuracy || 0)}m</div>
+        <div style="color:var(--text-secondary);font-size:13px;margin-top:6px;">Canlı konum takibi</div>
+        <div style="color:var(--text-muted);font-size:12px;margin-top:4px;">Doğruluk: ~${Math.round(locationData.accuracy || 0)}m</div>
       </div>
     `, { closeButton: false });
     

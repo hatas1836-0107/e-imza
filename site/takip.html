@@ -45,20 +45,32 @@
 }
 
 .leaflet-popup-content-wrapper {
-  background: white;
+  background: var(--surface-strong);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   padding: 0;
+  border: 1px solid var(--surface-border);
 }
 
 .leaflet-popup-content {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
+  color: var(--text-primary);
 }
 
 .leaflet-popup-tip {
-  background: white;
+  background: var(--surface-strong);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--surface-border);
+}
+
+[data-theme="light"] .leaflet-popup-content-wrapper {
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .leaflet-popup-tip {
+  background: white;
 }
 
 #map {
@@ -138,10 +150,11 @@
           id="trackingCode" 
           placeholder="Takip kodunuzu girin (örn: ZE-2024-1001)" 
           required
-          style="flex:1;min-width:250px;padding:14px 20px;background:rgba(255,255,255,0.05);border:1px solid var(--border,rgba(255,255,255,0.12));border-radius:10px;color:var(--text,#f3f4f8);font-size:1rem;"
+          style="flex:1;min-width:250px;padding:14px 20px;background:var(--surface);border:1px solid var(--surface-border);border-radius:10px;color:var(--text-primary);font-size:1rem;"
         >
         <button type="submit" class="btn btn-primary">
-          🔍 Sorgula
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Sorgula
         </button>
       </form>
       
@@ -167,7 +180,14 @@
 
       <div id="mapSection" style="display:none;margin-top:24px;">
         <div class="card glass reveal">
-          <h3 style="margin-bottom:16px;">📍 Kurye Konumu <span style="color:var(--success,#22c55e);font-size:0.9rem;">(Canlı)</span></h3>
+          <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Kurye Konumu 
+            <span style="color:var(--success,#22c55e);font-size:0.9rem;font-weight:500;">(Canlı)</span>
+          </h3>
           <div id="map" style="width:100%;height:500px;background:#f9fafb;border-radius:12px;border:2px solid rgba(99,102,241,0.2);"></div>
           <div id="distanceInfo" style="margin-top:16px;text-align:center;color:var(--text-muted,#7d81a0);"></div>
         </div>
@@ -175,7 +195,13 @@
 
       <div id="courierSection" style="display:none;margin-top:24px;">
         <div class="card glass reveal">
-          <h3 style="margin-bottom:16px;">👤 Kurye Bilgileri</h3>
+          <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Kurye Bilgileri
+          </h3>
           <div style="display:flex;gap:16px;align-items:center;">
             <div id="courierAvatar" style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--primary,#4f46e5),var(--secondary,#7c3aed));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;">K</div>
             <div>

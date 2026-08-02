@@ -1081,6 +1081,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .form-field input::placeholder, .form-field textarea::placeholder { 
   color: var(--text-muted); 
 }
+
+/* Tracking page input fix */
+#trackingCode::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+#trackingCode {
+  transition: all 0.3s var(--ease);
+}
+
+#trackingCode:focus {
+  border-color: var(--indigo-400);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+  background: var(--surface-strong);
+}
+
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus { 
   border-color: var(--indigo-400); 
   outline: none;
