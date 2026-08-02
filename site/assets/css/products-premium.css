@@ -4,7 +4,7 @@
 */
 
 :root {
-  --products-bg: #000;
+  --products-bg: transparent;
   --products-fg: #fff;
   --products-cyan: #22d3ee;
   --products-cyan-soft: #67e8f9;
@@ -16,7 +16,7 @@
 }
 
 [data-theme="light"] {
-  --products-bg: #fafbfc;
+  --products-bg: transparent;
   --products-fg: #0f172a;
   --products-cyan: #0891b2;
   --products-cyan-soft: #06b6d4;
@@ -41,7 +41,9 @@
   height: 100%;
   display: block;
   z-index: 0;
-  background: var(--products-bg);
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Fallback gradient when WebGL is unavailable */
@@ -49,15 +51,9 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(circle at 50% 45%, rgba(34,211,238,0.15), transparent 42%),
-              radial-gradient(circle at 50% 45%, rgba(139,92,246,0.12), transparent 60%),
-              var(--products-bg);
-}
-
-[data-theme="light"] .products-bg-fallback {
-  background: radial-gradient(circle at 50% 45%, rgba(14,165,233,0.08), transparent 42%),
-              radial-gradient(circle at 50% 45%, rgba(124,58,237,0.06), transparent 60%),
-              var(--products-bg);
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .products-container {
