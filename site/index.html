@@ -322,11 +322,8 @@
   </div>
 </section>
 
-<!-- Ürünler Section - Premium Design with WebGL -->
+<!-- Ürünler Section - Premium Design -->
 <section class="products-premium-section">
-  <div class="products-bg-fallback" id="homeBgFallback"></div>
-  <canvas id="homeBgCanvas" class="products-bg-canvas" aria-hidden="true"></canvas>
-  
   <div class="products-container">
     <div class="products-hero">
       <h1>İhtiyacınıza Uygun <span class="accent">E-İmza Paketi</span></h1>
@@ -1354,13 +1351,8 @@ console.log('✅ [ANASAYFA] Firebase initialized');
 const database = getDatabase(app);
 console.log('✅ [ANASAYFA] Database connected');
 
-// Initialize WebGL background for home page
-if (window.initProductsBackground) {
-  window.initProductsBackground('homeBgCanvas', 'homeBgFallback');
-  console.log('✅ [ANASAYFA] WebGL background initialized');
-} else {
-  console.warn('⚠️ [ANASAYFA] initProductsBackground not found');
-}
+// Don't initialize WebGL background on homepage - it already has mesh-bg
+// WebGL background is only for pricing page
 
 const productsRef = ref(database, 'products');
 console.log('📦 [ANASAYFA] Products ref oluşturuldu, dinleniyor...');
