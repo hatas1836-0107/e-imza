@@ -110,23 +110,16 @@
 
 <main id="main">
 
+<!-- 3D USB Stick Background Container -->
+<div id="usb-3d-stage" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; pointer-events: none;"></div>
+
 <section class="hero">
   <div class="container hero-grid">
-    <div class="signature-stage glass reveal">
-      <svg viewBox="0 0 420 340" aria-hidden="true">
-        <defs>
-          <linearGradient id="sigGradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#818cf8"/>
-            <stop offset="0.55" stop-color="#a855f7"/>
-            <stop offset="1" stop-color="#e8a33d"/>
-          </linearGradient>
-        </defs>
-        <path class="sig-path" d="M40 230 C 70 120, 110 120, 120 200 C 128 260, 150 260, 165 190 C 178 130, 200 120, 215 180 C 225 220, 245 230, 260 190 C 275 150, 300 150, 305 190 C 312 240, 340 245, 360 200 C 372 175, 385 170, 395 175" />
-      </svg>
-      <div class="sig-seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 0-3 3c0 1.5 1 2 1 3.5S9 12 9 12h6s-1-1-1-2.5 1-2 1-3.5a3 3 0 0 0-3-3Z"/><path d="M5 21h14M6 21v-3a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3M9 12v4h6v-4"/></svg></div>
-      <div class="sig-badge b1 glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg> Onaylandı</div>
-      <div class="sig-badge b2 glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 10 8h4l3 5m-9 0h9m-4-9h3l2 4"/></svg> Kurye yolda</div>
-      <div class="sig-badge b3 glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> 45 dk içinde</div>
+    <div class="usb-stage-card glass reveal">
+      <!-- 3D Model burada render edilecek -->
+      <div class="usb-info-badge glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg> E-İmza Hazır</div>
+      <div class="usb-info-badge b2 glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 10 8h4l3 5m-9 0h9m-4-9h3l2 4"/></svg> Kurye Yolda</div>
+      <div class="usb-info-badge b3 glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Aynı Gün</div>
     </div>
     <div>
       <span class="eyebrow"><span class="dot"></span> İstanbul'un 39 ilçesinde aynı gün teslimat</span>
@@ -360,6 +353,13 @@
 </div>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-<script src="/assets/js/main.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/usb-3d-viewer.js"></script>
+<script>
+  // 3D USB Stick modelini başlat
+  if (typeof initUSB3DViewer === 'function') {
+    initUSB3DViewer('usb-3d-stage');
+  }
+</script>
 </body>
 </html>
