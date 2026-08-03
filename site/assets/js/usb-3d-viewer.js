@@ -155,105 +155,108 @@
     animate();
   }
 
-  // SCROLL ANIMATION - 8 DRAMATIC PHASES
+  // SCROLL ANIMATION - MODERN PRODUCT SHOWCASE
   function updateScrollAnimation() {
     const scroll = state.scroll;
     
-    // PHASE 1: INTRO - Standing upright, center stage (0-12%)
-    if (scroll < 0.12) {
-      const p = scroll / 0.12;
-      state.target.rotX = window.THREE.MathUtils.lerp(1.8, 1.4, p);  // Slightly tilted
-      state.target.rotY = window.THREE.MathUtils.lerp(0, 0.3, p);
-      state.target.rotZ = window.THREE.MathUtils.lerp(0, 0.1, p);
+    // PHASE 1: DISTANT INTRO - Far away, slowly approaching (0-15%)
+    if (scroll < 0.15) {
+      const p = scroll / 0.15;
+      const ease = 1 - Math.pow(1 - p, 3); // Ease out cubic
+      state.target.rotX = window.THREE.MathUtils.lerp(1.6, 1.5, ease);
+      state.target.rotY = window.THREE.MathUtils.lerp(-0.5, 0, ease);
+      state.target.rotZ = window.THREE.MathUtils.lerp(0, 0, ease);
       state.target.posX = 0;
-      state.target.posY = window.THREE.MathUtils.lerp(0.5, 0, p);
-      state.target.posZ = 0;
-      state.target.scale = window.THREE.MathUtils.lerp(0.8, 1, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(14, 10, p);
+      state.target.posY = 0;
+      state.target.posZ = window.THREE.MathUtils.lerp(-8, 0, ease);
+      state.target.scale = window.THREE.MathUtils.lerp(0.6, 1, ease);
+      state.target.camZ = window.THREE.MathUtils.lerp(22, 14, ease);
     }
-    // PHASE 2: TOP VIEW - Rotating to show connector (12-25%)
-    else if (scroll < 0.25) {
-      const p = (scroll - 0.12) / 0.13;
-      state.target.rotX = window.THREE.MathUtils.lerp(1.4, 0.5, p);  // Tilting down
-      state.target.rotY = window.THREE.MathUtils.lerp(0.3, 1.2, p);  // Spinning
-      state.target.rotZ = window.THREE.MathUtils.lerp(0.1, 0.3, p);
-      state.target.posX = window.THREE.MathUtils.lerp(0, -1.5, p);
-      state.target.posY = window.THREE.MathUtils.lerp(0, 1, p);
+    // PHASE 2: SLIDE RIGHT + ROTATE - Moving to right side (15-28%)
+    else if (scroll < 0.28) {
+      const p = (scroll - 0.15) / 0.13;
+      const ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      state.target.rotX = window.THREE.MathUtils.lerp(1.5, 0.8, ease);
+      state.target.rotY = window.THREE.MathUtils.lerp(0, 1.8, ease);
+      state.target.rotZ = window.THREE.MathUtils.lerp(0, 0.3, ease);
+      state.target.posX = window.THREE.MathUtils.lerp(0, 3, ease);
+      state.target.posY = window.THREE.MathUtils.lerp(0, 0.5, ease);
       state.target.posZ = 0;
-      state.target.scale = window.THREE.MathUtils.lerp(1, 1.3, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(10, 7, p);
+      state.target.scale = 1;
+      state.target.camZ = window.THREE.MathUtils.lerp(14, 10, ease);
     }
-    // PHASE 3: HORIZONTAL SPIN - Laying flat, rotating (25-37%)
-    else if (scroll < 0.37) {
-      const p = (scroll - 0.25) / 0.12;
-      state.target.rotX = window.THREE.MathUtils.lerp(0.5, 0, p);  // Completely flat
-      state.target.rotY = window.THREE.MathUtils.lerp(1.2, 2.5, p);  // Full rotation
+    // PHASE 3: VERTICAL CLIMB - Rising upward dramatically (28-40%)
+    else if (scroll < 0.40) {
+      const p = (scroll - 0.28) / 0.12;
+      state.target.rotX = window.THREE.MathUtils.lerp(0.8, 2.2, p);
+      state.target.rotY = window.THREE.MathUtils.lerp(1.8, 2.5, p);
       state.target.rotZ = window.THREE.MathUtils.lerp(0.3, -0.2, p);
-      state.target.posX = window.THREE.MathUtils.lerp(-1.5, 2, p);
-      state.target.posY = window.THREE.MathUtils.lerp(1, 0, p);
-      state.target.posZ = 0;
-      state.target.scale = window.THREE.MathUtils.lerp(1.3, 1.1, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(7, 9, p);
-    }
-    // PHASE 4: VERTICAL RISE - Standing up again (37-50%)
-    else if (scroll < 0.50) {
-      const p = (scroll - 0.37) / 0.13;
-      state.target.rotX = window.THREE.MathUtils.lerp(0, 2.5, p);  // Standing tall
-      state.target.rotY = window.THREE.MathUtils.lerp(2.5, 3.5, p);
-      state.target.rotZ = window.THREE.MathUtils.lerp(-0.2, 0.1, p);
-      state.target.posX = window.THREE.MathUtils.lerp(2, 0, p);
-      state.target.posY = window.THREE.MathUtils.lerp(0, -1.5, p);
+      state.target.posX = window.THREE.MathUtils.lerp(3, 1, p);
+      state.target.posY = window.THREE.MathUtils.lerp(0.5, 3, p);
       state.target.posZ = window.THREE.MathUtils.lerp(0, 1, p);
-      state.target.scale = window.THREE.MathUtils.lerp(1.1, 1.4, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(9, 6, p);
+      state.target.scale = window.THREE.MathUtils.lerp(1, 1.3, p);
+      state.target.camZ = window.THREE.MathUtils.lerp(10, 8, p);
     }
-    // PHASE 5: BOTTOM VIEW - Upside down inspection (50-62%)
-    else if (scroll < 0.62) {
-      const p = (scroll - 0.50) / 0.12;
-      state.target.rotX = window.THREE.MathUtils.lerp(2.5, 3.5, p);  // Flipped
-      state.target.rotY = window.THREE.MathUtils.lerp(3.5, 4.8, p);
-      state.target.rotZ = window.THREE.MathUtils.lerp(0.1, -0.3, p);
-      state.target.posX = window.THREE.MathUtils.lerp(0, 1.5, p);
-      state.target.posY = window.THREE.MathUtils.lerp(-1.5, -0.5, p);
-      state.target.posZ = window.THREE.MathUtils.lerp(1, -1, p);
-      state.target.scale = window.THREE.MathUtils.lerp(1.4, 1.2, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(6, 8, p);
-    }
-    // PHASE 6: FULL 360 SHOWCASE - Complete rotation (62-75%)
-    else if (scroll < 0.75) {
-      const p = (scroll - 0.62) / 0.13;
-      state.target.rotX = window.THREE.MathUtils.lerp(3.5, 1.5, p);
-      state.target.rotY = window.THREE.MathUtils.lerp(4.8, 6.3, p);  // More than 360
-      state.target.rotZ = window.THREE.MathUtils.lerp(-0.3, 0.2, p);
-      state.target.posX = window.THREE.MathUtils.lerp(1.5, -1.8, p);
-      state.target.posY = window.THREE.MathUtils.lerp(-0.5, 0.5, p);
-      state.target.posZ = window.THREE.MathUtils.lerp(-1, 0, p);
-      state.target.scale = window.THREE.MathUtils.lerp(1.2, 1, p);
+    // PHASE 4: CENTER SPIN - Spinning in center (40-52%)
+    else if (scroll < 0.52) {
+      const p = (scroll - 0.40) / 0.12;
+      state.target.rotX = window.THREE.MathUtils.lerp(2.2, 1.57, p);
+      state.target.rotY = window.THREE.MathUtils.lerp(2.5, 4.5, p);
+      state.target.rotZ = window.THREE.MathUtils.lerp(-0.2, 0, p);
+      state.target.posX = window.THREE.MathUtils.lerp(1, 0, p);
+      state.target.posY = window.THREE.MathUtils.lerp(3, 0, p);
+      state.target.posZ = window.THREE.MathUtils.lerp(1, 0, p);
+      state.target.scale = window.THREE.MathUtils.lerp(1.3, 1, p);
       state.target.camZ = window.THREE.MathUtils.lerp(8, 11, p);
     }
-    // PHASE 7: ZOOM OUT - Pull back to see whole (75-87%)
-    else if (scroll < 0.87) {
-      const p = (scroll - 0.75) / 0.12;
-      state.target.rotX = window.THREE.MathUtils.lerp(1.5, 1.6, p);
-      state.target.rotY = window.THREE.MathUtils.lerp(6.3, 6.8, p);
-      state.target.rotZ = window.THREE.MathUtils.lerp(0.2, 0, p);
-      state.target.posX = window.THREE.MathUtils.lerp(-1.8, 0, p);
-      state.target.posY = window.THREE.MathUtils.lerp(0.5, 0, p);
+    // PHASE 5: SLIDE LEFT - Gliding to left side (52-64%)
+    else if (scroll < 0.64) {
+      const p = (scroll - 0.52) / 0.12;
+      state.target.rotX = window.THREE.MathUtils.lerp(1.57, 0.7, p);
+      state.target.rotY = window.THREE.MathUtils.lerp(4.5, 5.5, p);
+      state.target.rotZ = window.THREE.MathUtils.lerp(0, -0.4, p);
+      state.target.posX = window.THREE.MathUtils.lerp(0, -3.5, p);
+      state.target.posY = window.THREE.MathUtils.lerp(0, -0.5, p);
       state.target.posZ = 0;
-      state.target.scale = window.THREE.MathUtils.lerp(1, 0.85, p);
-      state.target.camZ = window.THREE.MathUtils.lerp(11, 13, p);
+      state.target.scale = 1;
+      state.target.camZ = window.THREE.MathUtils.lerp(11, 9, p);
     }
-    // PHASE 8: HERO FINALE - Perfect presentation (87-100%)
+    // PHASE 6: VERTICAL DROP - Descending smoothly (64-76%)
+    else if (scroll < 0.76) {
+      const p = (scroll - 0.64) / 0.12;
+      state.target.rotX = window.THREE.MathUtils.lerp(0.7, 0.2, p);
+      state.target.rotY = window.THREE.MathUtils.lerp(5.5, 6.3, p);
+      state.target.rotZ = window.THREE.MathUtils.lerp(-0.4, 0.1, p);
+      state.target.posX = window.THREE.MathUtils.lerp(-3.5, -1, p);
+      state.target.posY = window.THREE.MathUtils.lerp(-0.5, -3, p);
+      state.target.posZ = window.THREE.MathUtils.lerp(0, -1, p);
+      state.target.scale = window.THREE.MathUtils.lerp(1, 1.2, p);
+      state.target.camZ = window.THREE.MathUtils.lerp(9, 7, p);
+    }
+    // PHASE 7: RETURN CENTER - Coming back to center (76-88%)
+    else if (scroll < 0.88) {
+      const p = (scroll - 0.76) / 0.12;
+      const ease = p * p * (3 - 2 * p); // Smooth step
+      state.target.rotX = window.THREE.MathUtils.lerp(0.2, 1.57, ease);
+      state.target.rotY = window.THREE.MathUtils.lerp(6.3, 6.8, ease);
+      state.target.rotZ = window.THREE.MathUtils.lerp(0.1, 0, ease);
+      state.target.posX = window.THREE.MathUtils.lerp(-1, 0, ease);
+      state.target.posY = window.THREE.MathUtils.lerp(-3, 0, ease);
+      state.target.posZ = window.THREE.MathUtils.lerp(-1, 0, ease);
+      state.target.scale = window.THREE.MathUtils.lerp(1.2, 1, ease);
+      state.target.camZ = window.THREE.MathUtils.lerp(7, 12, ease);
+    }
+    // PHASE 8: HERO FINALE - Perfect showcase position (88-100%)
     else {
-      const p = (scroll - 0.87) / 0.13;
-      state.target.rotX = window.THREE.MathUtils.lerp(1.6, 1.57, p);  // Standing proud
-      state.target.rotY = window.THREE.MathUtils.lerp(6.8, 7, p);
+      const p = (scroll - 0.88) / 0.12;
+      state.target.rotX = window.THREE.MathUtils.lerp(1.57, 1.57, p);
+      state.target.rotY = window.THREE.MathUtils.lerp(6.8, Math.PI * 2.22, p);
       state.target.rotZ = 0;
       state.target.posX = 0;
       state.target.posY = 0;
       state.target.posZ = 0;
       state.target.scale = 1;
-      state.target.camZ = window.THREE.MathUtils.lerp(13, 11, p);
+      state.target.camZ = window.THREE.MathUtils.lerp(12, 11, p);
     }
   }
 
