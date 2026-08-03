@@ -10,8 +10,10 @@
   let scene, camera, renderer, model, mixer, clock;
   let container, isInitialized = false;
   let animationFrameId = null;
-  let scrollProgress = 0;
   let mouseX = 0, mouseY = 0;
+  
+  // Mouse object for showcase-style interaction
+  const mouse = { x: 0, y: 0 };
 
   // Lazy load Three.js with importmap
   function loadThreeJS(callback) {
@@ -142,12 +144,12 @@
 
     // Clock for animations
     clock = new window.THREE.Clock();
-
-    // Scroll listener for parallax
-    window.addEventListener('scroll', onScroll, { passive: true });
     
-    // Mouse move listener for interaction
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    // Mouse move listener - showcase style
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }, { passive: true });
 
     // Resize handler
     window.addEventListener('resize', onWindowResize, false);
@@ -155,15 +157,6 @@
     // Start animation loop
     isInitialized = true;
     animate();
-  }
-
-  function onScroll() {
-    scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-  }
-
-  function onMouseMove(event) {
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   function onWindowResize() {
@@ -189,31 +182,21 @@
     }
 
     if (model) {
-      // CONTINUOUS BASE ROTATION - exact same as showcase
+      // EXACT SHOWCASE ANIMATION LOGIC
+      // Base rotation - continuous spin
       model.rotation.y = elapsedTime * 0.15;
       
-      // MOUSE PARALLAX - added on top like showcase
-      // In showcase: modelsGroup.rotation.x = mouse.y * 0.2; modelsGroup.rotation.y += mouse.x * 0.3;
-      model.rotation.x = mouseY * 0.2;
-      model.rotation.y += mouseX * 0.3;
+      // Mouse parallax - added on top (just like showcase)
+      model.rotation.x = mouse.y * 0.2;
+      model.rotation.y += mouse.x * 0.3;
       
-      // SIMPLE FLOATING like showcase
-      model.position.y = Math.sin(elapsedTime * 0.8) * 0.6;
+      // Individual model floating (showcase: flashDrive.position.y = Math.sin(elapsedTime * 0.8) * 0.15)
+      // We use slightly larger amplitude for background visibility
+      model.position.y = Math.sin(elapsedTime * 0.8) * 0.15;
       
-      // Subtle horizontal sway
-      model.position.x = Math.sin(elapsedTime * 0.5) * 0.3;
-      
-      // Keep Z position stable
+      // Keep other positions stable
+      model.position.x = 0;
       model.position.z = 0;
-      
-      // Keep camera fixed - no dynamic movement
-      camera.position.set(0, 2, 8);
-      camera.lookAt(0, 0, 0);
-      
-      // BREATHING SCALE - subtle
-      const breathScale = 1 + Math.sin(elapsedTime * 0.6) * 0.08;
-      const baseScale = model.userData.baseScale || 6.0;
-      model.scale.setScalar(baseScale * breathScale);
     }
 
     renderer.render(scene, camera);
