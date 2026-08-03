@@ -8,9 +8,9 @@
   --products-fg: #fff;
   --products-cyan: #22d3ee;
   --products-cyan-soft: #67e8f9;
-  --products-card-bg-top: rgba(11, 14, 26, 0.95);
-  --products-card-bg-bottom: rgba(11, 14, 26, 0.92);
-  --products-card-border: rgba(255,255,255,0.15);
+  --products-card-bg-top: rgba(255,255,255,0.09);
+  --products-card-bg-bottom: rgba(255,255,255,0.04);
+  --products-card-border: rgba(255,255,255,0.10);
   --products-accent: #8b5cf6;
   --products-accent-light: #c4b5fd;
 }
@@ -132,9 +132,9 @@
   border-radius: 22px;
   border: 1px solid var(--products-card-border);
   background: linear-gradient(160deg, var(--products-card-bg-top), var(--products-card-bg-bottom));
-  backdrop-filter: blur(24px) brightness(1.05);
-  -webkit-backdrop-filter: blur(24px) brightness(1.05);
-  box-shadow: 0 20px 45px -20px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+  backdrop-filter: blur(18px) brightness(0.95);
+  -webkit-backdrop-filter: blur(18px) brightness(0.95);
+  box-shadow: 0 20px 45px -20px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
