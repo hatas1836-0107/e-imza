@@ -407,6 +407,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     opacity: .02;
     animation: grainMove 12s steps(8) infinite;
   }
+  /* 3D Background mobile optimization */
+  #flash3DBackground {
+    opacity: 0.08 !important;
+  }
 }
 
 /* Düşük güçlü cihazlar için */
@@ -428,6 +432,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   .grain-overlay {
     display: none;
+  }
+  /* 3D Background disabled on low-end */
+  #flash3DBackground {
+    display: none !important;
   }
 }
 
