@@ -13,24 +13,35 @@
   let scrollProgress = 0;
   let mouseX = 0, mouseY = 0;
 
-  // Lazy load Three.js ES Module
+  // Lazy load Three.js with importmap
   function loadThreeJS(callback) {
     if (window.THREE) {
       callback();
       return;
     }
 
-    // Load Three.js ES Module
-    const script1 = document.createElement('script');
-    script1.type = 'module';
-    script1.textContent = `
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+    // Add import map first
+    const importMap = document.createElement('script');
+    importMap.type = 'importmap';
+    importMap.textContent = JSON.stringify({
+      imports: {
+        'three': 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
+        'three/addons/': 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/'
+      }
+    });
+    document.head.appendChild(importMap);
+
+    // Then load the module
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.textContent = `
+      import * as THREE from 'three';
+      import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       window.THREE = THREE;
       window.GLTFLoader = GLTFLoader;
       window.dispatchEvent(new Event('threeLoaded'));
     `;
-    document.head.appendChild(script1);
+    document.head.appendChild(script);
     
     window.addEventListener('threeLoaded', callback, { once: true });
   }
