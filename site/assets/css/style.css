@@ -24,10 +24,10 @@
   --gradient-brand: linear-gradient(135deg, var(--indigo-500) 0%, var(--violet-500) 55%, #a855f7 100%);
   --gradient-seal: linear-gradient(135deg, var(--amber-400) 0%, var(--amber-500) 100%);
   --gradient-mesh-dark:
-    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.65), transparent 70%),
-    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.55), transparent 75%),
-    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.35), transparent 70%),
-    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.45), transparent 70%);
+    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.85), transparent 80%),
+    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.75), transparent 85%),
+    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.50), transparent 80%),
+    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.65), transparent 80%);
   --gradient-mesh-light:
     radial-gradient(circle at 12% 18%, rgba(79,70,229,0.28), transparent 70%),
     radial-gradient(circle at 85% 12%, rgba(124,58,237,0.24), transparent 75%),
@@ -199,7 +199,7 @@ main, section, div, header, footer, nav {
   animation: meshDrift 24s ease-in-out infinite alternate, meshPulse 8s ease-in-out infinite;
   will-change: transform, opacity, filter;
   pointer-events: none;
-  filter: blur(80px);
+  filter: blur(120px);
   transform-origin: center center;
 }
 
@@ -274,7 +274,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .mesh-bg {
     /* Mobilde daha hafif animasyon ve blur */
     animation: meshDrift 30s ease-in-out infinite alternate, meshPulse 10s ease-in-out infinite;
-    filter: blur(60px);
+    filter: blur(90px);
   }
   
   .grain-overlay {
@@ -289,7 +289,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .mesh-bg {
     /* Çok hafif animasyon */
     animation: meshPulse 12s ease-in-out infinite;
-    filter: blur(50px);
+    filter: blur(70px);
   }
   
   .grain-overlay {
