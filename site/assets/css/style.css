@@ -1157,36 +1157,34 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   justify-content: space-between; 
   flex-wrap: wrap; 
   gap: 30px; 
-  position: relative;
 }
 
-.stat-row::before {
-  content: '';
-  position: absolute;
-  inset: -36px -40px;
-  background: rgba(11, 14, 26, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 20px;
-  z-index: -1;
-}
-
-.stat { flex: 1; min-width: 140px; text-align: center; position: relative; z-index: 1; }
+.stat { flex: 1; min-width: 140px; text-align: center; }
 .stat-num { 
   font-family: 'Space Grotesk'; 
   font-size: clamp(1.9rem,3.4vw,2.7rem); 
-  font-weight: 700; 
-  background: var(--gradient-brand); 
+  font-weight: 800; 
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c7d2fe 100%);
   -webkit-background-clip: text; 
   background-clip: text; 
   color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+  filter: 
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) 
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5)) 
+    drop-shadow(0 0 30px rgba(139, 92, 246, 0.7))
+    drop-shadow(0 0 60px rgba(99, 102, 241, 0.5));
+  letter-spacing: -0.02em;
 }
 .stat-label { 
-  font-size: .84rem; 
-  color: rgba(255, 255, 255, 0.95); 
-  font-weight: 600; 
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-size: .88rem; 
+  color: #ffffff; 
+  font-weight: 700; 
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(139, 92, 246, 0.4);
+  letter-spacing: 0.3px;
 }
 
 /* ---------- Footer ---------- */
