@@ -82,9 +82,6 @@
 </div>
 <div class="grain-overlay" aria-hidden="true"></div>
 
-<!-- 3D USB Stick Background -->
-<div id="usb-3d-stage" style="position: fixed; inset: 0; z-index: -3; pointer-events: none;"></div>
-
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="brand">
@@ -1312,21 +1309,6 @@
 <script src="assets/js/main.js" defer></script>
 <script src="assets/js/nav-liquid.js" defer></script>
 <script src="assets/js/products-premium.js"></script>
-<script src="assets/js/usb-3d-viewer.js"></script>
-
-<!-- Initialize USB 3D Viewer -->
-<script>
-if (document.getElementById('usb-3d-stage')) {
-  // Wait for DOM to be ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      window.initUSB3DViewer('usb-3d-stage');
-    });
-  } else {
-    window.initUSB3DViewer('usb-3d-stage');
-  }
-}
-</script>
 
 <!-- Firebase Ürün Yükleme Scripti - Deferred -->
 <script type="module" defer>
