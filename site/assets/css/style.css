@@ -1154,8 +1154,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* ---------- İstatistik şeridi ---------- */
 .stat-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
 .stat { flex: 1; min-width: 140px; text-align: center; }
-.stat-num { font-family: 'Space Grotesk'; font-size: clamp(1.9rem,3.4vw,2.7rem); font-weight: 700; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.stat-label { font-size: .84rem; color: var(--text-muted); font-weight: 500; }
+.stat-num { 
+  font-family: 'Space Grotesk'; 
+  font-size: clamp(1.9rem,3.4vw,2.7rem); 
+  font-weight: 700; 
+  background: var(--gradient-brand); 
+  -webkit-background-clip: text; 
+  background-clip: text; 
+  color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+}
+.stat-label { 
+  font-size: .84rem; 
+  color: rgba(255, 255, 255, 0.95); 
+  font-weight: 600; 
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 
 /* ---------- Footer ---------- */
 .site-footer { padding: 70px 0 26px; border-top: 1px solid var(--divider); margin-top: 40px; }
