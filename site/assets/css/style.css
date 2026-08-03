@@ -1861,37 +1861,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     margin: 24px auto 0;
   }
 }
-    background: linear-gradient(180deg, transparent, var(--surface));
-    pointer-events: none;
-  }
-  
-  /* Testimonial mobilde */
-  .testi-card {
-    padding: 28px 22px;
-    min-width: 100%;
-  }
-  .testi-quote {
-    font-size: .9rem;
-  }
-  
-  /* Architecture mobilde */
-  .eimza-architecture-card {
-    grid-template-columns: 1fr;
-    padding: 32px 24px;
-    gap: 32px;
-  }
-  .arch-visual {
-    min-height: 220px;
-    order: -1;
-  }
-  .arch-content {
-    text-align: center;
-  }
-  .arch-features {
-    max-width: 400px;
-    margin: 24px auto 0;
-  }
-}
+
 @media (max-width: 640px) {
   /* Genel */
   .container { padding: 0 16px; }
