@@ -1152,8 +1152,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .cta-row { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 28px; position: relative; z-index: 1; }
 
 /* ---------- İstatistik şeridi ---------- */
-.stat-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
-.stat { flex: 1; min-width: 140px; text-align: center; }
+.stat-row { 
+  display: flex; 
+  justify-content: space-between; 
+  flex-wrap: wrap; 
+  gap: 30px; 
+  position: relative;
+}
+
+.stat-row::before {
+  content: '';
+  position: absolute;
+  inset: -36px -40px;
+  background: rgba(11, 14, 26, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 20px;
+  z-index: -1;
+}
+
+.stat { flex: 1; min-width: 140px; text-align: center; position: relative; z-index: 1; }
 .stat-num { 
   font-family: 'Space Grotesk'; 
   font-size: clamp(1.9rem,3.4vw,2.7rem); 
