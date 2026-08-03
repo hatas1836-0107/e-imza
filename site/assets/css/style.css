@@ -466,8 +466,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 34px; }
 
 .trust-row { display: flex; flex-wrap: wrap; gap: 22px; }
-.trust-item { display: flex; align-items: center; gap: 9px; font-size: .85rem; color: var(--text-muted); font-weight: 500; }
-.trust-item svg { width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0; }
+.trust-item { display: flex; align-items: center; gap: 9px; font-size: .85rem; color: rgba(255, 255, 255, 0.95); font-weight: 500; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
+.trust-item svg { width: 18px; height: 18px; color: #10b981; flex-shrink: 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
 
 /* İmza çizim animasyonu yerine Route Animation */
 .signature-stage {
