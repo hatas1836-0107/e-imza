@@ -24,15 +24,21 @@
   --gradient-brand: linear-gradient(135deg, var(--indigo-500) 0%, var(--violet-500) 55%, #a855f7 100%);
   --gradient-seal: linear-gradient(135deg, var(--amber-400) 0%, var(--amber-500) 100%);
   --gradient-mesh-dark:
-    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.85), transparent 80%),
-    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.75), transparent 85%),
-    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.50), transparent 80%),
-    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.65), transparent 80%);
+    radial-gradient(circle at 15% 20%, rgba(79,70,229,0.7), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(236,72,153,0.55), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(124,58,237,0.4), transparent 60%),
+    radial-gradient(circle at 25% 75%, rgba(99,102,241,0.65), transparent 48%),
+    radial-gradient(circle at 75% 85%, rgba(34,211,238,0.5), transparent 52%),
+    radial-gradient(circle at 90% 55%, rgba(139,92,246,0.45), transparent 55%),
+    radial-gradient(circle at 10% 50%, rgba(168,85,247,0.35), transparent 50%);
   --gradient-mesh-light:
-    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.28), transparent 70%),
-    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.24), transparent 75%),
-    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.26), transparent 70%),
-    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.22), transparent 70%);
+    radial-gradient(circle at 15% 20%, rgba(79,70,229,0.25), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(236,72,153,0.18), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(124,58,237,0.15), transparent 60%),
+    radial-gradient(circle at 25% 75%, rgba(99,102,241,0.22), transparent 48%),
+    radial-gradient(circle at 75% 85%, rgba(34,211,238,0.16), transparent 52%),
+    radial-gradient(circle at 90% 55%, rgba(139,92,246,0.14), transparent 55%),
+    radial-gradient(circle at 10% 50%, rgba(168,85,247,0.12), transparent 50%);
 
   /* Dark (varsayılan) */
   --bg: var(--ink-950);
