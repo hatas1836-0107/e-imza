@@ -191,138 +191,104 @@
     if (mixer) mixer.update(delta);
 
     if (model) {
-      // Easing
-      const ease = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      // SCROLL-BASED SCENES + CONTINUOUS ROTATION
+      const scrollPhase = scrollProgress * 100; // 0-100 for easier math
       
-      // Micro movements for life
-      const microX = Math.sin(elapsedTime * 0.5) * 0.1;
-      const microY = Math.cos(elapsedTime * 0.4) * 0.1;
-      const microZ = Math.sin(elapsedTime * 0.6) * 0.08;
+      // BASE CONTINUOUS ROTATION - ALWAYS SPINNING
+      const continuousY = elapsedTime * 0.2 + scrollProgress * Math.PI * 8;
       
-      // DIRECT ASSIGNMENT - NO TARGET/CURRENT SYSTEM
-      let rotX, rotY, rotZ, posX, posY, posZ, camX, camY, camZ, scale;
+      // BIG MOVEMENTS for visibility
+      const waveX = Math.sin(elapsedTime * 0.6) * 0.4;
+      const waveY = Math.cos(elapsedTime * 0.5) * 0.3;
+      const waveZ = Math.sin(elapsedTime * 0.4) * 0.3;
       
-      if (scrollProgress < 0.15) {
-        // SCENE 1: FRONT FACING - USB ucu ekrana bakıyor
-        const t = ease(scrollProgress / 0.15);
-        rotX = 0.1 + microX * 0.5;
-        rotY = 0 + microY * 0.5;
-        rotZ = 0;
-        posX = 0;
-        posY = microY * 2;
-        posZ = -2.0;
-        camX = 0;
-        camY = 2;
-        camZ = 9 - t * 1;
-        scale = 1.0 + t * 0.3;
+      let finalRotX, finalRotY, finalRotZ, finalPosX, finalPosY, finalPosZ, finalCamZ, finalScale;
+      
+      if (scrollPhase < 20) {
+        // SCENE 1: Opening spin - front view
+        finalRotX = 0.2 + waveX;
+        finalRotY = continuousY;
+        finalRotZ = waveZ * 0.5;
+        finalPosX = waveX;
+        finalPosY = waveY;
+        finalPosZ = -1.5;
+        finalCamZ = 9;
+        finalScale = 1.0 + scrollPhase * 0.01;
         
-      } else if (scrollProgress < 0.30) {
-        // SCENE 2: FAST SPIN 360° - Hızlı dönüş
-        const t = (scrollProgress - 0.15) / 0.15;
-        const spin = t * Math.PI * 4; // 4 tam tur
-        rotX = Math.sin(spin * 1.3) * 0.8;
-        rotY = spin;
-        rotZ = Math.cos(spin * 0.9) * 0.6;
-        posX = Math.sin(spin * 2) * 0.8;
-        posY = Math.cos(spin * 1.5) * 0.6;
-        posZ = -1.0 + Math.sin(spin) * 0.5;
-        camX = Math.sin(t * Math.PI * 2) * 2;
-        camY = 2 + Math.cos(t * Math.PI * 3) * 1;
-        camZ = 8;
-        scale = 1.0 + Math.sin(spin * 2) * 0.2;
+      } else if (scrollPhase < 35) {
+        // SCENE 2: Side profile + fast spin
+        const local = (scrollPhase - 20) / 15;
+        finalRotX = Math.PI * 0.3 + waveX;
+        finalRotY = continuousY + Math.PI * 0.5;
+        finalRotZ = Math.PI * 0.2 + waveZ;
+        finalPosX = Math.sin(local * Math.PI * 4) * 1.2;
+        finalPosY = waveY;
+        finalPosZ = -1.0;
+        finalCamZ = 8;
+        finalScale = 1.2;
         
-      } else if (scrollProgress < 0.45) {
-        // SCENE 3: SIDE VIEW - Yan görünüm showcase
-        const t = ease((scrollProgress - 0.30) / 0.15);
-        rotX = Math.PI * 0.2;
-        rotY = Math.PI * 0.5 + t * Math.PI * 0.8 + microY;
-        rotZ = Math.PI * 0.3;
-        posX = Math.sin(t * Math.PI * 2) * 1.0;
-        posY = 0.2;
-        posZ = -1.5;
-        camX = 3 - t * 2;
-        camY = 2.5;
-        camZ = 7;
-        scale = 1.2;
+      } else if (scrollPhase < 50) {
+        // SCENE 3: Top view spinning
+        const local = (scrollPhase - 35) / 15;
+        finalRotX = Math.PI * 0.6 + waveX;
+        finalRotY = continuousY + local * Math.PI * 4;
+        finalRotZ = waveZ;
+        finalPosX = Math.sin(elapsedTime * 0.8) * 0.6;
+        finalPosY = -0.3 + waveY;
+        finalPosZ = -1.2;
+        finalCamZ = 7;
+        finalScale = 1.1;
         
-      } else if (scrollProgress < 0.60) {
-        // SCENE 4: TOP VIEW - Yukarıdan bakış + spin
-        const t = (scrollProgress - 0.45) / 0.15;
-        const topSpin = t * Math.PI * 3;
-        rotX = Math.PI * 0.6 + Math.sin(topSpin) * 0.3;
-        rotY = topSpin + microY;
-        rotZ = Math.cos(topSpin * 0.7) * 0.4;
-        posX = 0;
-        posY = -0.5;
-        posZ = -1.0;
-        camX = Math.sin(t * Math.PI * 4) * 2;
-        camY = 6;
-        camZ = 6;
-        scale = 1.1;
+      } else if (scrollPhase < 70) {
+        // SCENE 4: Crazy tumble
+        const local = (scrollPhase - 50) / 20;
+        finalRotX = continuousY * 1.5 + Math.sin(elapsedTime * 1.2) * 1.0;
+        finalRotY = continuousY * 2.0;
+        finalRotZ = continuousY * 0.8 + Math.cos(elapsedTime * 1.5) * 0.8;
+        finalPosX = Math.sin(elapsedTime * 1.0) * 1.5;
+        finalPosY = Math.cos(elapsedTime * 1.2) * 1.0;
+        finalPosZ = -2.0 + Math.sin(elapsedTime * 0.8) * 0.8;
+        finalCamZ = 6 + Math.sin(elapsedTime * 0.5) * 1;
+        finalScale = 1.3 + Math.sin(elapsedTime * 2) * 0.2;
         
-      } else if (scrollProgress < 0.75) {
-        // SCENE 5: CRAZY TUMBLE - Çılgın takla
-        const t = (scrollProgress - 0.60) / 0.15;
-        const chaos = t * Math.PI * 6;
-        rotX = chaos * 1.5 + Math.sin(chaos * 3) * 1.0;
-        rotY = chaos * 2.0 + Math.cos(chaos * 2.5) * 0.8;
-        rotZ = chaos * 1.2 + Math.sin(chaos * 4) * 1.2;
-        posX = Math.sin(chaos * 3) * 1.5;
-        posY = Math.cos(chaos * 2.5) * 1.2;
-        posZ = -2.0 + Math.sin(chaos * 2) * 1.0;
-        camX = Math.sin(chaos) * 3;
-        camY = 2 + Math.cos(chaos * 1.5) * 2;
-        camZ = 7 + Math.sin(chaos * 0.8) * 2;
-        scale = 1.2 + Math.sin(chaos * 5) * 0.3;
-        
-      } else if (scrollProgress < 0.88) {
-        // SCENE 6: CLOSE-UP FRONT - Tekrar ekrana yakın
-        const t = ease((scrollProgress - 0.75) / 0.13);
-        rotX = Math.sin(t * Math.PI) * 0.2 + microX;
-        rotY = Math.PI * 0.1 + microY * 2;
-        rotZ = 0;
-        posX = 0;
-        posY = Math.sin(t * Math.PI * 2) * 0.4;
-        posZ = -3.5;
-        camX = 0;
-        camY = 2;
-        camZ = 5;
-        scale = 1.5;
+      } else if (scrollPhase < 85) {
+        // SCENE 5: Close-up front
+        finalRotX = 0.1 + waveX * 0.5;
+        finalRotY = continuousY * 0.3;
+        finalRotZ = waveZ * 0.3;
+        finalPosX = waveX * 0.5;
+        finalPosY = waveY;
+        finalPosZ = -3.0;
+        finalCamZ = 5;
+        finalScale = 1.5;
         
       } else {
-        // SCENE 7: GRAND FINALE - Explosive ending
-        const t = (scrollProgress - 0.88) / 0.12;
-        const finale = t * Math.PI * 8;
-        rotX = finale * 2 + Math.sin(finale * 5) * 1.5;
-        rotY = finale * 3;
-        rotZ = Math.cos(finale * 3) * Math.PI;
-        posX = Math.cos(finale * 4) * 2.0;
-        posY = Math.sin(finale * 5) * 1.5;
-        posZ = -5.0 + Math.sin(finale * 3) * 2.0;
-        camX = Math.sin(finale * 2) * 4;
-        camY = 2 + Math.cos(finale * 3) * 3;
-        camZ = 4 + t * 3;
-        scale = 1.3 + t * 0.8;
+        // SCENE 6: Grand finale
+        const local = (scrollPhase - 85) / 15;
+        finalRotX = continuousY * 2 + Math.sin(elapsedTime * 2) * 1.5;
+        finalRotY = continuousY * 3;
+        finalRotZ = Math.cos(elapsedTime * 2.5) * Math.PI;
+        finalPosX = Math.cos(elapsedTime * 1.5) * 2.0;
+        finalPosY = Math.sin(elapsedTime * 2.0) * 1.5;
+        finalPosZ = -4.0 + Math.sin(elapsedTime * 1.8) * 2.0;
+        finalCamZ = 4 + local * 2;
+        finalScale = 1.6 + local * 0.6;
       }
       
-      // APPLY WITH LERP
-      const lerp = 0.1;
-      model.rotation.x += (rotX - model.rotation.x) * lerp + mouse.y * 0.2;
-      model.rotation.y += (rotY - model.rotation.y) * lerp + mouse.x * 0.3;
-      model.rotation.z += (rotZ - model.rotation.z) * lerp;
+      // DIRECT APPLY - NO LERP (immediate response)
+      model.rotation.x = finalRotX + mouse.y * 0.3;
+      model.rotation.y = finalRotY + mouse.x * 0.4;
+      model.rotation.z = finalRotZ;
       
-      model.position.x += (posX - model.position.x) * lerp;
-      model.position.y += (posY - model.position.y) * lerp;
-      model.position.z += (posZ - model.position.z) * lerp;
+      model.position.x = finalPosX;
+      model.position.y = finalPosY;
+      model.position.z = finalPosZ;
       
-      camera.position.x += (camX - camera.position.x) * 0.08;
-      camera.position.y += (camY - camera.position.y) * 0.08;
-      camera.position.z += (camZ - camera.position.z) * 0.08;
+      camera.position.z = finalCamZ;
       camera.lookAt(model.position);
       
       const baseScale = model.userData.baseScale || 6.0;
-      const targetScale = baseScale * scale * (1.0 + scrollProgress * 0.4);
-      model.scale.setScalar(targetScale);
+      model.scale.setScalar(baseScale * finalScale);
     }
 
     renderer.render(scene, camera);
