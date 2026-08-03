@@ -3,7 +3,7 @@
    Tasarım dili: Glassmorphism + Gradyan Mesh + Signature Stroke
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Font import kaldırıldı - HTML'de preload ile yüklenecek */
 
 /* ---------- Tema Değişkenleri ---------- */
 :root {
