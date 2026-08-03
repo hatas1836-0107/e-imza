@@ -182,21 +182,23 @@
     }
 
     if (model) {
-      // EXACT SHOWCASE ANIMATION LOGIC
-      // Base rotation - continuous spin
+      // MULTI-AXIS ROTATION - daha dinamik ve farklı açılardan görünüm
       model.rotation.y = elapsedTime * 0.15;
+      model.rotation.x = Math.sin(elapsedTime * 0.3) * 0.4 + mouse.y * 0.3;
+      model.rotation.z = Math.cos(elapsedTime * 0.25) * 0.3 + mouse.x * 0.2;
       
-      // Mouse parallax - added on top (just like showcase)
-      model.rotation.x = mouse.y * 0.2;
-      model.rotation.y += mouse.x * 0.3;
+      // Mouse parallax ekleme
+      model.rotation.y += mouse.x * 0.5;
       
-      // Individual model floating (showcase: flashDrive.position.y = Math.sin(elapsedTime * 0.8) * 0.15)
-      // We use slightly larger amplitude for background visibility
-      model.position.y = Math.sin(elapsedTime * 0.8) * 0.15;
+      // FLOATING with multi-axis movement
+      model.position.y = Math.sin(elapsedTime * 0.8) * 0.4;
+      model.position.x = Math.cos(elapsedTime * 0.6) * 0.3;
+      model.position.z = Math.sin(elapsedTime * 0.4) * 0.2;
       
-      // Keep other positions stable
-      model.position.x = 0;
-      model.position.z = 0;
+      // Dynamic scale for depth
+      const scaleVar = 1 + Math.sin(elapsedTime * 0.5) * 0.15;
+      const baseScale = model.userData.baseScale || 6.0;
+      model.scale.setScalar(baseScale * scaleVar);
     }
 
     renderer.render(scene, camera);
