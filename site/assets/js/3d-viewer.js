@@ -1,7 +1,7 @@
 /**
- * Optimized 3D GLB Background Viewer with Three.js
- * Fixed background with scroll-reactive parallax
- * Responsive, mobile-friendly, performant
+ * Optimized & Cinematic 3D GLB Background Viewer with Three.js
+ * Fixed background with multi-stage scroll-reactive transitions
+ * Includes micro-mouse parallax & high-fidelity smoothing
  */
 
 (function() {
@@ -11,16 +11,18 @@
   let container, isInitialized = false;
   let animationFrameId = null;
   let scrollProgress = 0;
-  let mouseX = 0, mouseY = 0;
-  
-  // Mouse object for showcase-style interaction
-  const mouse = { x: 0, y: 0 };
-  
-  // Target values for smooth interpolation
-  let targetRotation = { x: 0, y: 0, z: 0 };
-  let currentRotation = { x: 0, y: 0, z: 0 };
-  let targetPosition = { x: 0, y: 0, z: 0 };
-  let currentPosition = { x: 0, y: 0, z: 0 };
+
+  // Yumuşatma katsayısı (Düşük değer = Daha akıcı ve ağır geçişler, 'Cool' etki)
+  const LERP_FACTOR = 0.06;
+
+  // Dinamik hedef ve mevcut animasyon değerleri
+  const transform = {
+    target: { rotX: 0, rotY: 0, rotZ: 0, posX: 0, posY: 0, posZ: 0, camZ: 9 },
+    current: { rotX: 0, rotY: 0, rotZ: 0, posX: 0, posY: 0, posZ: 0, camZ: 9 }
+  };
+
+  // Mouse takip değişkenleri (Modelin nefes alması gibi hafif etkileşim için)
+  const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
 
   // Lazy load Three.js with importmap
   function loadThreeJS(callback) {
@@ -29,7 +31,6 @@
       return;
     }
 
-    // Add import map first
     const importMap = document.createElement('script');
     importMap.type = 'importmap';
     importMap.textContent = JSON.stringify({
@@ -40,7 +41,6 @@
     });
     document.head.appendChild(importMap);
 
-    // Then load the module
     const script = document.createElement('script');
     script.type = 'module';
     script.textContent = `
@@ -62,15 +62,12 @@
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // Scene
+    // Scene & Camera Setup
     scene = new window.THREE.Scene();
+    camera = new window.THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.set(0, 2, transform.current.camZ);
 
-    // Camera - closer for better visibility
-    camera = new window.THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 2, 8);
-    camera.lookAt(0, 0, 0);
-
-    // Renderer with optimizations
+    // Renderer Setup
     renderer = new window.THREE.WebGLRenderer({ 
       antialias: window.innerWidth > 768,
       alpha: true,
@@ -80,29 +77,24 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = window.THREE.SRGBColorSpace;
     renderer.toneMapping = window.THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
+    renderer.toneMappingExposure = 1.3;
     container.appendChild(renderer.domElement);
 
-    // Enhanced Lights for better visibility
-    const ambientLight = new window.THREE.AmbientLight(0xffffff, 1.0);
+    // Cinematic Lighting (Stüdyo Kalitesi)
+    const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
-    const directionalLight1 = new window.THREE.DirectionalLight(0xffffff, 1.5);
-    directionalLight1.position.set(10, 10, 10);
-    scene.add(directionalLight1);
+    const mainLight = new window.THREE.DirectionalLight(0xffffff, 1.5);
+    mainLight.position.set(5, 5, 4);
+    scene.add(mainLight);
 
-    const directionalLight2 = new window.THREE.DirectionalLight(0x4f46e5, 0.8);
-    directionalLight2.position.set(-10, 5, -10);
-    scene.add(directionalLight2);
+    const blueRimLight = new window.THREE.DirectionalLight(0x4f46e5, 1.2);
+    blueRimLight.position.set(-5, 3, -3);
+    scene.add(blueRimLight);
 
-    const rimLight = new window.THREE.DirectionalLight(0x22d3ee, 1.0);
-    rimLight.position.set(0, -10, -10);
-    scene.add(rimLight);
-
-    // Point light for glow effect
-    const pointLight = new window.THREE.PointLight(0x8b5cf6, 1.2, 50);
-    pointLight.position.set(0, 5, 5);
-    scene.add(pointLight);
+    const cyanRimLight = new window.THREE.DirectionalLight(0x22d3ee, 0.9);
+    cyanRimLight.position.set(0, -5, -5);
+    scene.add(cyanRimLight);
 
     // Load GLB Model
     const loader = new window.GLTFLoader();
@@ -111,24 +103,21 @@
       (gltf) => {
         model = gltf.scene;
         
-        // Center and scale model
+        // Modeli merkeze oturtma
         const box = new window.THREE.Box3().setFromObject(model);
         const center = box.getCenter(new window.THREE.Vector3());
         const size = box.getSize(new window.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
         
-        // Base scale for normalization
         const baseScale = 6.0 / maxDim;
         model.scale.setScalar(baseScale);
         model.position.sub(center.multiplyScalar(baseScale));
-        
-        // Start at center of screen
-        model.position.set(0, 0, 0);
-        
-        // Store base scale for breathing animation
         model.userData.baseScale = baseScale;
         
-        scene.add(model);
+        const wrapper = new window.THREE.Group();
+        wrapper.add(model);
+        scene.add(wrapper);
+        model = wrapper;
 
         // Animation mixer
         if (gltf.animations && gltf.animations.length > 0) {
@@ -138,7 +127,8 @@
           });
         }
 
-        console.log('✅ 3D Flash Drive loaded - Cinematic animations active');
+        isInitialized = true;
+        console.log('✅ 3D Flash Drive loaded - Cinematic mode active');
       },
       (progress) => {
         const percent = (progress.loaded / progress.total * 100).toFixed(0);
@@ -151,24 +141,72 @@
 
     // Clock for animations
     clock = new window.THREE.Clock();
-    
-    // Scroll listener
-    window.addEventListener('scroll', () => {
-      scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-    }, { passive: true });
-    
-    // Mouse move listener - showcase style
-    window.addEventListener('mousemove', (event) => {
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    }, { passive: true });
 
-    // Resize handler
+    // Event Listeners
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('resize', onWindowResize, false);
 
-    // Start animation loop
-    isInitialized = true;
     animate();
+  }
+
+  // MÜKEMMEL GEÇİŞ MATRİSİ (Apple Tarzı Scroll Kurgusu)
+  function onScroll() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+    scrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+
+    // Parçalı Zaman Çizelgesi (4 FAZ Scroll Timeline)
+    if (scrollProgress < 0.25) {
+      // FAZ 1: Giriş Ekranı - USB connector görünür, yakınlaşma (0% - 25%)
+      const localP = scrollProgress / 0.25;
+      transform.target.rotX = window.THREE.MathUtils.lerp(0.2, 0.4, localP);
+      transform.target.rotY = window.THREE.MathUtils.lerp(Math.PI, Math.PI * 1.5, localP);
+      transform.target.rotZ = 0;
+      transform.target.posX = 0;
+      transform.target.posY = 0;
+      transform.target.posZ = 0;
+      transform.target.camZ = window.THREE.MathUtils.lerp(9, 7, localP);
+    } 
+    else if (scrollProgress >= 0.25 && scrollProgress < 0.55) {
+      // FAZ 2: Detay Gösterimi - Yan yatıyor, sola kayıyor (25% - 55%)
+      const localP = (scrollProgress - 0.25) / 0.30;
+      transform.target.rotX = window.THREE.MathUtils.lerp(0.4, 0.7, localP);
+      transform.target.rotY = window.THREE.MathUtils.lerp(Math.PI * 1.5, Math.PI * 2.3, localP);
+      transform.target.rotZ = window.THREE.MathUtils.lerp(0, 0.3, localP);
+      transform.target.posX = window.THREE.MathUtils.lerp(0, -1.0, localP);
+      transform.target.posY = window.THREE.MathUtils.lerp(0, 0.3, localP);
+      transform.target.posZ = 0;
+      transform.target.camZ = 7;
+    } 
+    else if (scrollProgress >= 0.55 && scrollProgress < 0.80) {
+      // FAZ 3: Dev Takla & Geçiş - USB tam dönüş, sağa kayma (55% - 80%)
+      const localP = (scrollProgress - 0.55) / 0.25;
+      transform.target.rotX = window.THREE.MathUtils.lerp(0.7, Math.PI * 1.2, localP);
+      transform.target.rotY = window.THREE.MathUtils.lerp(Math.PI * 2.3, Math.PI * 3.5, localP);
+      transform.target.rotZ = window.THREE.MathUtils.lerp(0.3, -0.2, localP);
+      transform.target.posX = window.THREE.MathUtils.lerp(-1.0, 1.2, localP);
+      transform.target.posY = window.THREE.MathUtils.lerp(0.3, -0.3, localP);
+      transform.target.posZ = 0;
+      transform.target.camZ = window.THREE.MathUtils.lerp(7, 8, localP);
+    } 
+    else {
+      // FAZ 4: Kapanış - Merkeze dönüş, final pose (80% - 100%)
+      const localP = (scrollProgress - 0.80) / 0.20;
+      transform.target.rotX = window.THREE.MathUtils.lerp(Math.PI * 1.2, 0.3, localP);
+      transform.target.rotY = window.THREE.MathUtils.lerp(Math.PI * 3.5, Math.PI * 4, localP);
+      transform.target.rotZ = window.THREE.MathUtils.lerp(-0.2, 0, localP);
+      transform.target.posX = window.THREE.MathUtils.lerp(1.2, 0, localP);
+      transform.target.posY = window.THREE.MathUtils.lerp(-0.3, 0, localP);
+      transform.target.posZ = window.THREE.MathUtils.lerp(0, -1, localP);
+      transform.target.camZ = window.THREE.MathUtils.lerp(8, 6, localP);
+    }
+  }
+
+  // Mouse Hareketi (Micro-interaction Parallax)
+  function onMouseMove(event) {
+    mouse.targetX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.targetY = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   function onWindowResize() {
@@ -182,111 +220,42 @@
     renderer.setSize(width, height);
   }
 
+  // Lerp (Kusursuz Yumuşatma) Döngüsü
   function animate() {
     animationFrameId = requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
-    const elapsedTime = clock.getElapsedTime();
 
     if (mixer) mixer.update(delta);
 
-    if (model) {
-      const scrollPct = scrollProgress * 100;
-      
-      // BIG AMBIENT MOVEMENTS - ALWAYS VISIBLE
-      const floatX = Math.sin(elapsedTime * 0.4) * 0.5;
-      const floatY = Math.cos(elapsedTime * 0.35) * 0.4;
-      const floatRotX = Math.sin(elapsedTime * 0.3) * 0.4;
-      const floatRotY = Math.cos(elapsedTime * 0.25) * 0.3;
-      const floatRotZ = Math.sin(elapsedTime * 0.28) * 0.35;
-      
-      let targetRotX, targetRotY, targetRotZ, targetPosX, targetPosY, targetPosZ;
-      let targetCamX = 0, targetCamY = 2, targetCamZ = 9;
-      let targetScale = 1.0;
-      
-      // ALWAYS SET BASE VALUES (so it moves even at scroll 0)
-      targetRotX = 0.2 + floatRotX;
-      targetRotY = Math.PI + floatRotY + elapsedTime * 0.1;
-      targetRotZ = floatRotZ;
-      targetPosX = floatX;
-      targetPosY = floatY;
-      targetPosZ = -2.0;
-      
-      // SCROLL MODIFICATIONS
-      if (scrollPct >= 0 && scrollPct < 20) {
-        const t = scrollPct / 20;
-        targetRotX = 0.2 + floatRotX + t * 0.3;
-        targetPosX = floatX + t * 0.5;
-        targetPosZ = -2.0 + t * 0.3;
-        targetScale = 1.0 + t * 0.2;
-        
-      } else if (scrollPct >= 20 && scrollPct < 40) {
-        const t = (scrollPct - 20) / 20;
-        targetRotX = 0.5 + floatRotX;
-        targetRotY = Math.PI + Math.PI * 0.4 * t + floatRotY + elapsedTime * 0.1;
-        targetRotZ = 0.3 * t + floatRotZ;
-        targetPosX = floatX - t * 0.8;
-        targetPosY = floatY + t * 0.4;
-        targetPosZ = -1.7;
-        targetCamX = t * 2;
-        targetCamZ = 9 - t * 1;
-        targetScale = 1.2 + t * 0.1;
-        
-      } else if (scrollPct >= 40 && scrollPct < 60) {
-        const t = (scrollPct - 40) / 20;
-        targetRotX = 0.7 + floatRotX * 1.5;
-        targetRotY = Math.PI + Math.PI * (0.4 + t * 0.5) + floatRotY + elapsedTime * 0.08;
-        targetRotZ = 0.3 + floatRotZ * 1.2;
-        targetPosX = -0.8 + floatX * 1.5 + t * 0.8;
-        targetPosY = 0.4 + floatY - t * 0.6;
-        targetPosZ = -1.7 + t * 0.2;
-        targetCamX = 2 - t * 2;
-        targetCamY = 2 + t * 3;
-        targetCamZ = 8 - t * 1;
-        targetScale = 1.3;
-        
-      } else if (scrollPct >= 60 && scrollPct < 80) {
-        const t = (scrollPct - 60) / 20;
-        targetRotX = 0.3 + floatRotX * 0.8;
-        targetRotY = Math.PI + Math.PI * 0.2 * t + floatRotY * 0.5 + elapsedTime * 0.12;
-        targetRotZ = floatRotZ * 0.5;
-        targetPosX = floatX * 0.8;
-        targetPosY = -0.2 + floatY * 1.5 + Math.sin(t * Math.PI) * 0.5;
-        targetPosZ = -1.5 - t * 1.2;
-        targetCamX = 0;
-        targetCamY = 5 - t * 2.5;
-        targetCamZ = 7 - t * 1.5;
-        targetScale = 1.3 + t * 0.3;
-        
-      } else if (scrollPct >= 80) {
-        const t = (scrollPct - 80) / 20;
-        targetRotX = 0.2 + floatRotX * 1.3;
-        targetRotY = Math.PI + Math.PI * (0.2 + t * 0.4) + floatRotY + elapsedTime * 0.15;
-        targetRotZ = 0.2 * t + floatRotZ * 1.5;
-        targetPosX = floatX * 1.2 + t * 0.6;
-        targetPosY = 0.3 + floatY * 1.8;
-        targetPosZ = -2.7 - t * 1.0;
-        targetCamX = t * 1;
-        targetCamY = 2.5 - t * 0.5;
-        targetCamZ = 5.5 - t * 1;
-        targetScale = 1.6 + t * 0.4;
-      }
-      
-      // DIRECT APPLY - IMMEDIATE RESPONSE
-      model.rotation.x = targetRotX + mouse.y * 0.3;
-      model.rotation.y = targetRotY + mouse.x * 0.4;
-      model.rotation.z = targetRotZ;
-      
-      model.position.x = targetPosX;
-      model.position.y = targetPosY;
-      model.position.z = targetPosZ;
-      
-      camera.position.set(targetCamX, targetCamY, targetCamZ);
-      camera.lookAt(model.position);
-      
-      const baseScale = model.userData.baseScale || 6.0;
-      model.scale.setScalar(baseScale * targetScale);
-    }
+    if (!isInitialized || !model) return;
+
+    // Mouse Değerlerini Yumuşat (Gecikmeli takip etkisi)
+    mouse.x += (mouse.targetX - mouse.x) * LERP_FACTOR;
+    mouse.y += (mouse.targetY - mouse.y) * LERP_FACTOR;
+
+    // Model Rotasyon ve Pozisyon Değerlerini Lerp ile Yumuşat
+    transform.current.rotX += (transform.target.rotX - transform.current.rotX) * LERP_FACTOR;
+    transform.current.rotY += (transform.target.rotY - transform.current.rotY) * LERP_FACTOR;
+    transform.current.rotZ += (transform.target.rotZ - transform.current.rotZ) * LERP_FACTOR;
+    
+    transform.current.posX += (transform.target.posX - transform.current.posX) * LERP_FACTOR;
+    transform.current.posY += (transform.target.posY - transform.current.posY) * LERP_FACTOR;
+    transform.current.posZ += (transform.target.posZ - transform.current.posZ) * LERP_FACTOR;
+    
+    transform.current.camZ += (transform.target.camZ - transform.current.camZ) * LERP_FACTOR;
+
+    // Değerleri Uygula (Scroll + Hafif Mouse Esnekliği)
+    model.rotation.x = transform.current.rotX + (mouse.y * 0.2);
+    model.rotation.y = transform.current.rotY + (mouse.x * 0.25);
+    model.rotation.z = transform.current.rotZ;
+
+    model.position.x = transform.current.posX;
+    model.position.y = transform.current.posY;
+    model.position.z = transform.current.posZ;
+    
+    camera.position.z = transform.current.camZ;
+    camera.lookAt(model.position);
 
     renderer.render(scene, camera);
   }
@@ -305,12 +274,11 @@
     }
   }
 
-  // Simple init without observer (always visible as background)
+  // Init function
   function init3DBackground(containerId) {
     const targetContainer = document.getElementById(containerId);
     if (!targetContainer) return;
 
-    // Immediate load
     loadThreeJS(() => {
       init3DViewer(containerId);
     });
