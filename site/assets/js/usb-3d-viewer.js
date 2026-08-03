@@ -11,7 +11,7 @@
   let animationFrameId = null;
 
   // Ultra smooth interpolation
-  const LERP = 0.08;
+  const LERP = 0.15; // Increased for visible movement
 
   // Current animation state
   const state = {
@@ -120,6 +120,14 @@
         usbModel.rotation.x = Math.PI * 0.5;  // 90 degrees - standing up
         usbModel.rotation.y = 0;
         usbModel.rotation.z = 0;
+        
+        // SET INITIAL STATE
+        state.current.rotX = Math.PI * 0.5;
+        state.current.rotY = 0;
+        state.current.rotZ = 0;
+        state.target.rotX = Math.PI * 0.5;
+        state.target.rotY = 0;
+        state.target.rotZ = 0;
         
         scene.add(usbModel);
 
@@ -265,7 +273,9 @@
     const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
     state.scroll = Math.max(0, Math.min(1, scrollTop / maxScroll));
     
-    console.log('📜 Scroll:', (state.scroll * 100).toFixed(1) + '%');
+    console.log('📜 Scroll:', (state.scroll * 100).toFixed(1) + '%', 
+                'Target Y:', state.target.rotY.toFixed(2),
+                'Current Y:', state.current.rotY.toFixed(2));
     updateScrollAnimation();
   }
 
@@ -303,13 +313,13 @@
     state.current.scale += (state.target.scale - state.current.scale) * LERP;
     state.current.camZ += (state.target.camZ - state.current.camZ) * LERP;
 
-    // Apply with minimal mouse influence
-    usbModel.rotation.x = state.current.rotX + (mouse.y * 0.05);
-    usbModel.rotation.y = state.current.rotY + (mouse.x * 0.08);
-    usbModel.rotation.z = state.current.rotZ + (mouse.x * 0.02);
+    // Apply with NO mouse influence (for testing)
+    usbModel.rotation.x = state.current.rotX; // + (mouse.y * 0.05);
+    usbModel.rotation.y = state.current.rotY; // + (mouse.x * 0.08);
+    usbModel.rotation.z = state.current.rotZ; // + (mouse.x * 0.02);
 
-    usbModel.position.x = state.current.posX + (mouse.x * 0.1);
-    usbModel.position.y = state.current.posY + (mouse.y * 0.08);
+    usbModel.position.x = state.current.posX; // + (mouse.x * 0.1);
+    usbModel.position.y = state.current.posY; // + (mouse.y * 0.08);
     usbModel.position.z = state.current.posZ;
     
     usbModel.scale.setScalar(state.current.scale);
