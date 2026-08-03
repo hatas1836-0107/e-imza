@@ -33,6 +33,18 @@
   overflow: hidden;
 }
 
+.products-premium-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(79, 70, 229, 0.15) 30%, rgba(99, 102, 241, 0.3) 60%, rgba(79, 70, 229, 0.5) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* WebGL Canvas Background */
 .products-bg-canvas {
   position: absolute;
