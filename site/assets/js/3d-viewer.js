@@ -56,9 +56,10 @@
     // Scene
     scene = new window.THREE.Scene();
 
-    // Camera
-    camera = new window.THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    camera.position.set(3, 1, 5);
+    // Camera - closer for better visibility
+    camera = new window.THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
 
     // Renderer with optimizations
     renderer = new window.THREE.WebGLRenderer({ 
@@ -70,24 +71,29 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = window.THREE.SRGBColorSpace;
     renderer.toneMapping = window.THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.4;
     container.appendChild(renderer.domElement);
 
-    // Lights
-    const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.7);
+    // Enhanced Lights for better visibility
+    const ambientLight = new window.THREE.AmbientLight(0xffffff, 1.0);
     scene.add(ambientLight);
 
-    const directionalLight = new window.THREE.DirectionalLight(0xffffff, 1.2);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
+    const directionalLight1 = new window.THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight1.position.set(10, 10, 10);
+    scene.add(directionalLight1);
 
-    const fillLight = new window.THREE.DirectionalLight(0x4f46e5, 0.5);
-    fillLight.position.set(-5, 0, -5);
-    scene.add(fillLight);
+    const directionalLight2 = new window.THREE.DirectionalLight(0x4f46e5, 0.8);
+    directionalLight2.position.set(-10, 5, -10);
+    scene.add(directionalLight2);
 
-    const rimLight = new window.THREE.DirectionalLight(0x22d3ee, 0.6);
-    rimLight.position.set(0, -5, -5);
+    const rimLight = new window.THREE.DirectionalLight(0x22d3ee, 1.0);
+    rimLight.position.set(0, -10, -10);
     scene.add(rimLight);
+
+    // Point light for glow effect
+    const pointLight = new window.THREE.PointLight(0x8b5cf6, 1.2, 50);
+    pointLight.position.set(0, 5, 5);
+    scene.add(pointLight);
 
     // Load GLB Model
     const loader = new window.GLTFLoader();
@@ -96,15 +102,18 @@
       (gltf) => {
         model = gltf.scene;
         
-        // Center and scale model
+        // Center and scale model - MUCH LARGER
         const box = new window.THREE.Box3().setFromObject(model);
         const center = box.getCenter(new window.THREE.Vector3());
         const size = box.getSize(new window.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 3.5 / maxDim;
+        const scale = 6.0 / maxDim; // Increased from 3.5 to 6.0
         
         model.scale.setScalar(scale);
         model.position.sub(center.multiplyScalar(scale));
+        
+        // Start at center of screen
+        model.position.set(0, 0, 0);
         
         scene.add(model);
 
@@ -116,7 +125,7 @@
           });
         }
 
-        console.log('✅ 3D Background Model loaded');
+        console.log('✅ 3D Flash Drive loaded - Enhanced animations active');
       },
       (progress) => {
         const percent = (progress.loaded / progress.total * 100).toFixed(0);
@@ -133,7 +142,7 @@
     // Scroll listener for parallax
     window.addEventListener('scroll', onScroll, { passive: true });
     
-    // Mouse move listener for subtle interaction
+    // Mouse move listener for interaction
     window.addEventListener('mousemove', onMouseMove, { passive: true });
 
     // Resize handler
@@ -168,6 +177,7 @@
     animationFrameId = requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
 
     // Update animations
     if (mixer) {
@@ -175,26 +185,28 @@
     }
 
     if (model) {
-      // Smooth scroll-based rotation and position
-      const targetRotationY = scrollProgress * Math.PI * 2;
-      const targetRotationX = scrollProgress * Math.PI * 0.3;
+      // Continuous smooth rotation on multiple axes
+      model.rotation.y += 0.008; // Base Y rotation
+      model.rotation.x = Math.sin(time * 0.3) * 0.15; // Oscillating X tilt
+      model.rotation.z = Math.cos(time * 0.2) * 0.08; // Subtle Z wobble
       
-      // Lerp for smooth transitions
-      model.rotation.y += (targetRotationY - model.rotation.y) * 0.05;
-      model.rotation.x += (targetRotationX - model.rotation.x) * 0.05;
+      // Smooth floating animation
+      model.position.y = Math.sin(time * 0.5) * 0.8;
       
-      // Add base rotation for constant movement
-      model.rotation.y += 0.003;
+      // Scroll-based rotation enhancement
+      const scrollRotation = scrollProgress * Math.PI * 1.5;
+      model.rotation.y += scrollRotation * 0.01;
       
-      // Mouse parallax effect (subtle)
-      const targetX = mouseX * 0.5;
-      const targetY = mouseY * 0.3;
-      model.position.x += (targetX - model.position.x) * 0.02;
-      model.position.y += (targetY - model.position.y) * 0.02;
+      // Mouse parallax effect - more pronounced
+      const targetX = mouseX * 1.5;
+      const targetY = mouseY * 1.0;
+      model.position.x += (targetX - model.position.x) * 0.05;
+      model.position.z += (targetY - model.position.z) * 0.05;
       
-      // Scroll-based position changes
-      camera.position.z = 5 - scrollProgress * 2;
-      camera.position.y = 1 + scrollProgress * 3;
+      // Scroll-based camera movement for depth
+      camera.position.y = 2 + scrollProgress * 2;
+      camera.position.z = 8 - scrollProgress * 3;
+      camera.lookAt(model.position);
     }
 
     renderer.render(scene, camera);

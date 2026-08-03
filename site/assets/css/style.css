@@ -409,7 +409,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   /* 3D Background mobile optimization */
   #flash3DBackground {
-    opacity: 0.08 !important;
+    opacity: 0.2 !important;
   }
 }
 
