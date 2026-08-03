@@ -148,21 +148,11 @@
 
     clock = new window.THREE.Clock();
 
-    // Event listeners - EXACTLY like showcase.js
-    window.addEventListener('scroll', () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetScrollProgress = window.scrollY / maxScroll;
-      console.log('🔵 SCROLL!', {
-        scrollY: window.scrollY,
-        maxScroll,
-        targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%'
-      });
-    });
-    
+    // Event listeners
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('resize', onWindowResize, false);
     
-    console.log('✅ Scroll listeners attached (showcase.js style)');
+    console.log('✅ USB 3D Viewer ready with time-based animation');
 
     animate();
   }
@@ -178,16 +168,6 @@
     currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.05;
     
     const scroll = currentScrollProgress;
-    
-    // Debug log every 60 frames (1 second)
-    if (Math.random() < 0.016) {
-      console.log('🎬 UPDATE ANIMATION:', {
-        scroll: (scroll * 100).toFixed(1) + '%',
-        targetRotY: state.target.rotY.toFixed(2),
-        currentRotY: state.current.rotY.toFixed(2),
-        changed: oldProgress !== currentScrollProgress
-      });
-    }
     
     // PHASE 1: DISTANT INTRO - Far away, slowly approaching (0-15%)
     if (scroll < 0.15) {
@@ -306,34 +286,26 @@
     animationFrameId = requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
+    const elapsedTime = clock.getElapsedTime();
+    
     if (mixer) mixer.update(delta);
 
     if (!isInitialized || !usbModel) return;
 
-    // **CRITICAL FIX: Update scroll EVERY FRAME (don't rely on scroll events)**
+    // Read scroll (works if page is scrollable, otherwise stays 0)
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const oldTarget = targetScrollProgress;
     if (maxScroll > 0) {
       targetScrollProgress = window.scrollY / maxScroll;
     }
-    
-    // Debug EVERY frame temporarily
-    if (oldTarget !== targetScrollProgress) {
-      console.log('🔥 SCROLL CHANGED!', {
-        scrollY: window.scrollY,
-        maxScroll,
-        targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%'
-      });
-    }
 
-    // **CRITICAL: Update scroll animation EVERY FRAME (like showcase.js)**
+    // Update targets based on scroll OR time
     updateScrollAnimation();
 
     // Smooth mouse
     mouse.x += (mouse.targetX - mouse.x) * 0.15;
     mouse.y += (mouse.targetY - mouse.y) * 0.15;
 
-    // Smooth all transforms (like showcase.js interpolation)
+    // Smooth all transforms
     state.current.rotX += (state.target.rotX - state.current.rotX) * 0.08;
     state.current.rotY += (state.target.rotY - state.current.rotY) * 0.08;
     state.current.rotZ += (state.target.rotZ - state.current.rotZ) * 0.08;
@@ -343,9 +315,14 @@
     state.current.scale += (state.target.scale - state.current.scale) * 0.08;
     state.current.camZ += (state.target.camZ - state.current.camZ) * 0.05;
 
-    // Apply transforms with subtle mouse parallax
+    // **NEW: Time-based auto-rotation (like showcase.js)**
+    // If no scroll, USB rotates slowly on its own
+    const autoRotationSpeed = 0.3; // Slow elegant rotation
+    const autoRotation = elapsedTime * autoRotationSpeed;
+
+    // Apply transforms with mouse parallax + auto rotation
     usbModel.rotation.x = state.current.rotX + (mouse.y * 0.1);
-    usbModel.rotation.y = state.current.rotY + (mouse.x * 0.15);
+    usbModel.rotation.y = state.current.rotY + autoRotation + (mouse.x * 0.15);
     usbModel.rotation.z = state.current.rotZ + (mouse.x * 0.03);
 
     usbModel.position.x = state.current.posX + (mouse.x * 0.2);
@@ -356,17 +333,6 @@
     
     camera.position.z = state.current.camZ;
     camera.lookAt(usbModel.position);
-
-    // Debug log occasionally
-    if (Math.random() < 0.016) {
-      console.log('💎 RENDER:', {
-        rotX: usbModel.rotation.x.toFixed(2),
-        rotY: usbModel.rotation.y.toFixed(2),
-        posX: usbModel.position.x.toFixed(2),
-        posY: usbModel.position.y.toFixed(2),
-        scale: usbModel.scale.x.toFixed(2)
-      });
-    }
 
     renderer.render(scene, camera);
   }
