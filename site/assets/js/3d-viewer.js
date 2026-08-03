@@ -189,85 +189,105 @@
     }
 
     if (model) {
-      // SCROLL-BASED POSE TRANSFORMATIONS
-      // 0-0.2: Vertical standing (dik duruş)
-      // 0.2-0.4: Rotating to horizontal (yatay geçiş)
-      // 0.4-0.6: Horizontal spinning (yatay dönüş)
-      // 0.6-0.8: Flip animation (takla)
-      // 0.8-1.0: Dramatic spin (son poz)
+      // CINEMATIC SCROLL-BASED CHOREOGRAPHY
+      // Each 20% scroll = different dramatic view
       
-      let targetRotX = 0;
-      let targetRotY = 0;
-      let targetRotZ = 0;
+      let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
+      let targetPosX = 0, targetPosY = 0, targetPosZ = 0;
+      let targetCamZ = 8, targetCamY = 2, targetCamX = 0;
       
       if (scrollProgress < 0.2) {
-        // Phase 1: Vertical standing with gentle sway
-        const phase = scrollProgress / 0.2;
-        targetRotX = Math.PI * 0.5 + Math.sin(time * 0.5) * 0.1; // Dik
-        targetRotY = time * 0.2 + phase * Math.PI * 0.5;
-        targetRotZ = Math.sin(time * 0.3) * 0.1;
+        // Phase 1: FRONT VIEW - Close up, gentle reveal
+        targetRotX = Math.sin(time * 0.4) * 0.1;
+        targetRotY = time * 0.15; // Slow spin to show front
+        targetRotZ = Math.cos(time * 0.3) * 0.05;
+        targetPosX = Math.sin(time * 0.5) * 0.3;
+        targetPosY = Math.sin(time * 0.7) * 0.4;
+        targetPosZ = 0;
+        targetCamZ = 7 - (scrollProgress / 0.2) * 2; // Zoom in
+        targetCamY = 2;
         
       } else if (scrollProgress < 0.4) {
-        // Phase 2: Rotating to horizontal
+        // Phase 2: SIDE PROFILE - Rotate to show side, move to left
         const phase = (scrollProgress - 0.2) / 0.2;
-        const easePhase = 1 - Math.pow(1 - phase, 3); // Ease out cubic
-        targetRotX = Math.PI * 0.5 * (1 - easePhase); // 90° to 0°
-        targetRotY = time * 0.3 + phase * Math.PI * 2;
-        targetRotZ = Math.sin(time * 0.4) * 0.15;
+        targetRotX = Math.sin(time * 0.5) * 0.15;
+        targetRotY = Math.PI * 0.5 + time * 0.2; // 90° side view
+        targetRotZ = Math.cos(time * 0.4) * 0.1;
+        targetPosX = -2 + Math.sin(time * 0.6) * 0.5; // Move left
+        targetPosY = Math.sin(time * 0.8) * 0.6;
+        targetPosZ = Math.cos(time * 0.5) * 0.4;
+        targetCamZ = 6;
+        targetCamY = 2 + phase * 1;
+        targetCamX = 1;
         
       } else if (scrollProgress < 0.6) {
-        // Phase 3: Horizontal spinning
+        // Phase 3: ZOOM OUT + TOP VIEW - Show from above, spin fast
         const phase = (scrollProgress - 0.4) / 0.2;
-        targetRotX = Math.sin(time * 0.4) * 0.2; // Slight wobble
-        targetRotY = time * 0.5 + phase * Math.PI * 4; // Fast spin
-        targetRotZ = Math.cos(time * 0.5) * 0.15;
+        targetRotX = -Math.PI * 0.3 + Math.sin(time * 0.6) * 0.2; // Tilt down
+        targetRotY = time * 0.8 + phase * Math.PI * 4; // Fast 360° spin
+        targetRotZ = Math.sin(time * 0.7) * 0.15;
+        targetPosX = Math.sin(time * 0.4) * 1.5;
+        targetPosY = 1 + Math.cos(time * 0.9) * 0.7;
+        targetPosZ = -1;
+        targetCamZ = 10 + phase * 3; // Zoom out dramatically
+        targetCamY = 5; // High angle
+        targetCamX = Math.sin(phase * Math.PI) * 2;
         
       } else if (scrollProgress < 0.8) {
-        // Phase 4: Flip animation (takla)
+        // Phase 4: DIAGONAL FLIP - Show back, flip 180°
         const phase = (scrollProgress - 0.6) / 0.2;
-        const easePhase = phase < 0.5 
-          ? 2 * phase * phase 
-          : 1 - Math.pow(-2 * phase + 2, 2) / 2; // Ease in-out
-        targetRotX = Math.PI * 2 * easePhase; // Full flip
-        targetRotY = time * 0.4 + phase * Math.PI * 1.5;
-        targetRotZ = Math.sin(phase * Math.PI * 2) * 0.3; // Wobble during flip
+        const easePhase = phase < 0.5 ? 4 * phase * phase * phase : 1 - Math.pow(-2 * phase + 2, 3) / 2;
+        targetRotX = Math.PI * easePhase + Math.sin(time * 0.5) * 0.2; // Flip
+        targetRotY = Math.PI + time * 0.3; // Show back side
+        targetRotZ = Math.sin(phase * Math.PI * 2) * 0.4; // Wobble
+        targetPosX = 2 - phase * 4; // Move right to left
+        targetPosY = Math.sin(time * 1.1) * 0.8 + phase * 2; // Go up
+        targetPosZ = Math.cos(time * 0.6) * 0.6;
+        targetCamZ = 5 + Math.sin(phase * Math.PI) * 3;
+        targetCamY = 2 + phase * 3;
+        targetCamX = -2 + phase * 4;
         
       } else {
-        // Phase 5: Dramatic final spin
+        // Phase 5: DRAMATIC FINALE - Ultra close, full 360° showcase
         const phase = (scrollProgress - 0.8) / 0.2;
-        targetRotX = Math.sin(time * 0.6) * 0.25 + phase * Math.PI * 0.5;
-        targetRotY = time * 0.7 + phase * Math.PI * 6; // Very fast spin
-        targetRotZ = Math.cos(time * 0.4) * 0.2;
+        targetRotX = Math.sin(time * 0.8) * 0.3 + phase * Math.PI * 0.5;
+        targetRotY = time * 1.2 + phase * Math.PI * 8; // Very fast spin
+        targetRotZ = Math.cos(time * 0.9) * 0.25;
+        targetPosX = Math.sin(time * 0.7) * 0.4;
+        targetPosY = Math.cos(time * 1.3) * 0.5;
+        targetPosZ = Math.sin(time * 0.8) * 0.3;
+        targetCamZ = 4 - phase * 1; // Very close
+        targetCamY = 2 + Math.sin(phase * Math.PI * 2) * 1.5;
+        targetCamX = Math.cos(phase * Math.PI * 3) * 1;
       }
       
-      // Smooth interpolation (lerp) for buttery transitions
-      const lerpFactor = 0.08;
-      model.rotation.x += (targetRotX - model.rotation.x) * lerpFactor;
-      model.rotation.y += (targetRotY - model.rotation.y) * lerpFactor;
-      model.rotation.z += (targetRotZ - model.rotation.z) * lerpFactor;
+      // Ultra-smooth interpolation with different lerp factors
+      const rotLerp = 0.06;
+      const posLerp = 0.08;
+      const camLerp = 0.05;
       
-      // Smooth floating animation (independent of scroll)
-      const floatY = Math.sin(time * 0.5) * 0.5 + Math.sin(time * 1.2) * 0.3;
-      model.position.y += (floatY - model.position.y) * 0.05;
+      // Model rotation
+      model.rotation.x += (targetRotX - model.rotation.x) * rotLerp;
+      model.rotation.y += (targetRotY - model.rotation.y) * rotLerp;
+      model.rotation.z += (targetRotZ - model.rotation.z) * rotLerp;
       
-      // Enhanced mouse parallax with depth
-      const targetX = mouseX * 2.0 + Math.sin(time * 0.3) * 0.5;
-      const targetZ = mouseY * 1.5 + Math.cos(time * 0.4) * 0.5;
-      model.position.x += (targetX - model.position.x) * 0.08;
-      model.position.z += (targetZ - model.position.z) * 0.08;
+      // Model position with enhanced mouse parallax
+      const mouseInfluenceX = mouseX * 1.5;
+      const mouseInfluenceY = mouseY * 1.0;
+      model.position.x += (targetPosX + mouseInfluenceX - model.position.x) * posLerp;
+      model.position.y += (targetPosY + mouseInfluenceY - model.position.y) * posLerp;
+      model.position.z += (targetPosZ - model.position.z) * posLerp;
       
-      // Scroll-based camera choreography
-      const cameraY = 2 + Math.sin(scrollProgress * Math.PI * 2) * 1.5;
-      const cameraZ = 8 - scrollProgress * 4 + Math.cos(scrollProgress * Math.PI) * 2;
-      const cameraX = Math.sin(scrollProgress * Math.PI * 3) * 1.5;
+      // Dynamic camera movement
+      camera.position.x += (targetCamX - camera.position.x) * camLerp;
+      camera.position.y += (targetCamY - camera.position.y) * camLerp;
+      camera.position.z += (targetCamZ - camera.position.z) * camLerp;
       
-      camera.position.x += (cameraX - camera.position.x) * 0.05;
-      camera.position.y += (cameraY - camera.position.y) * 0.05;
-      camera.position.z += (cameraZ - camera.position.z) * 0.05;
+      // Always look at model
       camera.lookAt(model.position);
       
-      // Dynamic scale based on scroll (breathing effect)
-      const breathingScale = 1 + Math.sin(scrollProgress * Math.PI * 2) * 0.15;
+      // Dynamic scale with breathing
+      const breathingScale = 1 + Math.sin(time * 0.6) * 0.08 + Math.cos(scrollProgress * Math.PI * 3) * 0.12;
       const baseScale = model.userData.baseScale || 6.0;
       model.scale.setScalar(baseScale * breathingScale);
     }
