@@ -298,8 +298,8 @@
     updateScrollAnimation();
 
     // Smooth mouse
-    mouse.x += (mouse.targetX - mouse.x) * LERP * 2;
-    mouse.y += (mouse.targetY - mouse.y) * LERP * 2;
+    mouse.x += (mouse.targetX - mouse.x) * 0.15;
+    mouse.y += (mouse.targetY - mouse.y) * 0.15;
 
     // Smooth all transforms (like showcase.js interpolation)
     state.current.rotX += (state.target.rotX - state.current.rotX) * 0.08;
