@@ -148,10 +148,20 @@
 
     clock = new window.THREE.Clock();
 
-    // Event listeners
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Event listeners - multiple bindings for reliability
+    const scrollHandler = () => onScroll();
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    document.addEventListener('scroll', scrollHandler, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('resize', onWindowResize, false);
+    
+    console.log('✅ Scroll listeners attached to window and document');
+    
+    // Force initial scroll calculation
+    setTimeout(() => {
+      onScroll();
+      console.log('🔄 Forced initial scroll check');
+    }, 500);
 
     animate();
   }
@@ -161,12 +171,16 @@
   let currentScrollProgress = 0;
 
   function onScroll() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+    const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight;
+    const winHeight = window.innerHeight;
+    const maxScroll = (docHeight - winHeight) || 1;
     targetScrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
     
     console.log('🔵 SCROLL EVENT:', {
       scrollTop,
+      docHeight,
+      winHeight,
       maxScroll,
       targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%',
       currentScrollProgress: (currentScrollProgress * 100).toFixed(1) + '%'
