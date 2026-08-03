@@ -4474,8 +4474,10 @@ a, button, input[type="submit"], input[type="button"], .btn {
 
 .pricing-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 14, 26, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 32px 28px;
   display: flex;
@@ -4489,7 +4491,7 @@ a, button, input[type="submit"], input[type="button"], .btn {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -4497,8 +4499,9 @@ a, button, input[type="submit"], input[type="button"], .btn {
 
 .pricing-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(129, 140, 248, 0.3);
+  border-color: rgba(129, 140, 248, 0.4);
   box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+  background: rgba(11, 14, 26, 0.92);
 }
 
 .pricing-card:hover::before {
@@ -4506,14 +4509,15 @@ a, button, input[type="submit"], input[type="button"], .btn {
 }
 
 .pricing-card.featured {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-  border: 2px solid rgba(129, 140, 248, 0.4);
+  background: rgba(11, 14, 26, 0.92);
+  border: 2px solid rgba(129, 140, 248, 0.5);
   transform: scale(1.05);
   box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
 }
 
 .pricing-card.featured:hover {
   transform: scale(1.05) translateY(-8px);
+  background: rgba(11, 14, 26, 0.95);
 }
 
 .pricing-badge {
