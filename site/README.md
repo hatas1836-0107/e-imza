@@ -43,3 +43,5 @@ Klasördeki tüm dosyaları (assets dahil) herhangi bir hosting/sunucunun kök d
 - `sitemap.xml` ve `robots.txt` hazır; Google Search Console'a alan adınızı ekleyip sitemap'i gönderin.
 - SSS sayfasında FAQ, ana sayfa ve iletişimde ProfessionalService yapılandırılmış verisi (JSON-LD) var.
 - Gerçek "e-imza" aramalarında üst sıraya çıkmak; teknik SEO kadar geri bağlantı (backlink), Google İşletme Profili kaydı ve düzenli içerik üretimini de gerektirir — bunlar bu paketin kapsamı dışındadır.
+
+Son güncelleme: 2025-01-26
