@@ -82,8 +82,8 @@
 </div>
 <div class="grain-overlay" aria-hidden="true"></div>
 
-<!-- 3D Flash Drive Background -->
-<div id="flash3DBackground" style="position: fixed; inset: 0; z-index: -3; pointer-events: none; opacity: 0.35; mix-blend-mode: screen;"></div>
+<!-- 3D USB Stick Background -->
+<div id="usb-3d-stage" style="position: fixed; inset: 0; z-index: -3; pointer-events: none;"></div>
 
 <header class="site-header">
   <div class="container">
@@ -1312,18 +1312,18 @@
 <script src="assets/js/main.js" defer></script>
 <script src="assets/js/nav-liquid.js" defer></script>
 <script src="assets/js/products-premium.js"></script>
-<script src="assets/js/3d-viewer.js"></script>
+<script src="assets/js/usb-3d-viewer.js"></script>
 
-<!-- Initialize 3D Viewer -->
+<!-- Initialize USB 3D Viewer -->
 <script>
-if (document.getElementById('flash3DBackground')) {
+if (document.getElementById('usb-3d-stage')) {
   // Wait for DOM to be ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-      window.init3DBackground('flash3DBackground');
+      window.initUSB3DViewer('usb-3d-stage');
     });
   } else {
-    window.init3DBackground('flash3DBackground');
+    window.initUSB3DViewer('usb-3d-stage');
   }
 }
 </script>
