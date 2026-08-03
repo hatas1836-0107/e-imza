@@ -1163,26 +1163,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .stat-num { 
   font-family: 'Space Grotesk'; 
   font-size: clamp(1.9rem,3.4vw,2.7rem); 
-  font-weight: 800; 
-  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 40%, #831843 100%);
+  font-weight: 700; 
+  background: var(--gradient-brand); 
   -webkit-background-clip: text; 
   background-clip: text; 
   color: transparent;
-  filter: 
-    drop-shadow(0 2px 4px rgba(255, 255, 255, 0.6)) 
-    drop-shadow(0 4px 12px rgba(255, 255, 255, 0.4)) 
-    drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
-  letter-spacing: -0.02em;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
 }
 .stat-label { 
-  font-size: .88rem; 
-  color: #1e1b4b; 
-  font-weight: 700; 
-  text-shadow: 
-    0 1px 2px rgba(255, 255, 255, 0.8),
-    0 2px 8px rgba(255, 255, 255, 0.5),
-    0 4px 16px rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.3px;
+  font-size: .84rem; 
+  color: var(--text-muted); 
+  font-weight: 500;
 }
 
 /* ---------- Footer ---------- */
