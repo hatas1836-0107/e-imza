@@ -148,44 +148,28 @@
 
     clock = new window.THREE.Clock();
 
-    // Event listeners - multiple bindings for reliability
-    const scrollHandler = () => onScroll();
-    window.addEventListener('scroll', scrollHandler, { passive: true });
-    document.addEventListener('scroll', scrollHandler, { passive: true });
+    // Event listeners - EXACTLY like showcase.js
+    window.addEventListener('scroll', () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetScrollProgress = window.scrollY / maxScroll;
+      console.log('🔵 SCROLL!', {
+        scrollY: window.scrollY,
+        maxScroll,
+        targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%'
+      });
+    });
+    
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('resize', onWindowResize, false);
     
-    console.log('✅ Scroll listeners attached to window and document');
-    
-    // Force initial scroll calculation
-    setTimeout(() => {
-      onScroll();
-      console.log('🔄 Forced initial scroll check');
-    }, 500);
+    console.log('✅ Scroll listeners attached (showcase.js style)');
 
     animate();
   }
 
-  // Track target scroll (like showcase.js)
+  // Track target scroll (EXACTLY like showcase.js)
   let targetScrollProgress = 0;
   let currentScrollProgress = 0;
-
-  function onScroll() {
-    const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const maxScroll = (docHeight - winHeight) || 1;
-    targetScrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
-    
-    console.log('🔵 SCROLL EVENT:', {
-      scrollTop,
-      docHeight,
-      winHeight,
-      maxScroll,
-      targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%',
-      currentScrollProgress: (currentScrollProgress * 100).toFixed(1) + '%'
-    });
-  }
 
   // SCROLL ANIMATION - MODERN PRODUCT SHOWCASE (Applied every frame like showcase.js)
   function updateScrollAnimation() {
