@@ -308,10 +308,10 @@ body {
       Mevcut OG Image
     </div>
     <div class="preview" id="currentPreview">
-      <img src="../og-image.png" alt="Current OG Image" id="currentImage">
+      <img src="../og-image.jpg" alt="Current OG Image" id="currentImage">
       <div class="preview-info">
         <span><strong>Boyut:</strong> <span id="imageDimensions">Yükleniyor...</span></span>
-        <span><strong>Dosya:</strong> og-image.png</span>
+        <span><strong>Dosya:</strong> og-image.jpg</span>
       </div>
     </div>
 
@@ -333,7 +333,7 @@ body {
       </div>
       <div class="upload-text-main">Dosya seçin veya sürükleyin</div>
       <div class="upload-text-sub">PNG, JPG veya WEBP (Önerilen: 1200x630px)</div>
-      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp">
+      <input type="file" id="fileInput" accept="image/jpeg,image/jpeg,image/jpg,image/webp">
     </div>
 
     <div class="btn-group" id="actionButtons" style="display: none;">
@@ -426,13 +426,13 @@ async function loadCurrentImage() {
     } else {
       // Load from static file if no database entry
       const img = document.getElementById('currentImage');
-      img.src = '../og-image.png?v=' + new Date().getTime();
+      img.src = '../og-image.jpg?v=' + new Date().getTime();
     }
   } catch (error) {
     console.error('Error loading image:', error);
     // Fallback to static file
     const img = document.getElementById('currentImage');
-    img.src = '../og-image.png?v=' + new Date().getTime();
+    img.src = '../og-image.jpg?v=' + new Date().getTime();
   }
 }
 

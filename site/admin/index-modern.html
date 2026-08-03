@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YÃ¶netim Paneli | Zirve E-Ä°mza</title>
+<title>Yönetim Paneli | Zirve E-İmza</title>
 <!-- v2.1.0 - Bokeh Background + OG Image Management -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
@@ -1314,13 +1314,13 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
           <div class="brand-icon">
             <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z"/></svg>
           </div>
-          <span>Zirve E-Ä°mza Â· YÃ¶netim</span>
+          <span>Zirve E-İmza · Yönetim</span>
         </div>
         <div class="user-info">
           <span class="user-email" id="userEmail"></span>
           <button class="btn btn-danger btn-sm" onclick="logout()">
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-            Ã‡Ä±kÄ±ÅŸ Yap
+            Çıkış Yap
           </button>
         </div>
       </div>
@@ -1330,15 +1330,15 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
   <div class="container" style="padding-top:24px;padding-bottom:60px;">
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>Toplam ÃœrÃ¼n</div>
+        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>Toplam Ürün</div>
         <div class="stat-value" id="totalProducts">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>Aktif ÃœrÃ¼n</div>
+        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>Aktif Ürün</div>
         <div class="stat-value" id="activeProducts">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>Toplam SipariÅŸ</div>
+        <div class="stat-label"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>Toplam Sipariş</div>
         <div class="stat-value" id="totalOrders">0</div>
       </div>
       <div class="stat-card">
@@ -1350,11 +1350,11 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
     <div class="tabs">
       <button class="tab-btn active" data-tab="products" onclick="switchTab('products', this)">
         <svg class="icon" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        ÃœrÃ¼nler <span class="tab-count" id="tabCountProducts">0</span>
+        Ürünler <span class="tab-count" id="tabCountProducts">0</span>
       </button>
       <button class="tab-btn" data-tab="orders" onclick="switchTab('orders', this)">
         <svg class="icon" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-        SipariÅŸler <span class="tab-count" id="tabCountOrders">0</span>
+        Siparişler <span class="tab-count" id="tabCountOrders">0</span>
       </button>
       <button class="tab-btn" data-tab="couriers" onclick="switchTab('couriers', this)">
         <svg class="icon" viewBox="0 0 24 24"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z"/></svg>
@@ -1370,22 +1370,22 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
       <div class="section-header">
         <h2 class="section-title">
           <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          ÃœrÃ¼n YÃ¶netimi
+          Ürün Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openProductModal()">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-          Yeni ÃœrÃ¼n
+          Yeni Ürün
         </button>
       </div>
       <div class="toolbar">
         <div class="search-box">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="productSearch" placeholder="ÃœrÃ¼n ara..." oninput="renderProducts()">
+          <input type="text" id="productSearch" placeholder="Ürün ara..." oninput="renderProducts()">
         </div>
         <select class="filter-select" id="productStatusFilter" onchange="renderProducts()">
-          <option value="all">TÃ¼m Durumlar</option>
-          <option value="active">YalnÄ±z Aktif</option>
-          <option value="passive">YalnÄ±z Pasif</option>
+          <option value="all">Tüm Durumlar</option>
+          <option value="active">Yalnız Aktif</option>
+          <option value="passive">Yalnız Pasif</option>
         </select>
       </div>
       <div id="productsContainer"></div>
@@ -1395,27 +1395,27 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
       <div class="section-header">
         <h2 class="section-title">
           <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-          SipariÅŸ YÃ¶netimi
+          Sipariş Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openOrderModal()">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-          Yeni SipariÅŸ
+          Yeni Sipariş
         </button>
       </div>
       <div class="toolbar">
         <div class="search-box">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="orderSearch" placeholder="MÃ¼ÅŸteri, telefon veya Ã¼rÃ¼n ara..." oninput="renderOrders()">
+          <input type="text" id="orderSearch" placeholder="Müşteri, telefon veya ürün ara..." oninput="renderOrders()">
         </div>
         <select class="filter-select" id="orderStatusFilter" onchange="renderOrders()">
-          <option value="all">TÃ¼m Durumlar</option>
+          <option value="all">Tüm Durumlar</option>
           <option value="pending">Beklemede</option>
-          <option value="confirmed">OnaylandÄ±</option>
-          <option value="preparing">HazÄ±rlanÄ±yor</option>
-          <option value="ready">HazÄ±r</option>
+          <option value="confirmed">Onaylandı</option>
+          <option value="preparing">Hazırlanıyor</option>
+          <option value="ready">Hazır</option>
           <option value="shipped">Yolda</option>
           <option value="delivered">Teslim Edildi</option>
-          <option value="cancelled">Ä°ptal</option>
+          <option value="cancelled">İptal</option>
         </select>
       </div>
       <div id="ordersContainer"></div>
@@ -1425,7 +1425,7 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
       <div class="section-header">
         <h2 class="section-title">
           <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z"/></svg>
-          Kurye YÃ¶netimi
+          Kurye Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openCourierModal()">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
@@ -1440,7 +1440,7 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
       <div class="section-header">
         <h2 class="section-title">
           <svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-          OG Image YÃ¶netimi
+          OG Image Yönetimi
         </h2>
       </div>
       
@@ -1453,29 +1453,29 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
             </svg>
           </div>
           <div style="flex: 1;">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text);">Sosyal Medya PaylaÅŸÄ±m GÃ¶rseli</h3>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text);">Sosyal Medya Paylaşım Görseli</h3>
             <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
-              Facebook, Twitter, LinkedIn gibi platformlarda siteniz paylaÅŸÄ±ldÄ±ÄŸÄ±nda gÃ¶rÃ¼necek Ã¶zel gÃ¶rsel. 
-              GÃ¶rsel otomatik olarak <strong style="color: var(--primary);">1200x630 piksel</strong> boyutuna kÄ±rpÄ±lÄ±r ve optimize edilir.
+              Facebook, Twitter, LinkedIn gibi platformlarda siteniz paylaşıldığında görünecek özel görsel. 
+              Görsel otomatik olarak <strong style="color: var(--primary);">1200x630 piksel</strong> boyutuna kırpılır ve optimize edilir.
             </p>
             <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-muted);">
               <div style="display: flex; align-items: center; gap: 6px;">
                 <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                <span>Otomatik kÄ±rpma</span>
+                <span>Otomatik kırpma</span>
               </div>
               <div style="display: flex; align-items: center; gap: 6px;">
                 <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                <span>AkÄ±llÄ± sÄ±kÄ±ÅŸtÄ±rma</span>
+                <span>Akıllı sıkıştırma</span>
               </div>
               <div style="display: flex; align-items: center; gap: 6px;">
                 <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: var(--success); fill: none; stroke-width: 2;">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
-                <span>1200x630 Ã§Ä±ktÄ±</span>
+                <span>1200x630 çıktı</span>
               </div>
             </div>
           </div>
@@ -1484,26 +1484,26 @@ h1, h2, h3, .brand, .section-title, .stat-value, .modal-header h3 {
         <!-- Preview Area -->
         <div style="background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.15), transparent 60%), radial-gradient(circle at 70% 80%, rgba(168,85,247,0.12), transparent 60%), linear-gradient(135deg, rgba(18,20,35,0.85), rgba(14,16,28,0.85)); backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.3); border-radius: 20px; padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
           <div style="text-align: center; margin-bottom: 24px;">
-            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">Mevcut GÃ¶rsel</h4>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Sosyal medyada bÃ¶yle gÃ¶rÃ¼necek</p>
+            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">Mevcut Görsel</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Sosyal medyada böyle görünecek</p>
           </div>
           
           <div id="ogImagePreview" style="margin-bottom: 24px;">
             <div style="background: rgba(255,255,255,0.03); border: 2px dashed rgba(139,92,246,0.3); border-radius: 16px; padding: 64px 32px; min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
               <div class="spinner"></div>
-              <span style="color: var(--text-muted); font-size: 0.95rem;">YÃ¼kleniyor...</span>
+              <span style="color: var(--text-muted); font-size: 0.95rem;">Yükleniyor...</span>
             </div>
           </div>
           
           <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
             <label class="btn btn-primary" style="cursor: pointer; min-width: 200px;">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/></svg>
-              Yeni GÃ¶rsel YÃ¼kle
-              <input type="file" id="ogImageInput" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;">
+              Yeni Görsel Yükle
+              <input type="file" id="ogImageInput" accept="image/jpeg,image/jpg,image/jpeg,image/webp" style="display: none;">
             </label>
             <button class="btn btn-danger" onclick="deleteOGImage()" id="deleteOGBtn" style="display: none; min-width: 160px;">
               <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-              GÃ¶rseli Sil
+              Görseli Sil
             </button>
           </div>
         </div>
@@ -1552,9 +1552,9 @@ function compressImageToDataUrl(file, opts) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error('GÃ¶rsel okunamadÄ±.'));
+    reader.onerror = () => reject(new Error('Görsel okunamadı.'));
     reader.onload = (e) => {
-      img.onerror = () => reject(new Error('GÃ¶rsel iÅŸlenemedi.'));
+      img.onerror = () => reject(new Error('Görsel işlenemedi.'));
       img.onload = () => {
         let width = img.width, height = img.height;
         if (width > maxDim || height > maxDim) {
@@ -1614,8 +1614,8 @@ const ICONS = {
 };
 
 const STATUS_LABELS = {
-  pending: 'Beklemede', confirmed: 'OnaylandÄ±', preparing: 'HazÄ±rlanÄ±yor',
-  ready: 'HazÄ±r', shipped: 'Yolda', delivered: 'Teslim Edildi', cancelled: 'Ä°ptal'
+  pending: 'Beklemede', confirmed: 'Onaylandı', preparing: 'Hazırlanıyor',
+  ready: 'Hazır', shipped: 'Yolda', delivered: 'Teslim Edildi', cancelled: 'İptal'
 };
 const STATUS_COLORS = {
   pending: 'warning', confirmed: 'info', preparing: 'info', ready: 'success',
@@ -1624,7 +1624,7 @@ const STATUS_COLORS = {
 
 // ---------- ADMIN ----------
 const ADMIN_EMAILS = [
-  'huseyinatas@gmail.com', 'huseyin.atas@gmail.com', 'hÃ¼seyinataÅŸ@gmail.com',
+  'huseyinatas@gmail.com', 'huseyin.atas@gmail.com', 'hüseyinataş@gmail.com',
   'admin@zirveeimza.com', '2sthillman@gmail.com'
 ];
 function isAdmin(email) { return !!email && ADMIN_EMAILS.includes(email.toLowerCase()); }
@@ -1637,7 +1637,7 @@ onAuthStateChanged(auth, (user) => {
   
   if (user) {
     if (!isAdmin(user.email)) {
-      showToast('Bu hesabÄ±n yÃ¶netim paneline eriÅŸim yetkisi yok.', 'error');
+      showToast('Bu hesabın yönetim paneline erişim yetkisi yok.', 'error');
       signOut(auth).then(() => { window.location.href = '../giris.html'; });
       return;
     }
@@ -1654,7 +1654,7 @@ onAuthStateChanged(auth, (user) => {
 
 window.logout = () => {
   showConfirm({
-    title: 'Ã‡Ä±kÄ±ÅŸ yap', message: 'Oturumu kapatmak istediÄŸinize emin misiniz?', confirmLabel: 'Ã‡Ä±kÄ±ÅŸ Yap',
+    title: 'Çıkış yap', message: 'Oturumu kapatmak istediğinize emin misiniz?', confirmLabel: 'Çıkış Yap',
     onConfirm: async () => { await signOut(auth); window.location.href = '../giris.html'; }
   });
 };
@@ -1702,7 +1702,7 @@ function showConfirm({ title, message, confirmLabel = 'Onayla', danger = true, o
     <div class="confirm-title">${escapeHtml(title)}</div>
     <div class="confirm-text">${escapeHtml(message)}</div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">VazgeÃ§</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Vazgeç</button>
       <button class="btn ${danger ? 'btn-danger solid' : 'btn-primary'}" id="confirmActionBtn">${escapeHtml(confirmLabel)}</button>
     </div>
   `, true);
@@ -1730,7 +1730,7 @@ function loadProducts() {
     products = snap.val() || {};
     renderProducts(); updateStats();
   }, (err) => {
-    document.getElementById('productsContainer').innerHTML = errorBlock('ÃœrÃ¼nler yÃ¼klenemedi', err.message, loadProducts);
+    document.getElementById('productsContainer').innerHTML = errorBlock('Ürünler yüklenemedi', err.message, loadProducts);
   });
 }
 function loadOrders() {
@@ -1738,7 +1738,7 @@ function loadOrders() {
     orders = snap.val() || {};
     renderOrders(); updateStats();
   }, (err) => {
-    document.getElementById('ordersContainer').innerHTML = errorBlock('SipariÅŸler yÃ¼klenemedi', err.message, loadOrders);
+    document.getElementById('ordersContainer').innerHTML = errorBlock('Siparişler yüklenemedi', err.message, loadOrders);
   });
 }
 function loadCouriers() {
@@ -1746,7 +1746,7 @@ function loadCouriers() {
     couriers = snap.val() || {};
     renderCouriers(); updateStats();
   }, (err) => {
-    document.getElementById('couriersContainer').innerHTML = errorBlock('Kuryeler yÃ¼klenemedi', err.message, loadCouriers);
+    document.getElementById('couriersContainer').innerHTML = errorBlock('Kuryeler yüklenemedi', err.message, loadCouriers);
   });
 }
 function errorBlock(title, message, retryFn) {
@@ -1792,12 +1792,12 @@ function renderProducts() {
   if (statusFilter === 'passive') list = list.filter(p => p.status !== 'active');
 
   if (Object.keys(products).length === 0) {
-    container.innerHTML = `<div class="empty-state">${ICONS.package}<p>HenÃ¼z Ã¼rÃ¼n eklenmemiÅŸ.</p>
-      <button class="btn btn-primary" onclick="openProductModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>Ä°lk ÃœrÃ¼nÃ¼ Ekle</button></div>`;
+    container.innerHTML = `<div class="empty-state">${ICONS.package}<p>Henüz ürün eklenmemiş.</p>
+      <button class="btn btn-primary" onclick="openProductModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>İlk Ürünü Ekle</button></div>`;
     return;
   }
   if (list.length === 0) {
-    container.innerHTML = `<div class="empty-state">${ICONS.package}<p>AramanÄ±zla eÅŸleÅŸen Ã¼rÃ¼n bulunamadÄ±.</p></div>`;
+    container.innerHTML = `<div class="empty-state">${ICONS.package}<p>Aramanızla eşleşen ürün bulunamadı.</p></div>`;
     return;
   }
 
@@ -1815,13 +1815,13 @@ function renderProducts() {
         <div class="product-image">${image}</div>
         <div class="product-body">
           <div class="product-name">${escapeHtml(p.name)}</div>
-          <div class="product-price">${Number(p.price || 0).toLocaleString('tr-TR')}â‚º <small>+KDV</small></div>
+          <div class="product-price">${Number(p.price || 0).toLocaleString('tr-TR')}? <small>+KDV</small></div>
           <div class="product-badges">${statusBadge}<span class="badge badge-info">${ICONS.clock}${escapeHtml(p.duration || '-')}</span></div>
           ${p.description ? `<p class="product-description">${escapeHtml(p.description)}</p>` : ''}
           ${features ? `<ul class="product-features">${features}</ul>` : ''}
         </div>
         <div class="card-actions">
-          <button class="btn btn-secondary" onclick="openProductModal('${p.id}')">${ICONS.edit}DÃ¼zenle</button>
+          <button class="btn btn-secondary" onclick="openProductModal('${p.id}')">${ICONS.edit}Düzenle</button>
           <button class="btn btn-danger" onclick="confirmDeleteProduct('${p.id}')">${ICONS.trash}Sil</button>
         </div>
       </div>`;
@@ -1839,39 +1839,39 @@ window.openProductModal = (id) => {
 
   openModal(`
     <div class="modal-header">
-      <h3>${isEdit ? 'ÃœrÃ¼nÃ¼ DÃ¼zenle' : 'Yeni ÃœrÃ¼n'}</h3>
+      <h3>${isEdit ? 'Ürünü Düzenle' : 'Yeni Ürün'}</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     <div class="form-group">
-      <label>GÃ¶rsel</label>
+      <label>Görsel</label>
       <div class="image-drop" id="imageDrop">
         ${product?.imageUrl ? `<img src="${product.imageUrl}" id="imagePreview"><button type="button" class="image-remove-btn" onclick="removeProductImage(event)">${ICONS.x}</button>` :
-          `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>GÃ¶rsel yÃ¼klemek iÃ§in tÄ±klayÄ±n</span></div>`}
+          `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>Görsel yüklemek için tıklayın</span></div>`}
         <input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">
       </div>
-      <div class="form-hint">GÃ¶rsel otomatik olarak sÄ±kÄ±ÅŸtÄ±rÄ±lÄ±p veritabanÄ±na kaydedilir, harici depolama kullanÄ±lmaz.</div>
+      <div class="form-hint">Görsel otomatik olarak sıkıştırılıp veritabanına kaydedilir, harici depolama kullanılmaz.</div>
     </div>
     <div class="form-group">
-      <label>ÃœrÃ¼n AdÄ±</label>
-      <input type="text" id="pfName" value="${escapeHtml(product?.name || '')}" placeholder="Ã–rn: Nitelikli E-Ä°mza 1 YÄ±l">
+      <label>Ürün Adı</label>
+      <input type="text" id="pfName" value="${escapeHtml(product?.name || '')}" placeholder="Örn: Nitelikli E-İmza 1 Yıl">
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>Fiyat (â‚º)</label>
+        <label>Fiyat (?)</label>
         <input type="number" id="pfPrice" value="${product?.price ?? ''}" placeholder="0" min="0" step="0.01">
       </div>
       <div class="form-group">
-        <label>SÃ¼re</label>
-        <input type="text" id="pfDuration" value="${escapeHtml(product?.duration || '')}" placeholder="Ã–rn: 1 yÄ±l">
+        <label>Süre</label>
+        <input type="text" id="pfDuration" value="${escapeHtml(product?.duration || '')}" placeholder="Örn: 1 yıl">
       </div>
     </div>
     <div class="form-group">
-      <label>AÃ§Ä±klama</label>
-      <textarea id="pfDescription" placeholder="ÃœrÃ¼n aÃ§Ä±klamasÄ±">${escapeHtml(product?.description || '')}</textarea>
+      <label>Açıklama</label>
+      <textarea id="pfDescription" placeholder="Ürün açıklaması">${escapeHtml(product?.description || '')}</textarea>
     </div>
     <div class="form-group">
-      <label>Ã–zellikler (virgÃ¼lle ayÄ±rÄ±n)</label>
-      <textarea id="pfFeatures" placeholder="Ã–rn: HÄ±zlÄ± teslimat, 7/24 destek, Ãœcretsiz kurulum">${(product?.features || []).join(', ')}</textarea>
+      <label>Özellikler (virgülle ayırın)</label>
+      <textarea id="pfFeatures" placeholder="Örn: Hızlı teslimat, 7/24 destek, Ücretsiz kurulum">${(product?.features || []).join(', ')}</textarea>
     </div>
     <div class="toggle-row">
       <span>KDV Dahil</span>
@@ -1881,7 +1881,7 @@ window.openProductModal = (id) => {
       </label>
     </div>
     <div class="toggle-row">
-      <span>ÃœrÃ¼n Aktif</span>
+      <span>Ürün Aktif</span>
       <label class="switch">
         <input type="checkbox" id="pfStatus" ${!product || product.status === 'active' ? 'checked' : ''}>
         <span class="slider-track"></span>
@@ -1889,8 +1889,8 @@ window.openProductModal = (id) => {
     </div>
     <div class="form-error" id="pfError"></div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">VazgeÃ§</button>
-      <button class="btn btn-primary" id="pfSubmit" onclick="submitProduct('${id || ''}')">${isEdit ? 'Kaydet' : 'ÃœrÃ¼nÃ¼ Ekle'}</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Vazgeç</button>
+      <button class="btn btn-primary" id="pfSubmit" onclick="submitProduct('${id || ''}')">${isEdit ? 'Kaydet' : 'Ürünü Ekle'}</button>
     </div>
   `);
 };
@@ -1899,7 +1899,7 @@ window.handleImageSelect = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
   const drop = document.getElementById('imageDrop');
-  drop.innerHTML = `<div class="drop-label">${ICONS.spinner}<span>GÃ¶rsel hazÄ±rlanÄ±yor...</span></div>`;
+  drop.innerHTML = `<div class="drop-label">${ICONS.spinner}<span>Görsel hazırlanıyor...</span></div>`;
   try {
     // First, read the file as data URL
     const reader = new FileReader();
@@ -1907,16 +1907,16 @@ window.handleImageSelect = async (e) => {
       // Open cropper with the full-quality image
       openCropper(file, event.target.result);
       // Reset the drop zone
-      drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>GÃ¶rsel yÃ¼klemek iÃ§in tÄ±klayÄ±n</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
+      drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>Görsel yüklemek için tıklayın</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
     };
     reader.onerror = () => {
-      showToast('GÃ¶rsel okunamadÄ±', 'error');
-      drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>GÃ¶rsel yÃ¼klemek iÃ§in tÄ±klayÄ±n</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
+      showToast('Görsel okunamadı', 'error');
+      drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>Görsel yüklemek için tıklayın</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
     };
     reader.readAsDataURL(file);
   } catch (err) {
-    showToast('GÃ¶rsel iÅŸlenemedi: ' + err.message, 'error');
-    drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>GÃ¶rsel yÃ¼klemek iÃ§in tÄ±klayÄ±n</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
+    showToast('Görsel işlenemedi: ' + err.message, 'error');
+    drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>Görsel yüklemek için tıklayın</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
   }
 };
 window.removeProductImage = (e) => {
@@ -1924,7 +1924,7 @@ window.removeProductImage = (e) => {
   pendingImageDataUrl = null;
   pendingImageRemoved = true;
   const drop = document.getElementById('imageDrop');
-  drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>GÃ¶rsel yÃ¼klemek iÃ§in tÄ±klayÄ±n</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
+  drop.innerHTML = `<div class="drop-label" id="imageDropLabel">${ICONS.upload}<span>Görsel yüklemek için tıklayın</span></div><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
 };
 
 window.submitProduct = async (id) => {
@@ -1939,7 +1939,7 @@ window.submitProduct = async (id) => {
   const submitBtn = document.getElementById('pfSubmit');
 
   if (!name || price === '' || isNaN(parseFloat(price))) {
-    errorEl.textContent = 'ÃœrÃ¼n adÄ± ve geÃ§erli bir fiyat girmelisiniz.';
+    errorEl.textContent = 'Ürün adı ve geçerli bir fiyat girmelisiniz.';
     errorEl.classList.add('active');
     return;
   }
@@ -1956,7 +1956,7 @@ window.submitProduct = async (id) => {
     if (pendingImageDataUrl) imageUrl = pendingImageDataUrl;
 
     const data = {
-      name, description, price: parseFloat(price), duration: duration || '1 yÄ±l',
+      name, description, price: parseFloat(price), duration: duration || '1 yıl',
       features: featuresRaw ? featuresRaw.split(',').map(f => f.trim()).filter(Boolean) : [],
       status: isActive ? 'active' : 'passive', 
       vatIncluded: vatIncluded,
@@ -1969,7 +1969,7 @@ window.submitProduct = async (id) => {
     else await set(ref(database, `products/${productId}`), data);
 
     closeModal();
-    showToast(id ? 'ÃœrÃ¼n gÃ¼ncellendi.' : 'ÃœrÃ¼n eklendi.', 'success');
+    showToast(id ? 'Ürün güncellendi.' : 'Ürün eklendi.', 'success');
   } catch (err) {
     errorEl.textContent = 'Hata: ' + err.message;
     errorEl.classList.add('active');
@@ -1981,12 +1981,12 @@ window.submitProduct = async (id) => {
 window.confirmDeleteProduct = (id) => {
   const p = products[id];
   showConfirm({
-    title: 'ÃœrÃ¼nÃ¼ sil', message: `"${p?.name || 'Bu Ã¼rÃ¼n'}" kalÄ±cÄ± olarak silinecek. Bu iÅŸlem geri alÄ±namaz.`,
+    title: 'Ürünü sil', message: `"${p?.name || 'Bu ürün'}" kalıcı olarak silinecek. Bu işlem geri alınamaz.`,
     confirmLabel: 'Sil',
     onConfirm: async () => {
       try {
         await remove(ref(database, `products/${id}`));
-        showToast('ÃœrÃ¼n silindi.', 'success');
+        showToast('Ürün silindi.', 'success');
       } catch (err) { showToast('Hata: ' + err.message, 'error'); }
     }
   });
@@ -2005,12 +2005,12 @@ function renderOrders() {
   list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
   if (Object.keys(orders).length === 0) {
-    container.innerHTML = `<div class="empty-state">${ICONS.ordersEmpty}<p>HenÃ¼z sipariÅŸ oluÅŸturulmamÄ±ÅŸ.</p>
-      <button class="btn btn-primary" onclick="openOrderModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>Ä°lk SipariÅŸi Ekle</button></div>`;
+    container.innerHTML = `<div class="empty-state">${ICONS.ordersEmpty}<p>Henüz sipariş oluşturulmamış.</p>
+      <button class="btn btn-primary" onclick="openOrderModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>İlk Siparişi Ekle</button></div>`;
     return;
   }
   if (list.length === 0) {
-    container.innerHTML = `<div class="empty-state">${ICONS.ordersEmpty}<p>AramanÄ±zla eÅŸleÅŸen sipariÅŸ bulunamadÄ±.</p></div>`;
+    container.innerHTML = `<div class="empty-state">${ICONS.ordersEmpty}<p>Aramanızla eşleşen sipariş bulunamadı.</p></div>`;
     return;
   }
 
@@ -2019,28 +2019,28 @@ function renderOrders() {
     const color = STATUS_COLORS[o.status] || 'info';
     const label = STATUS_LABELS[o.status] || o.status || 'Bilinmiyor';
     
-    // "Yola Ã‡Ä±ktÄ±m" butonunu sadece shipped durumunda gÃ¶ster
+    // "Yola Çıktım" butonunu sadece shipped durumunda göster
     const startDeliveryBtn = o.status === 'shipped' 
-      ? `<button class="btn btn-primary btn-sm" onclick="startDelivery('${o.id}')" style="background:var(--success);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Yola Ã‡Ä±ktÄ±m</button>`
+      ? `<button class="btn btn-primary btn-sm" onclick="startDelivery('${o.id}')" style="background:var(--success);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Yola Çıktım</button>`
       : '';
     
     html += `
       <div class="order-card">
         <div class="order-top">
           <div>
-            <div class="order-customer">${escapeHtml(o.customerName || 'Ä°simsiz MÃ¼ÅŸteri')}</div>
+            <div class="order-customer">${escapeHtml(o.customerName || 'İsimsiz Müşteri')}</div>
             <div class="order-meta">${escapeHtml(o.customerPhone || '-')}</div>
           </div>
           <span class="badge badge-${color}">${label}</span>
         </div>
-        <div class="order-detail-line">${ICONS.package}${escapeHtml(o.productName || 'ÃœrÃ¼n belirtilmemiÅŸ')}</div>
+        <div class="order-detail-line">${ICONS.package}${escapeHtml(o.productName || 'Ürün belirtilmemiş')}</div>
         <div class="order-detail-line">${ICONS.mapPin}${escapeHtml([o.district, o.city].filter(Boolean).join(', ') || '-')}</div>
         <div class="order-detail-line">${ICONS.clock}${fmtDate(o.createdAt)}</div>
         <div class="order-actions">
           ${startDeliveryBtn}
           <button class="btn btn-secondary btn-sm" onclick="viewOrder('${o.id}')">${ICONS.eye}Detay</button>
-          <button class="btn btn-secondary btn-sm" onclick="openOrderModal('${o.id}')">${ICONS.edit}DÃ¼zenle</button>
-          <button class="btn btn-primary btn-sm" onclick="openStatusModal('${o.id}')">${ICONS.refresh}Durum GÃ¼ncelle</button>
+          <button class="btn btn-secondary btn-sm" onclick="openOrderModal('${o.id}')">${ICONS.edit}Düzenle</button>
+          <button class="btn btn-primary btn-sm" onclick="openStatusModal('${o.id}')">${ICONS.refresh}Durum Güncelle</button>
           <button class="btn btn-danger btn-sm" onclick="confirmDeleteOrder('${o.id}')">${ICONS.trash}Sil</button>
         </div>
       </div>`;
@@ -2055,28 +2055,28 @@ window.openOrderModal = (id) => {
   const isEdit = !!o;
   openModal(`
     <div class="modal-header">
-      <h3>${isEdit ? 'SipariÅŸi DÃ¼zenle' : 'Yeni SipariÅŸ'}</h3>
+      <h3>${isEdit ? 'Siparişi Düzenle' : 'Yeni Sipariş'}</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>MÃ¼ÅŸteri AdÄ±</label><input type="text" id="ofName" value="${escapeHtml(o?.customerName || '')}"></div>
+      <div class="form-group"><label>Müşteri Adı</label><input type="text" id="ofName" value="${escapeHtml(o?.customerName || '')}"></div>
       <div class="form-group"><label>Telefon</label><input type="text" id="ofPhone" value="${escapeHtml(o?.customerPhone || '')}"></div>
     </div>
     <div class="form-group"><label>E-posta (opsiyonel)</label><input type="email" id="ofEmail" value="${escapeHtml(o?.customerEmail || '')}"></div>
     <div class="form-row">
-      <div class="form-group"><label>ÃœrÃ¼n</label><input type="text" id="ofProduct" value="${escapeHtml(o?.productName || '')}"></div>
+      <div class="form-group"><label>Ürün</label><input type="text" id="ofProduct" value="${escapeHtml(o?.productName || '')}"></div>
       <div class="form-group"><label>Fiyat</label><input type="text" id="ofPrice" value="${escapeHtml(o?.productPrice || '')}"></div>
     </div>
     <div class="form-group"><label>Adres</label><textarea id="ofAddress">${escapeHtml(o?.address || '')}</textarea></div>
     <div class="form-row">
-      <div class="form-group"><label>Åehir</label><input type="text" id="ofCity" value="${escapeHtml(o?.city || '')}"></div>
-      <div class="form-group"><label>Ä°lÃ§e</label><input type="text" id="ofDistrict" value="${escapeHtml(o?.district || '')}"></div>
+      <div class="form-group"><label>Şehir</label><input type="text" id="ofCity" value="${escapeHtml(o?.city || '')}"></div>
+      <div class="form-group"><label>İlçe</label><input type="text" id="ofDistrict" value="${escapeHtml(o?.district || '')}"></div>
     </div>
     <div class="form-group"><label>Not (opsiyonel)</label><textarea id="ofNotes">${escapeHtml(o?.notes || '')}</textarea></div>
     <div class="form-error" id="ofError"></div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">VazgeÃ§</button>
-      <button class="btn btn-primary" id="ofSubmit" onclick="submitOrder('${id || ''}')">${isEdit ? 'Kaydet' : 'SipariÅŸi Ekle'}</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Vazgeç</button>
+      <button class="btn btn-primary" id="ofSubmit" onclick="submitOrder('${id || ''}')">${isEdit ? 'Kaydet' : 'Siparişi Ekle'}</button>
     </div>
   `);
 };
@@ -2095,12 +2095,12 @@ window.submitOrder = async (id) => {
   const submitBtn = document.getElementById('ofSubmit');
 
   if (customerName.length < 2 || customerPhone.length < 10 || !productName) {
-    errorEl.textContent = 'MÃ¼ÅŸteri adÄ±, geÃ§erli bir telefon numarasÄ± (en az 10 hane) ve Ã¼rÃ¼n adÄ± gereklidir.';
+    errorEl.textContent = 'Müşteri adı, geçerli bir telefon numarası (en az 10 hane) ve ürün adı gereklidir.';
     errorEl.classList.add('active');
     return;
   }
   if (customerEmail && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(customerEmail)) {
-    errorEl.textContent = 'GeÃ§erli bir e-posta adresi girin ya da alanÄ± boÅŸ bÄ±rakÄ±n.';
+    errorEl.textContent = 'Geçerli bir e-posta adresi girin ya da alanı boş bırakın.';
     errorEl.classList.add('active');
     return;
   }
@@ -2120,16 +2120,16 @@ window.submitOrder = async (id) => {
         id: orderId, customerName, customerPhone, customerEmail, productName, productPrice,
         address, city, district, notes, status: 'pending',
         createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-        history: [{ status: 'pending', timestamp: new Date().toISOString(), note: 'SipariÅŸ oluÅŸturuldu' }]
+        history: [{ status: 'pending', timestamp: new Date().toISOString(), note: 'Sipariş oluşturuldu' }]
       });
     }
     closeModal();
-    showToast(id ? 'SipariÅŸ gÃ¼ncellendi.' : 'SipariÅŸ eklendi.', 'success');
+    showToast(id ? 'Sipariş güncellendi.' : 'Sipariş eklendi.', 'success');
   } catch (err) {
     errorEl.textContent = 'Hata: ' + err.message;
     errorEl.classList.add('active');
     submitBtn.disabled = false;
-    submitBtn.textContent = id ? 'Kaydet' : 'SipariÅŸi Ekle';
+    submitBtn.textContent = id ? 'Kaydet' : 'Siparişi Ekle';
   }
 };
 
@@ -2145,20 +2145,20 @@ window.viewOrder = (id) => {
         <div class="tl-time">${fmtDate(h.timestamp)}</div>
         ${h.note ? `<div class="tl-note">${escapeHtml(h.note)}</div>` : ''}
       </div>
-    </div>`).join('') : '<div class="confirm-text">HenÃ¼z geÃ§miÅŸ yok.</div>';
+    </div>`).join('') : '<div class="confirm-text">Henüz geçmiş yok.</div>';
   
-  // Takip kodu - trackingCode varsa onu gÃ¶ster, yoksa ID'yi gÃ¶ster
+  // Takip kodu - trackingCode varsa onu göster, yoksa ID'yi göster
   const displayTrackingCode = o.trackingCode || id;
   const trackingUrl = `${window.location.origin}/takip.html?kod=${encodeURIComponent(displayTrackingCode)}`;
 
   openModal(`
     <div class="modal-header">
-      <h3>SipariÅŸ DetayÄ±</h3>
+      <h3>Sipariş Detayı</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     
     <div style="background:rgba(79,70,229,0.08);border:2px solid rgba(79,70,229,0.3);border-radius:12px;padding:16px;margin-bottom:20px;">
-      <div style="font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">ğŸ“‹ Takip Kodu</div>
+      <div style="font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">?? Takip Kodu</div>
       <div style="display:flex;gap:8px;align-items:center;">
         <div style="flex:1;font-size:1.1rem;font-weight:800;font-family:monospace;color:var(--primary);letter-spacing:0.02em;">${displayTrackingCode}</div>
         <button class="btn btn-primary btn-sm" onclick="copyTrackingCode('${displayTrackingCode}')" style="white-space:nowrap;">
@@ -2167,23 +2167,23 @@ window.viewOrder = (id) => {
         </button>
       </div>
       <div style="margin-top:10px;font-size:0.78rem;color:var(--text-muted);">
-        MÃ¼ÅŸteri bu kodu kullanarak sipariÅŸini takip edebilir
+        Müşteri bu kodu kullanarak siparişini takip edebilir
       </div>
     </div>
     
     <div class="detail-grid">
-      <div class="detail-item"><div class="dl">MÃ¼ÅŸteri</div><div class="dv">${escapeHtml(o.customerName)}</div></div>
+      <div class="detail-item"><div class="dl">Müşteri</div><div class="dv">${escapeHtml(o.customerName)}</div></div>
       <div class="detail-item"><div class="dl">Telefon</div><div class="dv">${escapeHtml(o.customerPhone)}</div></div>
-      <div class="detail-item"><div class="dl">ÃœrÃ¼n</div><div class="dv">${escapeHtml(o.productName || '-')}</div></div>
+      <div class="detail-item"><div class="dl">Ürün</div><div class="dv">${escapeHtml(o.productName || '-')}</div></div>
       <div class="detail-item"><div class="dl">Fiyat</div><div class="dv">${escapeHtml(o.productPrice || '-')}</div></div>
       <div class="detail-item full"><div class="dl">Adres</div><div class="dv">${escapeHtml([o.address, o.district, o.city].filter(Boolean).join(', ') || '-')}</div></div>
       ${o.notes ? `<div class="detail-item full"><div class="dl">Not</div><div class="dv">${escapeHtml(o.notes)}</div></div>` : ''}
     </div>
-    <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">Durum GeÃ§miÅŸi</div>
+    <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">Durum Geçmişi</div>
     <div class="timeline">${timelineHtml}</div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
-      <button class="btn btn-primary" onclick="openStatusModal('${id}')">${ICONS.refresh}Durumu GÃ¼ncelle</button>
+      <button class="btn btn-primary" onclick="openStatusModal('${id}')">${ICONS.refresh}Durumu Güncelle</button>
     </div>
   `);
 };
@@ -2194,13 +2194,13 @@ window.copyTrackingCode = (trackingCode) => {
   // Clipboard API kullan
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(trackingCode).then(() => {
-      showToast(`âœ… Takip kodu kopyalandÄ±: ${trackingCode}`, 'success');
+      showToast(`? Takip kodu kopyalandı: ${trackingCode}`, 'success');
     }).catch(() => {
       // Fallback
       fallbackCopy(trackingCode);
     });
   } else {
-    // Fallback eski tarayÄ±cÄ±lar iÃ§in
+    // Fallback eski tarayıcılar için
     fallbackCopy(trackingCode);
   }
 };
@@ -2214,9 +2214,9 @@ function fallbackCopy(text) {
   textarea.select();
   try {
     document.execCommand('copy');
-    showToast(`âœ… Takip kodu kopyalandÄ±: ${text}`, 'success');
+    showToast(`? Takip kodu kopyalandı: ${text}`, 'success');
   } catch (err) {
-    showToast('âŒ Kopyalama baÅŸarÄ±sÄ±z oldu', 'error');
+    showToast('? Kopyalama başarısız oldu', 'error');
   }
   document.body.removeChild(textarea);
 }
@@ -2228,7 +2228,7 @@ window.openStatusModal = (id) => {
     `<option value="${val}" ${o.status === val ? 'selected' : ''}>${label}</option>`).join('');
   openModal(`
     <div class="modal-header">
-      <h3>Durum GÃ¼ncelle</h3>
+      <h3>Durum Güncelle</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     <div class="form-group">
@@ -2237,10 +2237,10 @@ window.openStatusModal = (id) => {
     </div>
     <div class="form-group">
       <label>Not (opsiyonel)</label>
-      <textarea id="statusNote" placeholder="Bu durum deÄŸiÅŸikliÄŸiyle ilgili not ekleyin"></textarea>
+      <textarea id="statusNote" placeholder="Bu durum değişikliğiyle ilgili not ekleyin"></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">VazgeÃ§</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Vazgeç</button>
       <button class="btn btn-primary" id="statusSubmit" onclick="submitStatusChange('${id}')">${ICONS.check}Kaydet</button>
     </div>
   `, true);
@@ -2258,7 +2258,7 @@ window.submitStatusChange = async (id) => {
     history.push({ 
       status: STATUS_LABELS[newStatus] || newStatus, 
       timestamp: new Date().toISOString(), 
-      note: note || 'Durum admin tarafÄ±ndan gÃ¼ncellendi' 
+      note: note || 'Durum admin tarafından güncellendi' 
     });
     
     const updates = { 
@@ -2269,7 +2269,7 @@ window.submitStatusChange = async (id) => {
     
     await update(ref(database, `orders/${id}`), updates);
     
-    // EÄŸer "shipped" (yolda) durumuna geÃ§ildiyse ve courier atanmÄ±ÅŸsa
+    // Eğer "shipped" (yolda) durumuna geçildiyse ve courier atanmışsa
     // Courier'in activeOrders listesine ekle
     if (newStatus === 'shipped' && o.courier && o.courier.email) {
       const courierEmail = o.courier.email;
@@ -2285,12 +2285,12 @@ window.submitStatusChange = async (id) => {
           address: o.address,
           district: o.district
         });
-        console.log('âœ… SipariÅŸ kurye paneline eklendi:', courierId);
+        console.log('? Sipariş kurye paneline eklendi:', courierId);
       }
     }
     
     closeModal();
-    showToast('SipariÅŸ durumu gÃ¼ncellendi.', 'success');
+    showToast('Sipariş durumu güncellendi.', 'success');
   } catch (err) {
     showToast('Hata: ' + err.message, 'error');
     btn.disabled = false;
@@ -2298,7 +2298,7 @@ window.submitStatusChange = async (id) => {
   }
 };
 
-// ================= START DELIVERY (YOLA Ã‡IKTIM) =================
+// ================= START DELIVERY (YOLA ÇIKTIM) =================
 let activeDeliveryWatchId = null;
 let activeDeliveryInterval = null;
 let activeDeliveryWakeLock = null;
@@ -2307,25 +2307,25 @@ let activeDeliveryOrderId = null;
 window.startDelivery = async (orderId) => {
   const order = orders[orderId];
   if (!order) {
-    showToast('SipariÅŸ bulunamadÄ±', 'error');
+    showToast('Sipariş bulunamadı', 'error');
     return;
   }
   
-  // Konum izni kontrolÃ¼
+  // Konum izni kontrolü
   if (!('geolocation' in navigator)) {
-    showToast('TarayÄ±cÄ±nÄ±z konum servislerini desteklemiyor!', 'error');
+    showToast('Tarayıcınız konum servislerini desteklemiyor!', 'error');
     return;
   }
   
   // Confirm dialog
   showConfirm({
-    title: 'Teslimat BaÅŸlat',
-    message: 'Konum paylaÅŸÄ±mÄ± baÅŸlatÄ±lacak ve mÃ¼ÅŸteri ile canlÄ± olarak paylaÅŸÄ±lacak. Devam edilsin mi?',
-    confirmLabel: 'Yola Ã‡Ä±k',
+    title: 'Teslimat Başlat',
+    message: 'Konum paylaşımı başlatılacak ve müşteri ile canlı olarak paylaşılacak. Devam edilsin mi?',
+    confirmLabel: 'Yola Çık',
     danger: false,
     onConfirm: async () => {
       try {
-        // Ä°zin iste
+        // İzin iste
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
@@ -2334,11 +2334,11 @@ window.startDelivery = async (orderId) => {
           });
         });
         
-        console.log('âœ… Konum izni alÄ±ndÄ±');
+        console.log('? Konum izni alındı');
         
-        // SipariÅŸe courier ata (eÄŸer yoksa)
+        // Siparişe courier ata (eğer yoksa)
         if (!order.courier || !order.courier.email) {
-          console.log('ğŸ“ SipariÅŸe courier atanÄ±yor...');
+          console.log('?? Siparişe courier atanıyor...');
           await update(ref(database, `orders/${orderId}`), {
             courier: {
               email: currentUser.email,
@@ -2347,27 +2347,27 @@ window.startDelivery = async (orderId) => {
               assignedAt: new Date().toISOString()
             }
           });
-          console.log('âœ… Courier atandÄ±:', currentUser.email);
+          console.log('? Courier atandı:', currentUser.email);
         }
         
-        // Wake Lock aktif et (ekran kilitli olsa bile Ã§alÄ±ÅŸsÄ±n)
+        // Wake Lock aktif et (ekran kilitli olsa bile çalışsın)
         if ('wakeLock' in navigator) {
           try {
             activeDeliveryWakeLock = await navigator.wakeLock.request('screen');
-            console.log('âœ… Wake Lock aktif - Ekran kilitli olsa bile konum gÃ¶nderilecek');
+            console.log('? Wake Lock aktif - Ekran kilitli olsa bile konum gönderilecek');
             
             activeDeliveryWakeLock.addEventListener('release', () => {
-              console.log('âš ï¸ Wake Lock serbest bÄ±rakÄ±ldÄ±');
+              console.log('?? Wake Lock serbest bırakıldı');
             });
           } catch (err) {
-            console.warn('Wake Lock baÅŸarÄ±sÄ±z:', err);
+            console.warn('Wake Lock başarısız:', err);
           }
         }
         
-        // Ä°lk konumu gÃ¶nder
+        // İlk konumu gönder
         await updateDeliveryLocation(position);
         
-        // Continuous tracking baÅŸlat
+        // Continuous tracking başlat
         activeDeliveryOrderId = orderId;
         
         activeDeliveryWatchId = navigator.geolocation.watchPosition(
@@ -2380,11 +2380,11 @@ window.startDelivery = async (orderId) => {
           }
         );
         
-        // Her 10 saniyede bir manuel gÃ¼ncelleme (watchPosition bazen yavaÅŸ olabiliyor)
+        // Her 10 saniyede bir manuel güncelleme (watchPosition bazen yavaş olabiliyor)
         activeDeliveryInterval = setInterval(() => {
           navigator.geolocation.getCurrentPosition(
             updateDeliveryLocation,
-            (err) => console.warn('Manuel konum gÃ¼ncellemesi baÅŸarÄ±sÄ±z:', err),
+            (err) => console.warn('Manuel konum güncellemesi başarısız:', err),
             {
               enableHighAccuracy: true,
               maximumAge: 0,
@@ -2393,32 +2393,32 @@ window.startDelivery = async (orderId) => {
           );
         }, 10000);
         
-        // SipariÅŸ durumunu izle - delivered veya cancelled olunca durdur
+        // Sipariş durumunu izle - delivered veya cancelled olunca durdur
         const orderRef = ref(database, `orders/${orderId}`);
         onValue(orderRef, (snapshot) => {
           if (snapshot.exists()) {
             const updatedOrder = snapshot.val();
             if (updatedOrder.status === 'delivered' || updatedOrder.status === 'cancelled') {
-              console.log('ğŸ“¦ SipariÅŸ teslim edildi/iptal edildi - Konum tracking durduruluyor');
+              console.log('?? Sipariş teslim edildi/iptal edildi - Konum tracking durduruluyor');
               stopDeliveryTracking();
-              showToast('Teslimat tamamlandÄ± - Konum paylaÅŸÄ±mÄ± durduruldu', 'success');
+              showToast('Teslimat tamamlandı - Konum paylaşımı durduruldu', 'success');
             }
           }
         });
         
-        showToast('âœ… Teslimat baÅŸlatÄ±ldÄ±! Konumunuz mÃ¼ÅŸteri ile paylaÅŸÄ±lÄ±yor.', 'success');
+        showToast('? Teslimat başlatıldı! Konumunuz müşteri ile paylaşılıyor.', 'success');
         
       } catch (error) {
-        console.error('Teslimat baÅŸlatma hatasÄ±:', error);
+        console.error('Teslimat başlatma hatası:', error);
         
         if (error.code === 1) {
-          showToast('Konum izni reddedildi! LÃ¼tfen tarayÄ±cÄ± ayarlarÄ±ndan izin verin.', 'error');
+          showToast('Konum izni reddedildi! Lütfen tarayıcı ayarlarından izin verin.', 'error');
         } else if (error.code === 2) {
-          showToast('Konum bilgisi alÄ±namadÄ±. GPS aktif mi kontrol edin.', 'error');
+          showToast('Konum bilgisi alınamadı. GPS aktif mi kontrol edin.', 'error');
         } else if (error.code === 3) {
-          showToast('Konum alma zaman aÅŸÄ±mÄ±na uÄŸradÄ±. Tekrar deneyin.', 'error');
+          showToast('Konum alma zaman aşımına uğradı. Tekrar deneyin.', 'error');
         } else {
-          showToast('Teslimat baÅŸlatÄ±lamadÄ±: ' + error.message, 'error');
+          showToast('Teslimat başlatılamadı: ' + error.message, 'error');
         }
       }
     }
@@ -2427,7 +2427,7 @@ window.startDelivery = async (orderId) => {
 
 async function updateDeliveryLocation(position) {
   if (!currentUser) {
-    console.warn('âš ï¸ KullanÄ±cÄ± giriÅŸ yapmamÄ±ÅŸ');
+    console.warn('?? Kullanıcı giriş yapmamış');
     return;
   }
   
@@ -2446,23 +2446,23 @@ async function updateDeliveryLocation(position) {
   
   try {
     await set(locationRef, locationData);
-    console.log('ğŸ“ Konum gÃ¼ncellendi:', {
+    console.log('?? Konum güncellendi:', {
       lat: locationData.latitude.toFixed(6),
       lng: locationData.longitude.toFixed(6),
       accuracy: Math.round(locationData.accuracy) + 'm',
       orderId: activeDeliveryOrderId
     });
   } catch (error) {
-    console.error('âŒ Konum kaydetme hatasÄ±:', error);
+    console.error('? Konum kaydetme hatası:', error);
   }
 }
 
 function handleDeliveryLocationError(error) {
-  console.error('Konum hatasÄ±:', error.message);
+  console.error('Konum hatası:', error.message);
   
   // Kritik hatalarda tracking'i durdurma - sadece log tut
   if (error.code === 1) {
-    console.error('Ä°zin reddedildi - Tracking durduruluyor');
+    console.error('İzin reddedildi - Tracking durduruluyor');
     stopDeliveryTracking();
     showToast('Konum izni reddedildi! Tracking durduruldu.', 'error');
   }
@@ -2482,23 +2482,23 @@ function stopDeliveryTracking() {
   if (activeDeliveryWakeLock) {
     activeDeliveryWakeLock.release().then(() => {
       activeDeliveryWakeLock = null;
-      console.log('âœ… Wake Lock serbest bÄ±rakÄ±ldÄ±');
+      console.log('? Wake Lock serbest bırakıldı');
     });
   }
   
   activeDeliveryOrderId = null;
-  console.log('ğŸ›‘ Teslimat tracking durduruldu');
+  console.log('?? Teslimat tracking durduruldu');
 }
 
-// Sayfa kapatÄ±lÄ±rken tracking'i durdur
+// Sayfa kapatılırken tracking'i durdur
 window.addEventListener('beforeunload', () => {
   stopDeliveryTracking();
 });
 
-// Visibility change - sayfa arka plana gitse bile Ã§alÄ±ÅŸmaya devam et
+// Visibility change - sayfa arka plana gitse bile çalışmaya devam et
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && activeDeliveryOrderId && !activeDeliveryWatchId) {
-    console.log('ğŸ“± Sayfa Ã¶n plana geldi - Tracking yeniden baÅŸlatÄ±lÄ±yor');
+    console.log('?? Sayfa ön plana geldi - Tracking yeniden başlatılıyor');
     
     // Tracking devam etsin
     activeDeliveryWatchId = navigator.geolocation.watchPosition(
@@ -2516,10 +2516,10 @@ document.addEventListener('visibilitychange', () => {
 window.confirmDeleteOrder = (id) => {
   const o = orders[id];
   showConfirm({
-    title: 'SipariÅŸi sil', message: `"${o?.customerName || 'Bu sipariÅŸ'}" adÄ±na kayÄ±tlÄ± sipariÅŸ kalÄ±cÄ± olarak silinecek.`,
+    title: 'Siparişi sil', message: `"${o?.customerName || 'Bu sipariş'}" adına kayıtlı sipariş kalıcı olarak silinecek.`,
     confirmLabel: 'Sil',
     onConfirm: async () => {
-      try { await remove(ref(database, `orders/${id}`)); showToast('SipariÅŸ silindi.', 'success'); }
+      try { await remove(ref(database, `orders/${id}`)); showToast('Sipariş silindi.', 'success'); }
       catch (err) { showToast('Hata: ' + err.message, 'error'); }
     }
   });
@@ -2531,8 +2531,8 @@ function renderCouriers() {
   const list = Object.entries(couriers).map(([id, d]) => ({ id, ...d }));
 
   if (list.length === 0) {
-    container.innerHTML = `<div class="empty-state">${ICONS.courier}<p>HenÃ¼z kurye eklenmemiÅŸ.</p>
-      <button class="btn btn-primary" onclick="openCourierModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>Ä°lk Kuryeyi Ekle</button></div>`;
+    container.innerHTML = `<div class="empty-state">${ICONS.courier}<p>Henüz kurye eklenmemiş.</p>
+      <button class="btn btn-primary" onclick="openCourierModal()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>İlk Kuryeyi Ekle</button></div>`;
     return;
   }
 
@@ -2550,12 +2550,12 @@ function renderCouriers() {
         <div class="product-body">
           <div class="product-name">${escapeHtml(c.name)}</div>
           <div class="order-detail-line">${ICONS.mail}${escapeHtml(c.email || '-')}</div>
-          <div class="order-detail-line">${ICONS.phone}${escapeHtml(c.phone || 'BelirtilmemiÅŸ')}</div>
-          <div class="product-badges" style="margin-top:8px;">${statusBadge}<span class="badge badge-info">${ICONS.package}${activeCount} aktif sipariÅŸ</span></div>
+          <div class="order-detail-line">${ICONS.phone}${escapeHtml(c.phone || 'Belirtilmemiş')}</div>
+          <div class="product-badges" style="margin-top:8px;">${statusBadge}<span class="badge badge-info">${ICONS.package}${activeCount} aktif sipariş</span></div>
         </div>
         <div class="card-actions cols-3">
           <button class="btn btn-secondary" onclick="viewCourier('${c.id}')">${ICONS.eye}Detay</button>
-          <button class="btn btn-secondary" onclick="openCourierModal('${c.id}')">${ICONS.edit}DÃ¼zenle</button>
+          <button class="btn btn-secondary" onclick="openCourierModal('${c.id}')">${ICONS.edit}Düzenle</button>
           <button class="btn btn-danger" onclick="confirmDeleteCourier('${c.id}')">${ICONS.trash}Sil</button>
         </div>
       </div>`;
@@ -2570,7 +2570,7 @@ window.openCourierModal = (id) => {
   const isEdit = !!c;
   openModal(`
     <div class="modal-header">
-      <h3>${isEdit ? 'Kuryeyi DÃ¼zenle' : 'Yeni Kurye'}</h3>
+      <h3>${isEdit ? 'Kuryeyi Düzenle' : 'Yeni Kurye'}</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     <div class="form-group"><label>Ad Soyad</label><input type="text" id="cfName" value="${escapeHtml(c?.name || '')}"></div>
@@ -2585,7 +2585,7 @@ window.openCourierModal = (id) => {
     </div>
     <div class="form-error" id="cfError"></div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">VazgeÃ§</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Vazgeç</button>
       <button class="btn btn-primary" id="cfSubmit" onclick="submitCourier('${id || ''}')">${isEdit ? 'Kaydet' : 'Kuryeyi Ekle'}</button>
     </div>
   `, true);
@@ -2616,7 +2616,7 @@ window.submitCourier = async (id) => {
       await set(ref(database, `couriers/${courierId}`), { id: courierId, name, email, phone, isActive, activeOrders: {} });
     }
     closeModal();
-    showToast(id ? 'Kurye gÃ¼ncellendi.' : 'Kurye eklendi.', 'success');
+    showToast(id ? 'Kurye güncellendi.' : 'Kurye eklendi.', 'success');
   } catch (err) {
     errorEl.textContent = 'Hata: ' + err.message;
     errorEl.classList.add('active');
@@ -2631,7 +2631,7 @@ window.viewCourier = (id) => {
   const activeCount = c.activeOrders ? Object.keys(c.activeOrders).length : 0;
   openModal(`
     <div class="modal-header">
-      <h3>Kurye DetayÄ±</h3>
+      <h3>Kurye Detayı</h3>
       <button class="close-btn" onclick="closeModal()">${ICONS.x}</button>
     </div>
     <div class="detail-grid">
@@ -2639,7 +2639,7 @@ window.viewCourier = (id) => {
       <div class="detail-item"><div class="dl">E-posta</div><div class="dv">${escapeHtml(c.email || '-')}</div></div>
       <div class="detail-item"><div class="dl">Telefon</div><div class="dv">${escapeHtml(c.phone || '-')}</div></div>
       <div class="detail-item"><div class="dl">Durum</div><div class="dv">${c.isActive ? 'Aktif' : 'Pasif'}</div></div>
-      <div class="detail-item"><div class="dl">Aktif SipariÅŸ</div><div class="dv">${activeCount}</div></div>
+      <div class="detail-item"><div class="dl">Aktif Sipariş</div><div class="dv">${activeCount}</div></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
@@ -2654,14 +2654,14 @@ window.toggleCourierStatus = async (id) => {
   try {
     await update(ref(database, `couriers/${id}`), { isActive: !c.isActive });
     closeModal();
-    showToast(`Kurye durumu ${!c.isActive ? 'aktif' : 'pasif'} olarak gÃ¼ncellendi.`, 'success');
+    showToast(`Kurye durumu ${!c.isActive ? 'aktif' : 'pasif'} olarak güncellendi.`, 'success');
   } catch (err) { showToast('Hata: ' + err.message, 'error'); }
 };
 
 window.confirmDeleteCourier = (id) => {
   const c = couriers[id];
   showConfirm({
-    title: 'Kuryeyi sil', message: `"${c?.name || 'Bu kurye'}" kalÄ±cÄ± olarak silinecek.`,
+    title: 'Kuryeyi sil', message: `"${c?.name || 'Bu kurye'}" kalıcı olarak silinecek.`,
     confirmLabel: 'Sil',
     onConfirm: async () => {
       try { await remove(ref(database, `couriers/${id}`)); showToast('Kurye silindi.', 'success'); }
@@ -2671,9 +2671,9 @@ window.confirmDeleteCourier = (id) => {
 };
 
 // initial empty-state renders before data arrives
-document.getElementById('productsContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>ÃœrÃ¼nler yÃ¼kleniyor...</span></div>`;
-document.getElementById('ordersContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>SipariÅŸler yÃ¼kleniyor...</span></div>`;
-document.getElementById('couriersContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>Kuryeler yÃ¼kleniyor...</span></div>`;
+document.getElementById('productsContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>Ürünler yükleniyor...</span></div>`;
+document.getElementById('ordersContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>Siparişler yükleniyor...</span></div>`;
+document.getElementById('couriersContainer').innerHTML = `<div class="loading-state">${ICONS.spinner}<span>Kuryeler yükleniyor...</span></div>`;
 
 // ==================== IMAGE CROPPER ====================
 let cropperState = {
@@ -2734,7 +2734,7 @@ window.openCropper = function(file, imageDataUrl) {
   };
   
   cropperState.image.onerror = () => {
-    showToast('GÃ¶rsel yÃ¼klenemedi', 'error');
+    showToast('Görsel yüklenemedi', 'error');
   };
   
   cropperState.image.src = imageDataUrl;
@@ -2888,7 +2888,7 @@ window.confirmCrop = async function() {
   const cropFrame = document.querySelector('.crop-frame');
   
   if (!img || !cropperState.image || !cropFrame) {
-    showToast('GÃ¶rsel bulunamadÄ±', 'error');
+    showToast('Görsel bulunamadı', 'error');
     return;
   }
   
@@ -2980,7 +2980,7 @@ window.confirmCrop = async function() {
       attempts++;
     }
     
-    console.log('ğŸ¨ Crop complete:', {
+    console.log('?? Crop complete:', {
       originalSize: cropperState.image.width + 'x' + cropperState.image.height,
       outputSize: outputWidth + 'x' + outputHeight,
       quality: Math.round(quality * 100) + '%',
@@ -2994,11 +2994,11 @@ window.confirmCrop = async function() {
     drop.innerHTML = `<img src="${dataUrl}" id="imagePreview"><button type="button" class="image-remove-btn" onclick="removeProductImage(event)">${ICONS.x}</button><input type="file" accept="image/*" id="imageInput" onchange="handleImageSelect(event)">`;
     
     closeCropper();
-    showToast('GÃ¶rsel baÅŸarÄ±yla kÄ±rpÄ±ldÄ± ve kaydedildi', 'success');
+    showToast('Görsel başarıyla kırpıldı ve kaydedildi', 'success');
     
   } catch (err) {
-    console.error('âŒ Crop error:', err);
-    showToast('KÄ±rpma hatasÄ±: ' + err.message, 'error');
+    console.error('? Crop error:', err);
+    showToast('Kırpma hatası: ' + err.message, 'error');
   }
 };
 
@@ -3025,7 +3025,7 @@ function loadCurrentOGImage() {
   
   if (!preview || !deleteBtn) return;
   
-  preview.innerHTML = '<div style="color:var(--text-faint);"><svg class="icon" style="width:24px;height:24px;margin-bottom:8px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 6zm0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/></svg><br>YÃ¼kleniyor...</div>';
+  preview.innerHTML = '<div style="color:var(--text-faint);"><svg class="icon" style="width:24px;height:24px;margin-bottom:8px;" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 12 6zm0 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0v-5a1 1 0 0 0-1-1z"/></svg><br>Yükleniyor...</div>';
   
   // Directly use get function (already imported at top)
   get(ref(database, 'settings/ogImage')).then(snapshot => {
@@ -3045,15 +3045,15 @@ function loadCurrentOGImage() {
         preview.innerHTML = `
           <div style="background: rgba(255,255,255,0.03); border: 1.5px dashed var(--border-strong); border-radius: 12px; padding: 48px; min-height: 280px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
             <svg class="icon" style="width:48px; height:48px; color:var(--text-faint);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15L16 10L5 21"/></svg>
-            <span style="color: var(--text-faint); font-size: 1.05rem;">HenÃ¼z OG Image yÃ¼klenmemiÅŸ</span>
-            <span style="color: var(--text-muted); font-size: 0.85rem;">AÅŸaÄŸÄ±daki butona tÄ±klayarak gÃ¶rsel yÃ¼kleyin</span>
+            <span style="color: var(--text-faint); font-size: 1.05rem;">Henüz OG Image yüklenmemiş</span>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">Aşağıdaki butona tıklayarak görsel yükleyin</span>
           </div>
         `;
         deleteBtn.style.display = 'none';
       }
     }).catch(err => {
-      console.error('OG Image yÃ¼kleme hatasÄ±:', err);
-      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">VeritabanÄ± hatasÄ±: ${err.message}</div>`;
+      console.error('OG Image yükleme hatası:', err);
+      preview.innerHTML = `<div style="color:var(--danger); padding:24px;">Veritabanı hatası: ${err.message}</div>`;
     });
 }
 
@@ -3063,21 +3063,21 @@ document.getElementById('ogImageInput')?.addEventListener('change', async functi
   
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    showToast('LÃ¼tfen geÃ§erli bir gÃ¶rsel dosyasÄ± seÃ§in', 'error');
+    showToast('Lütfen geçerli bir görsel dosyası seçin', 'error');
     e.target.value = '';
     return;
   }
   
   // Validate file size (max 10MB)
   if (file.size > 10 * 1024 * 1024) {
-    showToast('Dosya boyutu 10MB\'dan kÃ¼Ã§Ã¼k olmalÄ±dÄ±r', 'error');
+    showToast('Dosya boyutu 10MB\'dan küçük olmalıdır', 'error');
     e.target.value = '';
     return;
   }
   
   const preview = document.getElementById('ogImagePreview');
   if (preview) {
-    preview.innerHTML = '<div style="color:var(--text-faint); padding:48px;"><div class="spinner" style="margin:0 auto 12px;"></div><br>GÃ¶rsel iÅŸleniyor...</div>';
+    preview.innerHTML = '<div style="color:var(--text-faint); padding:48px;"><div class="spinner" style="margin:0 auto 12px;"></div><br>Görsel işleniyor...</div>';
   }
   
   try {
@@ -3086,10 +3086,10 @@ document.getElementById('ogImageInput')?.addEventListener('change', async functi
     
     // Save to Firebase
     await set(ref(database, 'settings/ogImage'), processedBase64);
-    showToast('OG Image baÅŸarÄ±yla yÃ¼klendi ve optimize edildi!', 'success');
+    showToast('OG Image başarıyla yüklendi ve optimize edildi!', 'success');
     loadCurrentOGImage();
   } catch (err) {
-    console.error('OG Image iÅŸleme hatasÄ±:', err);
+    console.error('OG Image işleme hatası:', err);
     showToast('Hata: ' + err.message, 'error');
     loadCurrentOGImage();
   }
@@ -3102,12 +3102,12 @@ async function processOGImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
-    reader.onerror = () => reject(new Error('Dosya okunamadÄ±'));
+    reader.onerror = () => reject(new Error('Dosya okunamadı'));
     
     reader.onload = (e) => {
       const img = new Image();
       
-      img.onerror = () => reject(new Error('GÃ¶rsel yÃ¼klenemedi'));
+      img.onerror = () => reject(new Error('Görsel yüklenemedi'));
       
       img.onload = () => {
         try {
@@ -3165,7 +3165,7 @@ async function processOGImage(file) {
           
           resolve(dataUrl);
         } catch (err) {
-          reject(new Error('GÃ¶rsel iÅŸlenirken hata: ' + err.message));
+          reject(new Error('Görsel işlenirken hata: ' + err.message));
         }
       };
       
@@ -3179,7 +3179,7 @@ async function processOGImage(file) {
 window.deleteOGImage = function() {
   showConfirm({
     title: 'OG Image\'i Sil',
-    message: 'Mevcut OG Image kalÄ±cÄ± olarak silinecek. Devam edilsin mi?',
+    message: 'Mevcut OG Image kalıcı olarak silinecek. Devam edilsin mi?',
     confirmLabel: 'Sil',
     onConfirm: async () => {
       try {
@@ -3187,7 +3187,7 @@ window.deleteOGImage = function() {
         showToast('OG Image silindi', 'success');
         loadCurrentOGImage();
       } catch (err) {
-        showToast('Silme hatasÄ±: ' + err.message, 'error');
+        showToast('Silme hatası: ' + err.message, 'error');
       }
     }
   });
@@ -3204,8 +3204,8 @@ window.deleteOGImage = function() {
           <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;"><path d="M6.13 1 6 16a2 2 0 0 0 2 2h15"/><path d="M1 6.13 16 6a2 2 0 0 1 2 2v15"/></svg>
         </div>
         <div style="flex: 1; min-width: 0;">
-          <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;">GÃ¶rseli DÃ¼zenle ve KÄ±rp</h3>
-          <p style="margin: 2px 0 0 0; font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Ã‡Ä±ktÄ±: 720Ã—405px (16:9 oran)</p>
+          <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2;">Görseli Düzenle ve Kırp</h3>
+          <p style="margin: 2px 0 0 0; font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Çıktı: 720×405px (16:9 oran)</p>
         </div>
       </div>
       <button class="crop-close-btn" onclick="closeCropper()" title="Kapat">
@@ -3239,14 +3239,14 @@ window.deleteOGImage = function() {
           <span>Zoom</span>
         </div>
         <div class="crop-zoom-group">
-          <button class="crop-icon-btn" onclick="handleCropZoomOut()" title="UzaklaÅŸtÄ±r">
+          <button class="crop-icon-btn" onclick="handleCropZoomOut()" title="Uzaklaştır">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M8 11h6"/></svg>
           </button>
           <div class="crop-zoom-slider">
             <input type="range" id="cropZoom" min="50" max="300" value="100" step="5" oninput="handleCropZoom(event)">
           </div>
           <span class="crop-zoom-value" id="cropZoomValue">100%</span>
-          <button class="crop-icon-btn" onclick="handleCropZoomIn()" title="YakÄ±nlaÅŸtÄ±r">
+          <button class="crop-icon-btn" onclick="handleCropZoomIn()" title="Yakınlaştır">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6m-3-3h6"/></svg>
           </button>
         </div>
@@ -3256,16 +3256,16 @@ window.deleteOGImage = function() {
       <div class="crop-controls-row">
         <div class="crop-control-label">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          <span>AraÃ§lar</span>
+          <span>Araçlar</span>
         </div>
         <div class="crop-tool-buttons">
-          <button class="crop-tool-btn" onclick="handleCropRotate()" title="90Â° DÃ¶ndÃ¼r">
+          <button class="crop-tool-btn" onclick="handleCropRotate()" title="90° Döndür">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M21 8a9 9 0 1 1-2.64-6.36L21 8"/></svg>
-            <span>DÃ¶ndÃ¼r</span>
+            <span>Döndür</span>
           </button>
-          <button class="crop-tool-btn" onclick="handleCropReset()" title="SÄ±fÄ±rla">
+          <button class="crop-tool-btn" onclick="handleCropReset()" title="Sıfırla">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M3 21v-5h5"/></svg>
-            <span>SÄ±fÄ±rla</span>
+            <span>Sıfırla</span>
           </button>
         </div>
       </div>
@@ -3273,14 +3273,14 @@ window.deleteOGImage = function() {
       <!-- Info -->
       <div class="crop-info-box">
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p><strong>SÃ¼rÃ¼kle</strong> ve <strong>zoom</strong> ile gÃ¶rseli ayarlayÄ±n. Mavi Ã§erÃ§eve Ã¼rÃ¼n kartÄ±nda gÃ¶sterilecek alanÄ± belirtir (16:9)</p>
+        <p><strong>Sürükle</strong> ve <strong>zoom</strong> ile görseli ayarlayın. Mavi çerçeve ürün kartında gösterilecek alanı belirtir (16:9)</p>
       </div>
       
       <!-- Action Buttons -->
       <div class="crop-action-buttons">
         <button class="btn btn-secondary btn-lg" onclick="closeCropper()" style="gap: 8px;">
           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          <span>Ä°ptal</span>
+          <span>İptal</span>
         </button>
         <button class="btn btn-primary btn-lg" onclick="confirmCrop()" style="gap: 8px; flex: 1;">
           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>

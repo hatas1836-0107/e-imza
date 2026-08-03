@@ -1,11 +1,11 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel | Zirve E-Ä°mza</title>
+<title>Admin Panel | Zirve E-İmza</title>
 <style>
-/* ZIRVE E-Ä°MZA ADMIN PANEL - MODERN & FULL-FEATURED */
+/* ZIRVE E-İMZA ADMIN PANEL - MODERN & FULL-FEATURED */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -404,7 +404,7 @@ body {
 }
 
 .product-features li::before {
-  content: 'âœ“';
+  content: '?';
   color: var(--success);
   font-weight: bold;
 }
@@ -584,11 +584,11 @@ body {
           <div class="brand-icon">
             <svg fill="white" viewBox="0 0 24 24" width="20" height="20"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z"/></svg>
           </div>
-          <span>Zirve E-Ä°mza Admin</span>
+          <span>Zirve E-İmza Admin</span>
         </div>
         <div class="user-info">
           <span class="user-email" id="userEmail"></span>
-          <button class="btn btn-danger btn-sm" onclick="logout()">Ã‡Ä±kÄ±ÅŸ</button>
+          <button class="btn btn-danger btn-sm" onclick="logout()">Çıkış</button>
         </div>
       </div>
     </div>
@@ -600,14 +600,14 @@ body {
       <div class="stat-card">
         <div class="stat-label">
           <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          Toplam ÃœrÃ¼n
+          Toplam Ürün
         </div>
         <div class="stat-value" id="totalProducts">0</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">
           <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Aktif ÃœrÃ¼nler
+          Aktif Ürünler
         </div>
         <div class="stat-value" id="activeProducts">0</div>
       </div>
@@ -616,12 +616,12 @@ body {
           <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Toplam Fiyat
         </div>
-        <div class="stat-value" style="font-size:1.5rem;" id="totalRevenue">0â‚º</div>
+        <div class="stat-value" style="font-size:1.5rem;" id="totalRevenue">0?</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">
           <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Son GÃ¼ncelleme
+          Son Güncelleme
         </div>
         <div class="stat-value" style="font-size:1.1rem;" id="lastUpdate">-</div>
       </div>
@@ -631,11 +631,11 @@ body {
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('products')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        ÃœrÃ¼nler
+        Ürünler
       </button>
       <button class="tab-btn" onclick="switchTab('orders')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        SipariÅŸler
+        Siparişler
       </button>
       <button class="tab-btn" onclick="switchTab('couriers')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -648,11 +648,11 @@ body {
       <div class="section-header">
         <h2 class="section-title">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          ÃœrÃ¼n YÃ¶netimi
+          Ürün Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openAddProductModal()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Yeni ÃœrÃ¼n
+          Yeni Ürün
         </button>
       </div>
       <div id="productsContainer"><div class="loading"></div></div>
@@ -663,11 +663,11 @@ body {
       <div class="section-header">
         <h2 class="section-title">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          SipariÅŸ YÃ¶netimi
+          Sipariş Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openAddOrderModal()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Yeni SipariÅŸ
+          Yeni Sipariş
         </button>
       </div>
       <div id="ordersContainer"><div class="loading"></div></div>
@@ -678,7 +678,7 @@ body {
       <div class="section-header">
         <h2 class="section-title">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          Kurye YÃ¶netimi
+          Kurye Yönetimi
         </h2>
         <button class="btn btn-primary" onclick="openAddCourierModal()">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -717,9 +717,9 @@ setPersistence(auth, browserLocalPersistence).catch((error) => {
   console.error('Persistence error:', error);
 });
 
-console.log('ğŸ”¥ Firebase initialized');
-console.log('ğŸ”¥ Auth:', auth ? 'OK' : 'FAILED');
-console.log('ğŸ”¥ Database:', database ? 'OK' : 'FAILED');
+console.log('?? Firebase initialized');
+console.log('?? Auth:', auth ? 'OK' : 'FAILED');
+console.log('?? Database:', database ? 'OK' : 'FAILED');
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -729,21 +729,21 @@ let orders = {};
 let couriers = {};
 let selectedImage = null;
 
-console.log('ğŸš€ Script loaded, setting up auth listener...');
+console.log('?? Script loaded, setting up auth listener...');
 
 // Admin email listesi
 const ADMIN_EMAILS = [
   'huseyinatas@gmail.com',
   'huseyin.atas@gmail.com',
-  'hÃ¼seyinataÅŸ@gmail.com',  // TÃ¼rkÃ§e karakterli versiyon
+  'hüseyinataş@gmail.com',  // Türkçe karakterli versiyon
   'admin@zirveeimza.com',
   '2sthillman@gmail.com'
 ];
 
-// Admin kontrolÃ¼
+// Admin kontrolü
 function isAdmin(email) {
   const result = ADMIN_EMAILS.includes(email.toLowerCase());
-  console.log('ğŸ” Admin check for', email, ':', result ? 'âœ… ADMIN' : 'âŒ NOT ADMIN');
+  console.log('?? Admin check for', email, ':', result ? '? ADMIN' : '? NOT ADMIN');
   return result;
 }
 
@@ -787,7 +787,7 @@ onAuthStateChanged(auth, async (user) => {
 
 // Logout
 window.logout = async () => {
-  if (confirm('Ã‡Ä±kÄ±ÅŸ yapmak istediÄŸinize emin misiniz?')) {
+  if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
     await signOut(auth);
     window.location.href = '../giris.html';
   }
@@ -795,115 +795,115 @@ window.logout = async () => {
 
 // Load products
 function loadProducts() {
-  console.log('ğŸ“¦ loadProducts() started');
+  console.log('?? loadProducts() started');
   const container = document.getElementById('productsContainer');
-  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">ÃœrÃ¼nler yÃ¼kleniyor...</p></div>';
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">Ürünler yükleniyor...</p></div>';
   
   try {
     const productsRef = ref(database, 'products');
-    console.log('ğŸ“¦ Firebase ref created for products');
+    console.log('?? Firebase ref created for products');
     
     onValue(productsRef, (snapshot) => {
-      console.log('ğŸ“¦ onValue callback triggered');
-      console.log('ğŸ“¦ Snapshot exists:', snapshot.exists());
-      console.log('ğŸ“¦ Snapshot value:', snapshot.val());
+      console.log('?? onValue callback triggered');
+      console.log('?? Snapshot exists:', snapshot.exists());
+      console.log('?? Snapshot value:', snapshot.val());
       
       products = snapshot.val() || {};
-      console.log('ğŸ“¦ Products loaded:', Object.keys(products).length, 'items');
-      console.log('ğŸ“¦ Products data:', products);
+      console.log('?? Products loaded:', Object.keys(products).length, 'items');
+      console.log('?? Products data:', products);
       
       renderProducts();
       updateStats();
     }, (error) => {
-      console.error('âŒ Error loading products:', error);
-      console.error('âŒ Error code:', error.code);
-      console.error('âŒ Error message:', error.message);
-      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ ÃœrÃ¼nler yÃ¼klenirken hata: ${error.message}</p><button class="btn btn-primary" onclick="location.reload()" style="margin-top:16px;">Yeniden Dene</button></div>`;
+      console.error('? Error loading products:', error);
+      console.error('? Error code:', error.code);
+      console.error('? Error message:', error.message);
+      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Ürünler yüklenirken hata: ${error.message}</p><button class="btn btn-primary" onclick="location.reload()" style="margin-top:16px;">Yeniden Dene</button></div>`;
     });
   } catch (error) {
-    console.error('âŒ Exception in loadProducts:', error);
-    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ Hata: ${error.message}</p></div>`;
+    console.error('? Exception in loadProducts:', error);
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Hata: ${error.message}</p></div>`;
   }
 }
 
 // Load orders
 function loadOrders() {
-  console.log('ğŸ“¦ loadOrders() started');
+  console.log('?? loadOrders() started');
   const container = document.getElementById('ordersContainer');
-  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">SipariÅŸler yÃ¼kleniyor...</p></div>';
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">Siparişler yükleniyor...</p></div>';
   
   try {
     const ordersRef = ref(database, 'orders');
-    console.log('ğŸ“¦ Firebase ref created for orders');
+    console.log('?? Firebase ref created for orders');
     
     onValue(ordersRef, (snapshot) => {
-      console.log('ğŸ“¦ Orders onValue callback triggered');
-      console.log('ğŸ“¦ Orders snapshot exists:', snapshot.exists());
+      console.log('?? Orders onValue callback triggered');
+      console.log('?? Orders snapshot exists:', snapshot.exists());
       
       orders = snapshot.val() || {};
-      console.log('ğŸ“¦ Orders loaded:', Object.keys(orders).length, 'items');
-      console.log('ğŸ“¦ Orders data:', orders);
+      console.log('?? Orders loaded:', Object.keys(orders).length, 'items');
+      console.log('?? Orders data:', orders);
       
       renderOrders();
       updateStats();
     }, (error) => {
-      console.error('âŒ Error loading orders:', error);
-      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ SipariÅŸler yÃ¼klenirken hata: ${error.message}</p></div>`;
+      console.error('? Error loading orders:', error);
+      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Siparişler yüklenirken hata: ${error.message}</p></div>`;
     });
   } catch (error) {
-    console.error('âŒ Exception in loadOrders:', error);
-    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ Hata: ${error.message}</p></div>`;
+    console.error('? Exception in loadOrders:', error);
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Hata: ${error.message}</p></div>`;
   }
 }
 
 // Load couriers
 function loadCouriers() {
-  console.log('ğŸ“¦ loadCouriers() started');
+  console.log('?? loadCouriers() started');
   const container = document.getElementById('couriersContainer');
-  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">Kuryeler yÃ¼kleniyor...</p></div>';
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="loading"></div><p style="margin-top:16px;color:var(--text-muted);">Kuryeler yükleniyor...</p></div>';
   
   try {
     const couriersRef = ref(database, 'couriers');
-    console.log('ğŸ“¦ Firebase ref created for couriers');
+    console.log('?? Firebase ref created for couriers');
     
     onValue(couriersRef, (snapshot) => {
-      console.log('ğŸ“¦ Couriers onValue callback triggered');
-      console.log('ğŸ“¦ Couriers snapshot exists:', snapshot.exists());
+      console.log('?? Couriers onValue callback triggered');
+      console.log('?? Couriers snapshot exists:', snapshot.exists());
       
       couriers = snapshot.val() || {};
-      console.log('ğŸ“¦ Couriers loaded:', Object.keys(couriers).length, 'items');
-      console.log('ğŸ“¦ Couriers data:', couriers);
+      console.log('?? Couriers loaded:', Object.keys(couriers).length, 'items');
+      console.log('?? Couriers data:', couriers);
       
       renderCouriers();
     }, (error) => {
-      console.error('âŒ Error loading couriers:', error);
-      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ Kuryeler yÃ¼klenirken hata: ${error.message}</p></div>`;
+      console.error('? Error loading couriers:', error);
+      container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Kuryeler yüklenirken hata: ${error.message}</p></div>`;
     });
   } catch (error) {
-    console.error('âŒ Exception in loadCouriers:', error);
-    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>âŒ Hata: ${error.message}</p></div>`;
+    console.error('? Exception in loadCouriers:', error);
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger);"><p>? Hata: ${error.message}</p></div>`;
   }
 }
 
 // Render products
 function renderProducts() {
-  console.log('ğŸ¨ renderProducts() called, products count:', Object.keys(products).length);
+  console.log('?? renderProducts() called, products count:', Object.keys(products).length);
   const container = document.getElementById('productsContainer');
   
   if (Object.keys(products).length === 0) {
-    console.log('ğŸ“­ No products found');
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><p>HenÃ¼z Ã¼rÃ¼n eklenmemiÅŸ.</p><button class="btn btn-primary" onclick="openAddProductModal()" style="margin-top:16px;">Ä°lk ÃœrÃ¼nÃ¼ Ekle</button></div>';
+    console.log('?? No products found');
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><p>Henüz ürün eklenmemiş.</p><button class="btn btn-primary" onclick="openAddProductModal()" style="margin-top:16px;">İlk Ürünü Ekle</button></div>';
     return;
   }
   
   const productsArray = Object.entries(products).map(([id, data]) => ({ id, ...data }));
-  console.log('ğŸ¨ Rendering', productsArray.length, 'products');
+  console.log('?? Rendering', productsArray.length, 'products');
   
   let html = '<div class="products-grid">';
   
   productsArray.forEach(product => {
-    const statusBadge = product.status === 'active' ? '<span class="badge badge-success">âœ“ Aktif</span>' : '<span class="badge badge-warning">â¸ Pasif</span>';
-    const imageHTML = product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}">` : '<div style="font-size:2rem;opacity:0.3;">ğŸ“¦</div>';
+    const statusBadge = product.status === 'active' ? '<span class="badge badge-success">? Aktif</span>' : '<span class="badge badge-warning">? Pasif</span>';
+    const imageHTML = product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}">` : '<div style="font-size:2rem;opacity:0.3;">??</div>';
     const featuresList = (product.features || []).slice(0, 3).map(f => `<li>${f}</li>`).join('');
     
     html += `
@@ -911,14 +911,14 @@ function renderProducts() {
         <div class="product-image">${imageHTML}</div>
         <div class="product-body">
           <div class="product-name">${product.name}</div>
-          <div class="product-price">${product.price}â‚º <span style="font-size:0.7rem;color:var(--text-muted);">+KDV</span></div>
-          <div class="product-badges">${statusBadge} <span class="badge badge-info">â± ${product.duration}</span></div>
+          <div class="product-price">${product.price}? <span style="font-size:0.7rem;color:var(--text-muted);">+KDV</span></div>
+          <div class="product-badges">${statusBadge} <span class="badge badge-info">? ${product.duration}</span></div>
           ${product.description ? `<p style="font-size:0.85rem;color:var(--text-muted);margin:4px 0;">${product.description}</p>` : ''}
           ${featuresList ? `<ul class="product-features">${featuresList}</ul>` : ''}
         </div>
         <div class="product-actions">
-          <button class="btn btn-secondary" onclick="editProduct('${product.id}')">âœï¸ DÃ¼zenle</button>
-          <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">ğŸ—‘ï¸ Sil</button>
+          <button class="btn btn-secondary" onclick="editProduct('${product.id}')">?? Düzenle</button>
+          <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">??? Sil</button>
         </div>
       </div>
     `;
@@ -926,22 +926,22 @@ function renderProducts() {
   
   html += '</div>';
   container.innerHTML = html;
-  console.log('âœ… Products rendered');
+  console.log('? Products rendered');
 }
 
 // Render orders
 function renderOrders() {
-  console.log('ğŸ¨ renderOrders() called, orders count:', Object.keys(orders).length);
+  console.log('?? renderOrders() called, orders count:', Object.keys(orders).length);
   const container = document.getElementById('ordersContainer');
   
   if (Object.keys(orders).length === 0) {
-    console.log('ğŸ“­ No orders found');
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p>HenÃ¼z sipariÅŸ oluÅŸturulmamÄ±ÅŸ.</p><button class="btn btn-primary" onclick="openAddOrderModal()" style="margin-top:16px;">Ä°lk SipariÅŸi Ekle</button></div>';
+    console.log('?? No orders found');
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><p>Henüz sipariş oluşturulmamış.</p><button class="btn btn-primary" onclick="openAddOrderModal()" style="margin-top:16px;">İlk Siparişi Ekle</button></div>';
     return;
   }
   
   const ordersArray = Object.entries(orders).map(([id, data]) => ({ id, ...data })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  console.log('ğŸ¨ Rendering', ordersArray.length, 'orders');
+  console.log('?? Rendering', ordersArray.length, 'orders');
   
   let html = '<div style="display:grid;gap:16px;">';
   
@@ -957,13 +957,13 @@ function renderOrders() {
     };
     const statusColor = statusColors[order.status] || 'info';
     const statusText = {
-      pending: 'â³ Beklemede',
-      confirmed: 'âœ“ OnaylandÄ±',
-      preparing: 'ğŸ‘¨â€ğŸ³ HazÄ±rlanÄ±yor',
-      ready: 'âœ… HazÄ±r',
-      shipped: 'ğŸšš Yolda',
-      delivered: 'ğŸ‰ Teslim Edildi',
-      cancelled: 'âŒ Ä°ptal'
+      pending: '? Beklemede',
+      confirmed: '? Onaylandı',
+      preparing: '????? Hazırlanıyor',
+      ready: '? Hazır',
+      shipped: '?? Yolda',
+      delivered: '?? Teslim Edildi',
+      cancelled: '? İptal'
     }[order.status] || order.status;
     
     html += `
@@ -976,13 +976,13 @@ function renderOrders() {
           <span class="badge badge-${statusColor}">${statusText}</span>
         </div>
         <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">
-          ğŸ“¦ ${order.productName || 'ÃœrÃ¼n belirtilmemiÅŸ'}<br>
-          ğŸ“ ${order.district}, ${order.city}<br>
-          ğŸ•’ ${new Date(order.createdAt).toLocaleString('tr-TR')}
+          ?? ${order.productName || 'Ürün belirtilmemiş'}<br>
+          ?? ${order.district}, ${order.city}<br>
+          ?? ${new Date(order.createdAt).toLocaleString('tr-TR')}
         </div>
         <div style="display:flex;gap:8px;margin-top:12px;">
-          <button class="btn btn-secondary btn-sm" onclick="viewOrder('${order.id}')">ğŸ‘ï¸ Detay</button>
-          <button class="btn btn-primary btn-sm" onclick="updateOrderStatus('${order.id}')">ğŸ”„ Durum GÃ¼ncelle</button>
+          <button class="btn btn-secondary btn-sm" onclick="viewOrder('${order.id}')">??? Detay</button>
+          <button class="btn btn-primary btn-sm" onclick="updateOrderStatus('${order.id}')">?? Durum Güncelle</button>
         </div>
       </div>
     `;
@@ -990,48 +990,48 @@ function renderOrders() {
   
   html += '</div>';
   container.innerHTML = html;
-  console.log('âœ… Orders rendered');
+  console.log('? Orders rendered');
 }
 
 // Render couriers
 function renderCouriers() {
-  console.log('ğŸ¨ renderCouriers() called, couriers count:', Object.keys(couriers).length);
+  console.log('?? renderCouriers() called, couriers count:', Object.keys(couriers).length);
   const container = document.getElementById('couriersContainer');
   
   if (Object.keys(couriers).length === 0) {
-    console.log('ğŸ“­ No couriers found');
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><p>HenÃ¼z kurye eklenmemiÅŸ.</p><button class="btn btn-primary" onclick="openAddCourierModal()" style="margin-top:16px;">Ä°lk Kuryeyi Ekle</button></div>';
+    console.log('?? No couriers found');
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48" height="48" style="margin:0 auto 16px;opacity:0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><p>Henüz kurye eklenmemiş.</p><button class="btn btn-primary" onclick="openAddCourierModal()" style="margin-top:16px;">İlk Kuryeyi Ekle</button></div>';
     return;
   }
   
   const couriersArray = Object.entries(couriers).map(([id, data]) => ({ id, ...data }));
-  console.log('ğŸ¨ Rendering', couriersArray.length, 'couriers');
+  console.log('?? Rendering', couriersArray.length, 'couriers');
   
   let html = '<div class="products-grid">';
   
   couriersArray.forEach(courier => {
     const activeCount = courier.activeOrders ? Object.keys(courier.activeOrders).length : 0;
-    const statusBadge = courier.isActive ? '<span class="badge badge-success">âœ“ Aktif</span>' : '<span class="badge badge-warning">â¸ Pasif</span>';
+    const statusBadge = courier.isActive ? '<span class="badge badge-success">? Aktif</span>' : '<span class="badge badge-warning">? Pasif</span>';
     
     html += `
       <div class="product-card">
         <div class="product-image" style="background:linear-gradient(135deg, rgba(34,197,94,0.1), rgba(59,130,246,0.1));">
-          <div style="font-size:3rem;">ğŸ‘¤</div>
+          <div style="font-size:3rem;">??</div>
         </div>
         <div class="product-body">
           <div class="product-name">${courier.name}</div>
           <div style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px;">
-            ğŸ“§ ${courier.email}<br>
-            ğŸ“± ${courier.phone || 'Telefon belirtilmemiÅŸ'}
+            ?? ${courier.email}<br>
+            ?? ${courier.phone || 'Telefon belirtilmemiş'}
           </div>
           <div class="product-badges">
             ${statusBadge}
-            <span class="badge badge-info">ğŸ“¦ ${activeCount} aktif sipariÅŸ</span>
+            <span class="badge badge-info">?? ${activeCount} aktif sipariş</span>
           </div>
         </div>
         <div class="product-actions">
-          <button class="btn btn-secondary" onclick="viewCourierDetails('${courier.id}')">ğŸ‘ï¸ Detay</button>
-          <button class="btn btn-primary" onclick="toggleCourierStatus('${courier.id}')">ğŸ”„ Durum</button>
+          <button class="btn btn-secondary" onclick="viewCourierDetails('${courier.id}')">??? Detay</button>
+          <button class="btn btn-primary" onclick="toggleCourierStatus('${courier.id}')">?? Durum</button>
         </div>
       </div>
     `;
@@ -1039,7 +1039,7 @@ function renderCouriers() {
   
   html += '</div>';
   container.innerHTML = html;
-  console.log('âœ… Couriers rendered');
+  console.log('? Couriers rendered');
 }
 
 // Update statistics
@@ -1051,7 +1051,7 @@ function updateStats() {
   
   document.getElementById('totalProducts').textContent = total;
   document.getElementById('activeProducts').textContent = active;
-  document.getElementById('totalRevenue').textContent = revenue.toLocaleString('tr-TR') + 'â‚º';
+  document.getElementById('totalRevenue').textContent = revenue.toLocaleString('tr-TR') + '?';
   document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 }
 
@@ -1131,10 +1131,10 @@ window.editProduct = (id) => {
 };
 
 window.deleteProduct = async (id) => {
-  if (confirm('Bu Ã¼rÃ¼nÃ¼ silmek istediÄŸinize emin misiniz?')) {
+  if (confirm('Bu ürünü silmek istediğinize emin misiniz?')) {
     try {
       await remove(ref(database, `products/${id}`));
-      alert('ÃœrÃ¼n baÅŸarÄ±yla silindi!');
+      alert('Ürün başarıyla silindi!');
     } catch (error) {
       alert('Hata: ' + error.message);
     }
@@ -1144,7 +1144,7 @@ window.deleteProduct = async (id) => {
 window.viewOrder = (id) => {
   const order = orders[id];
   if (order) {
-    alert(`SipariÅŸ DetaylarÄ±:\n\nMÃ¼ÅŸteri: ${order.customerName}\nTelefon: ${order.customerPhone}\nÃœrÃ¼n: ${order.productName}\nDurum: ${order.status}\nAdres: ${order.address}`);
+    alert(`Sipariş Detayları:\n\nMüşteri: ${order.customerName}\nTelefon: ${order.customerPhone}\nÜrün: ${order.productName}\nDurum: ${order.status}\nAdres: ${order.address}`);
   }
 };
 
@@ -1181,7 +1181,7 @@ window.viewCourierDetails = (id) => {
   const courier = couriers[id];
   if (courier) {
     const activeCount = courier.activeOrders ? Object.keys(courier.activeOrders).length : 0;
-    alert(`Kurye DetaylarÄ±:\n\nÄ°sim: ${courier.name}\nE-posta: ${courier.email}\nTelefon: ${courier.phone || 'BelirtilmemiÅŸ'}\nAktif SipariÅŸler: ${activeCount}\nDurum: ${courier.isActive ? 'Aktif' : 'Pasif'}`);
+    alert(`Kurye Detayları:\n\nİsim: ${courier.name}\nE-posta: ${courier.email}\nTelefon: ${courier.phone || 'Belirtilmemiş'}\nAktif Siparişler: ${activeCount}\nDurum: ${courier.isActive ? 'Aktif' : 'Pasif'}`);
   }
 };
 
@@ -1191,7 +1191,7 @@ window.toggleCourierStatus = async (id) => {
     try {
       const newStatus = !courier.isActive;
       await update(ref(database, `couriers/${id}`), { isActive: newStatus });
-      alert(`Kurye durumu ${newStatus ? 'aktif' : 'pasif'} olarak gÃ¼ncellendi!`);
+      alert(`Kurye durumu ${newStatus ? 'aktif' : 'pasif'} olarak güncellendi!`);
     } catch (error) {
       alert('Hata: ' + error.message);
     }
