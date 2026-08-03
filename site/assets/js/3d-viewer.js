@@ -191,104 +191,105 @@
     if (mixer) mixer.update(delta);
 
     if (model) {
-      // SCROLL-BASED SCENES + CONTINUOUS ROTATION
-      const scrollPhase = scrollProgress * 100; // 0-100 for easier math
+      const scrollPhase = scrollProgress * 100;
       
-      // BASE CONTINUOUS ROTATION - ALWAYS SPINNING
-      const continuousY = elapsedTime * 0.2 + scrollProgress * Math.PI * 8;
+      // SMOOTH FLOATING MOVEMENTS - always active
+      const floatX = Math.sin(elapsedTime * 0.3) * 0.6;
+      const floatY = Math.cos(elapsedTime * 0.25) * 0.5;
+      const floatZ = Math.sin(elapsedTime * 0.2) * 0.4;
       
-      // BIG MOVEMENTS for visibility
-      const waveX = Math.sin(elapsedTime * 0.6) * 0.4;
-      const waveY = Math.cos(elapsedTime * 0.5) * 0.3;
-      const waveZ = Math.sin(elapsedTime * 0.4) * 0.3;
+      // GENTLE ROTATION - show connector side mostly
+      const gentleRotX = Math.sin(elapsedTime * 0.15) * 0.3;
+      const gentleRotZ = Math.cos(elapsedTime * 0.18) * 0.25;
       
-      let finalRotX, finalRotY, finalRotZ, finalPosX, finalPosY, finalPosZ, finalCamZ, finalScale;
+      let rotX, rotY, rotZ, posX, posY, posZ, camZ, scale;
       
       if (scrollPhase < 20) {
-        // SCENE 1: Opening spin - front view
-        finalRotX = 0.2 + waveX;
-        finalRotY = continuousY;
-        finalRotZ = waveZ * 0.5;
-        finalPosX = waveX;
-        finalPosY = waveY;
-        finalPosZ = -1.5;
-        finalCamZ = 9;
-        finalScale = 1.0 + scrollPhase * 0.01;
+        // SCENE 1: Connector facing - elegant floating
+        rotX = Math.PI * 0.1 + gentleRotX;
+        rotY = Math.PI + scrollPhase * 0.01; // Metal side
+        rotZ = gentleRotZ;
+        posX = floatX;
+        posY = floatY;
+        posZ = -1.5 + floatZ * 0.3;
+        camZ = 9;
+        scale = 1.0 + scrollPhase * 0.01;
         
-      } else if (scrollPhase < 35) {
-        // SCENE 2: Side profile + fast spin
-        const local = (scrollPhase - 20) / 15;
-        finalRotX = Math.PI * 0.3 + waveX;
-        finalRotY = continuousY + Math.PI * 0.5;
-        finalRotZ = Math.PI * 0.2 + waveZ;
-        finalPosX = Math.sin(local * Math.PI * 4) * 1.2;
-        finalPosY = waveY;
-        finalPosZ = -1.0;
-        finalCamZ = 8;
-        finalScale = 1.2;
+      } else if (scrollPhase < 40) {
+        // SCENE 2: Drift to side - smooth transition
+        const local = (scrollPhase - 20) / 20;
+        rotX = Math.PI * 0.2 + gentleRotX;
+        rotY = Math.PI + Math.PI * 0.3 * local + elapsedTime * 0.08;
+        rotZ = Math.PI * 0.15 + gentleRotZ;
+        posX = floatX + Math.sin(local * Math.PI) * 0.8;
+        posY = floatY + 0.2;
+        posZ = -1.3 + floatZ * 0.4;
+        camZ = 8.5;
+        scale = 1.15;
         
-      } else if (scrollPhase < 50) {
-        // SCENE 3: Top view spinning
-        const local = (scrollPhase - 35) / 15;
-        finalRotX = Math.PI * 0.6 + waveX;
-        finalRotY = continuousY + local * Math.PI * 4;
-        finalRotZ = waveZ;
-        finalPosX = Math.sin(elapsedTime * 0.8) * 0.6;
-        finalPosY = -0.3 + waveY;
-        finalPosZ = -1.2;
-        finalCamZ = 7;
-        finalScale = 1.1;
+      } else if (scrollPhase < 60) {
+        // SCENE 3: Angled view - showing connector detail
+        const local = (scrollPhase - 40) / 20;
+        rotX = Math.PI * 0.35 + gentleRotX * 1.5;
+        rotY = Math.PI * 1.4 + elapsedTime * 0.1;
+        rotZ = Math.PI * 0.25 + gentleRotZ * 1.2;
+        posX = floatX * 1.2;
+        posY = floatY - 0.3;
+        posZ = -1.5 + floatZ * 0.5;
+        camZ = 8;
+        scale = 1.25;
         
-      } else if (scrollPhase < 70) {
-        // SCENE 4: Crazy tumble
-        const local = (scrollPhase - 50) / 20;
-        finalRotX = continuousY * 1.5 + Math.sin(elapsedTime * 1.2) * 1.0;
-        finalRotY = continuousY * 2.0;
-        finalRotZ = continuousY * 0.8 + Math.cos(elapsedTime * 1.5) * 0.8;
-        finalPosX = Math.sin(elapsedTime * 1.0) * 1.5;
-        finalPosY = Math.cos(elapsedTime * 1.2) * 1.0;
-        finalPosZ = -2.0 + Math.sin(elapsedTime * 0.8) * 0.8;
-        finalCamZ = 6 + Math.sin(elapsedTime * 0.5) * 1;
-        finalScale = 1.3 + Math.sin(elapsedTime * 2) * 0.2;
+      } else if (scrollPhase < 75) {
+        // SCENE 4: Close approach - slow rotation
+        const local = (scrollPhase - 60) / 15;
+        rotX = Math.PI * 0.15 + gentleRotX;
+        rotY = Math.PI * 1.1 + elapsedTime * 0.12 + local * Math.PI * 0.5;
+        rotZ = gentleRotZ * 1.5;
+        posX = floatX * 0.8;
+        posY = floatY + Math.sin(local * Math.PI) * 0.5;
+        posZ = -2.5 + floatZ * 0.3;
+        camZ = 7;
+        scale = 1.4;
         
-      } else if (scrollPhase < 85) {
-        // SCENE 5: Close-up front
-        finalRotX = 0.1 + waveX * 0.5;
-        finalRotY = continuousY * 0.3;
-        finalRotZ = waveZ * 0.3;
-        finalPosX = waveX * 0.5;
-        finalPosY = waveY;
-        finalPosZ = -3.0;
-        finalCamZ = 5;
-        finalScale = 1.5;
+      } else if (scrollPhase < 90) {
+        // SCENE 5: Perspective shift - elegant drift
+        const local = (scrollPhase - 75) / 15;
+        rotX = Math.PI * 0.4 + gentleRotX * 1.8;
+        rotY = Math.PI * 1.5 + elapsedTime * 0.09;
+        rotZ = Math.PI * 0.35 + gentleRotZ * 1.3;
+        posX = floatX * 1.5 + Math.cos(local * Math.PI * 2) * 0.7;
+        posY = floatY + 0.4;
+        posZ = -2.0 + floatZ * 0.6;
+        camZ = 7.5;
+        scale = 1.35;
         
       } else {
-        // SCENE 6: Grand finale
-        const local = (scrollPhase - 85) / 15;
-        finalRotX = continuousY * 2 + Math.sin(elapsedTime * 2) * 1.5;
-        finalRotY = continuousY * 3;
-        finalRotZ = Math.cos(elapsedTime * 2.5) * Math.PI;
-        finalPosX = Math.cos(elapsedTime * 1.5) * 2.0;
-        finalPosY = Math.sin(elapsedTime * 2.0) * 1.5;
-        finalPosZ = -4.0 + Math.sin(elapsedTime * 1.8) * 2.0;
-        finalCamZ = 4 + local * 2;
-        finalScale = 1.6 + local * 0.6;
+        // SCENE 6: Final zoom - connector showcase
+        const local = (scrollPhase - 90) / 10;
+        rotX = Math.PI * 0.2 + gentleRotX * 1.2;
+        rotY = Math.PI + elapsedTime * 0.15 + local * Math.PI * 0.8;
+        rotZ = gentleRotZ * 1.6;
+        posX = floatX * 0.6;
+        posY = floatY + Math.sin(local * Math.PI * 3) * 0.6;
+        posZ = -3.5 + floatZ * 0.8;
+        camZ = 6;
+        scale = 1.6 + local * 0.3;
       }
       
-      // DIRECT APPLY - NO LERP (immediate response)
-      model.rotation.x = finalRotX + mouse.y * 0.3;
-      model.rotation.y = finalRotY + mouse.x * 0.4;
-      model.rotation.z = finalRotZ;
+      // APPLY DIRECTLY
+      model.rotation.x = rotX + mouse.y * 0.2;
+      model.rotation.y = rotY + mouse.x * 0.25;
+      model.rotation.z = rotZ;
       
-      model.position.x = finalPosX;
-      model.position.y = finalPosY;
-      model.position.z = finalPosZ;
+      model.position.x = posX;
+      model.position.y = posY;
+      model.position.z = posZ;
       
-      camera.position.z = finalCamZ;
+      camera.position.z = camZ;
       camera.lookAt(model.position);
       
       const baseScale = model.userData.baseScale || 6.0;
-      model.scale.setScalar(baseScale * finalScale);
+      model.scale.setScalar(baseScale * scale);
     }
 
     renderer.render(scene, camera);
