@@ -310,6 +310,12 @@
 
     if (!isInitialized || !usbModel) return;
 
+    // **CRITICAL FIX: Update scroll EVERY FRAME (don't rely on scroll events)**
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll > 0) {
+      targetScrollProgress = window.scrollY / maxScroll;
+    }
+
     // **CRITICAL: Update scroll animation EVERY FRAME (like showcase.js)**
     updateScrollAnimation();
 
