@@ -204,43 +204,138 @@ main, section, div, header, footer, nav {
   }
 }
 
-/* Sabit mesh arkaplan - Gelişmiş modern görünüm */
+/* Modern Spotlight Background - Derin ve dinamik tasarım */
 .mesh-bg {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background: var(--bg-mesh);
-  background-color: var(--bg);
-  transition: background-color .4s var(--ease), opacity .6s var(--ease);
-  animation: meshDrift 24s ease-in-out infinite alternate, meshPulse 8s ease-in-out infinite;
-  will-change: transform, opacity, filter;
+  background: rgb(var(--bg));
+  overflow: hidden;
   pointer-events: none;
-  filter: blur(120px);
-  transform-origin: center center;
 }
 
-/* Mesh drift - Renk animasyonu */
-@keyframes meshDrift {
-  0%   { opacity: 1; }
-  25%  { opacity: 0.95; }
-  50%  { opacity: 1; }
-  75%  { opacity: 0.97; }
-  100% { opacity: 0.92; }
+/* Spotlight elementleri */
+.spotlight {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  will-change: transform, opacity;
 }
 
-/* Mesh pulse - Hafif büyüme/küçülme */
-@keyframes meshPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+/* Spotlight 1 - Purple/Indigo (Sol üst) */
+.spotlight-1 {
+  width: 900px;
+  height: 900px;
+  top: -20%;
+  left: -15%;
+  background: radial-gradient(circle, 
+    rgba(124, 58, 237, 0.6) 0%, 
+    rgba(79, 70, 229, 0.4) 30%,
+    rgba(99, 102, 241, 0.2) 50%,
+    transparent 75%
+  );
+  animation: spotlight1 20s infinite;
 }
 
-/* Grain overlay - Daha dinamik */
+/* Spotlight 2 - Cyan/Blue (Sağ alt) */
+.spotlight-2 {
+  width: 850px;
+  height: 850px;
+  bottom: -25%;
+  right: -18%;
+  background: radial-gradient(circle,
+    rgba(34, 211, 238, 0.55) 0%,
+    rgba(6, 182, 212, 0.4) 35%,
+    rgba(59, 130, 246, 0.25) 55%,
+    transparent 80%
+  );
+  animation: spotlight2 24s infinite;
+}
+
+/* Spotlight 3 - Pink/Rose (Orta) */
+.spotlight-3 {
+  width: 700px;
+  height: 700px;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(236, 72, 153, 0.35) 0%,
+    rgba(168, 85, 247, 0.25) 40%,
+    transparent 70%
+  );
+  animation: spotlight3 16s infinite;
+}
+
+/* Spotlight animasyonları */
+@keyframes spotlight1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  25% { 
+    transform: translate(10%, -8%) scale(1.12);
+    opacity: 0.65;
+  }
+  50% { 
+    transform: translate(-8%, 10%) scale(0.92);
+    opacity: 0.45;
+  }
+  75% { 
+    transform: translate(6%, -5%) scale(1.05);
+    opacity: 0.58;
+  }
+}
+
+@keyframes spotlight2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.52;
+  }
+  20% { 
+    transform: translate(-12%, 8%) scale(1.15);
+    opacity: 0.62;
+  }
+  40% { 
+    transform: translate(8%, -10%) scale(0.9);
+    opacity: 0.42;
+  }
+  60% { 
+    transform: translate(-8%, 12%) scale(1.08);
+    opacity: 0.58;
+  }
+  80% { 
+    transform: translate(5%, -6%) scale(0.95);
+    opacity: 0.48;
+  }
+}
+
+@keyframes spotlight3 {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.38;
+  }
+  33% { 
+    transform: translate(-45%, -55%) scale(1.2);
+    opacity: 0.48;
+  }
+  66% { 
+    transform: translate(-55%, -45%) scale(0.85);
+    opacity: 0.32;
+  }
+}
+
+/* Grain overlay - Daha dinamik texture */
 .grain-overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: .035;
+  opacity: .04;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grainMove 8s steps(10) infinite;
@@ -279,22 +374,36 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     transition-duration: .001ms !important; 
     scroll-behavior: auto !important; 
   }
-  .mesh-bg, .grain-overlay {
+  .mesh-bg, .grain-overlay, .spotlight {
     animation: none !important;
     transform: none !important;
   }
+  .spotlight {
+    opacity: 0.3 !important;
+  }
 }
 
-/* Mobil optimizasyon - mesh için */
+/* Mobil optimizasyon - spotlight için */
 @media (max-width: 768px) {
-  .mesh-bg {
-    /* Mobilde daha hafif animasyon ve blur */
-    animation: meshDrift 30s ease-in-out infinite alternate, meshPulse 10s ease-in-out infinite;
-    filter: blur(90px);
+  .spotlight {
+    filter: blur(100px);
   }
-  
+  .spotlight-1 {
+    width: 600px;
+    height: 600px;
+    animation-duration: 25s;
+  }
+  .spotlight-2 {
+    width: 550px;
+    height: 550px;
+    animation-duration: 28s;
+  }
+  .spotlight-3 {
+    width: 500px;
+    height: 500px;
+    animation-duration: 20s;
+  }
   .grain-overlay {
-    /* Mobilde daha az görünür */
     opacity: .02;
     animation: grainMove 12s steps(8) infinite;
   }
@@ -302,14 +411,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* Düşük güçlü cihazlar için */
 @media (max-width: 480px) {
-  .mesh-bg {
-    /* Çok hafif animasyon */
-    animation: meshPulse 12s ease-in-out infinite;
-    filter: blur(70px);
+  .spotlight {
+    filter: blur(80px);
+    opacity: 0.25 !important;
   }
-  
-  .grain-overlay {
+  .spotlight-1 {
+    width: 450px;
+    height: 450px;
+  }
+  .spotlight-2 {
+    width: 400px;
+    height: 400px;
+  }
+  .spotlight-3 {
     display: none; /* Performans için kaldır */
+  }
+  .grain-overlay {
+    display: none;
   }
 }
 
