@@ -24,15 +24,15 @@
   --gradient-brand: linear-gradient(135deg, var(--indigo-500) 0%, var(--violet-500) 55%, #a855f7 100%);
   --gradient-seal: linear-gradient(135deg, var(--amber-400) 0%, var(--amber-500) 100%);
   --gradient-mesh-dark:
-    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.85), transparent 80%),
-    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.75), transparent 85%),
-    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.50), transparent 80%),
-    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.65), transparent 80%);
+    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.95), transparent 60%),
+    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.90), transparent 65%),
+    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.70), transparent 60%),
+    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.85), transparent 60%);
   --gradient-mesh-light:
-    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.28), transparent 70%),
-    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.24), transparent 75%),
-    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.26), transparent 70%),
-    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.22), transparent 70%);
+    radial-gradient(circle at 12% 18%, rgba(79,70,229,0.45), transparent 55%),
+    radial-gradient(circle at 85% 12%, rgba(124,58,237,0.40), transparent 60%),
+    radial-gradient(circle at 70% 80%, rgba(232,163,61,0.38), transparent 55%),
+    radial-gradient(circle at 15% 85%, rgba(99,102,241,0.42), transparent 55%);
 
   /* Dark (varsayılan) */
   --bg: var(--ink-950);
@@ -199,7 +199,7 @@ main, section, div, header, footer, nav {
   animation: meshDrift 24s ease-in-out infinite alternate, meshPulse 8s ease-in-out infinite;
   will-change: transform, opacity, filter;
   pointer-events: none;
-  filter: blur(120px);
+  filter: blur(180px);
   transform-origin: center center;
 }
 
@@ -274,7 +274,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .mesh-bg {
     /* Mobilde daha hafif animasyon ve blur */
     animation: meshDrift 30s ease-in-out infinite alternate, meshPulse 10s ease-in-out infinite;
-    filter: blur(90px);
+    filter: blur(140px);
   }
   
   .grain-overlay {
@@ -289,7 +289,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .mesh-bg {
     /* Çok hafif animasyon */
     animation: meshPulse 12s ease-in-out infinite;
-    filter: blur(70px);
+    filter: blur(110px);
   }
   
   .grain-overlay {
@@ -4483,22 +4483,24 @@ a, button, input[type="submit"], input[type="button"], .btn {
   gap: 24px;
   transition: all 0.3s ease;
   overflow: hidden;
+  box-shadow: 0 30px 90px rgba(99, 102, 241, 0.5), 0 15px 60px rgba(139, 92, 246, 0.4), 0 0 120px rgba(124, 58, 237, 0.3);
 }
 
 .pricing-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+  filter: blur(80px);
 }
 
 .pricing-card:hover {
   transform: translateY(-8px);
   border-color: rgba(129, 140, 248, 0.3);
-  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 50px 150px rgba(99, 102, 241, 0.7), 0 25px 100px rgba(139, 92, 246, 0.6), 0 0 150px rgba(124, 58, 237, 0.5);
 }
 
 .pricing-card:hover::before {
@@ -4508,8 +4510,10 @@ a, button, input[type="submit"], input[type="button"], .btn {
 .pricing-card.featured {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
   border: 2px solid rgba(129, 140, 248, 0.4);
+  box-shadow: 0 40px 120px rgba(99, 102, 241, 0.6), 0 20px 80px rgba(139, 92, 246, 0.5), 0 0 140px rgba(124, 58, 237, 0.4);
+}
   transform: scale(1.05);
-  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 30px 90px rgba(99, 102, 241, 0.6);
 }
 
 .pricing-card.featured:hover {
