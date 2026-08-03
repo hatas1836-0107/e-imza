@@ -194,93 +194,131 @@
     }
 
     if (model) {
-      // SCROLL-BASED CINEMATIC POSES
-      // Sayfa 5 bölüme ayrılıyor, her bölümde farklı bir poz
-      const section = scrollProgress * 5; // 0-5 arası değer
+      // MASTER SCROLL-BASED ANIMATION SYSTEM
+      // scrollProgress (0-1) scroll pozisyonunu temsil eder
+      // Her scroll değeri UNIQUE bir pose oluşturur
       
-      // Easing function for smooth transitions
-      const easeInOutCubic = (t) => {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      };
+      // Scroll'u 0-10 aralığına çevir (daha detaylı kontrol)
+      const scrollPhase = scrollProgress * 10;
       
-      // Calculate target pose based on scroll position
-      if (section < 1) {
-        // POSE 1: İlk bakış - USB diagonal duruş, hafif dönüyor
-        const t = easeInOutCubic(section);
-        targetRotation.x = 0.3 + Math.sin(elapsedTime * 0.5) * 0.1;
-        targetRotation.y = Math.PI * 0.25 + elapsedTime * 0.1;
-        targetRotation.z = 0.2;
-        targetPosition.x = 0;
-        targetPosition.y = Math.sin(elapsedTime * 0.8) * 0.3;
-        targetPosition.z = 0;
+      // Easing function
+      const easeInOutQuad = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      
+      // BASE ROTATION - Scroll ile sürekli artan değer (tekrar etmeyen)
+      const baseRotationY = scrollProgress * Math.PI * 8; // 8 tam tur
+      const baseRotationX = Math.sin(scrollProgress * Math.PI * 4) * Math.PI * 0.8;
+      const baseRotationZ = Math.cos(scrollProgress * Math.PI * 3) * Math.PI * 0.6;
+      
+      // POSITION - Scroll'a göre unique pozisyonlar
+      const posX = Math.sin(scrollProgress * Math.PI * 6) * 1.2;
+      const posY = Math.cos(scrollProgress * Math.PI * 5) * 0.8;
+      const posZ = -scrollProgress * 3 + Math.sin(scrollProgress * Math.PI * 4) * 1.5; // Scroll'da yaklaşıyor
+      
+      // MICRO MOVEMENTS - Sadece hafif canlılık için elapsedTime
+      const microRotX = Math.sin(elapsedTime * 0.4) * 0.05;
+      const microRotY = Math.cos(elapsedTime * 0.3) * 0.05;
+      const microRotZ = Math.sin(elapsedTime * 0.5) * 0.03;
+      
+      const microPosX = Math.sin(elapsedTime * 0.6) * 0.08;
+      const microPosY = Math.cos(elapsedTime * 0.8) * 0.1;
+      const microPosZ = Math.sin(elapsedTime * 0.4) * 0.05;
+      
+      // DRAMATIC MOMENTS - Belirli scroll noktalarında özel efektler
+      let dramaticMultiplier = 1.0;
+      let speedBoost = 1.0;
+      
+      if (scrollProgress > 0.15 && scrollProgress < 0.25) {
+        // MOMENT 1: İlk dramatic spin (15-25%)
+        const localProgress = (scrollProgress - 0.15) / 0.1;
+        speedBoost = 1.0 + localProgress * 4.0; // 5x hızlanma
+        dramaticMultiplier = 1.0 + easeInOutQuad(localProgress) * 0.8;
         
-      } else if (section < 2) {
-        // POSE 2: USB ucu ekrana bakıyor (front view) - YAKINLAŞIYOR
-        const t = easeInOutCubic(section - 1);
-        targetRotation.x = 0 + Math.sin(elapsedTime * 0.3) * 0.08;
-        targetRotation.y = Math.PI * 0.5 + Math.sin(elapsedTime * 0.4) * 0.15;
+      } else if (scrollProgress > 0.35 && scrollProgress < 0.45) {
+        // MOMENT 2: USB ucu ekrana bakıyor (35-45%)
+        const localProgress = (scrollProgress - 0.35) / 0.1;
+        targetRotation.x = easeInOutQuad(localProgress) * 0.2;
+        targetRotation.y = Math.PI * 0.5 + easeInOutQuad(localProgress) * 0.3;
         targetRotation.z = 0;
-        targetPosition.x = 0;
-        targetPosition.y = Math.sin(elapsedTime * 1.0) * 0.2;
-        targetPosition.z = -1.2; // Yaklaşma
+        targetPosition.z = -2.5 + microPosZ; // Çok yakın
+        speedBoost = 0.3; // Yavaşlatma, fokuslu duruş
         
-      } else if (section < 3) {
-        // POSE 3: Hızlı 360° spin - TAM DÖNÜş
-        const t = easeInOutCubic(section - 2);
-        const spinSpeed = 2.5;
-        targetRotation.x = Math.sin(elapsedTime * 0.6) * 0.4;
-        targetRotation.y = elapsedTime * spinSpeed; // Hızlı dönüş
-        targetRotation.z = Math.cos(elapsedTime * 0.7) * 0.3;
-        targetPosition.x = Math.cos(elapsedTime * 1.2) * 0.4;
-        targetPosition.y = Math.sin(elapsedTime * 1.5) * 0.5;
-        targetPosition.z = Math.sin(elapsedTime * 0.8) * 0.3;
+      } else if (scrollProgress > 0.55 && scrollProgress < 0.70) {
+        // MOMENT 3: Çılgın tumbling (55-70%)
+        const localProgress = (scrollProgress - 0.55) / 0.15;
+        speedBoost = 3.0 + Math.sin(localProgress * Math.PI * 4) * 2.0; // Variable speed
+        dramaticMultiplier = 1.5;
         
-      } else if (section < 4) {
-        // POSE 4: Yan görünüm (side profile) - USB yatık
-        const t = easeInOutCubic(section - 3);
-        targetRotation.x = Math.PI * 0.15 + Math.sin(elapsedTime * 0.4) * 0.1;
-        targetRotation.y = Math.PI + Math.sin(elapsedTime * 0.3) * 0.2;
-        targetRotation.z = Math.PI * 0.4 + Math.cos(elapsedTime * 0.35) * 0.15;
-        targetPosition.x = Math.sin(elapsedTime * 0.5) * 0.3;
-        targetPosition.y = Math.cos(elapsedTime * 0.7) * 0.4;
-        targetPosition.z = 0;
+        // Chaotic rotation
+        targetRotation.x = baseRotationX * 2.5 + Math.sin(scrollProgress * Math.PI * 12) * 1.5;
+        targetRotation.y = baseRotationY * 1.8 + Math.cos(scrollProgress * Math.PI * 15) * 1.2;
+        targetRotation.z = baseRotationZ * 2.0 + Math.sin(scrollProgress * Math.PI * 10) * 1.0;
+        
+      } else if (scrollProgress > 0.75 && scrollProgress < 0.85) {
+        // MOMENT 4: Side profile showcase (75-85%)
+        const localProgress = (scrollProgress - 0.75) / 0.1;
+        targetRotation.x = Math.PI * 0.25;
+        targetRotation.y = Math.PI + easeInOutQuad(localProgress) * Math.PI * 0.3;
+        targetRotation.z = Math.PI * 0.5;
+        speedBoost = 0.5; // Yavaş elegant
+        
+      } else if (scrollProgress > 0.90) {
+        // MOMENT 5: Grand finale - extreme zoom + spin (90-100%)
+        const localProgress = (scrollProgress - 0.90) / 0.1;
+        speedBoost = 2.5 + localProgress * 3.0; // Giderek hızlanıyor
+        targetPosition.z = -4.0 + Math.sin(localProgress * Math.PI * 8) * 2.0;
+        dramaticMultiplier = 1.5 + localProgress * 1.0;
         
       } else {
-        // POSE 5: Büyük finale - ZOOM + DRAMATIC ROTATION
-        const t = easeInOutCubic(section - 4);
-        const dramaticSpin = 1.8;
-        targetRotation.x = Math.sin(elapsedTime * 1.0) * 0.6;
-        targetRotation.y = elapsedTime * dramaticSpin;
-        targetRotation.z = Math.cos(elapsedTime * 1.1) * 0.5;
-        targetPosition.x = Math.cos(elapsedTime * 1.3) * 0.5;
-        targetPosition.y = Math.sin(elapsedTime * 1.8) * 0.6;
-        targetPosition.z = -2.0 + Math.sin(elapsedTime * 1.5) * 0.8; // Çok yakın
+        // NORMAL FLOW - Scroll bazlı smooth rotation
+        targetRotation.x = baseRotationX + microRotX;
+        targetRotation.y = baseRotationY * speedBoost + microRotY;
+        targetRotation.z = baseRotationZ + microRotZ;
       }
       
-      // SMOOTH INTERPOLATION - Yumuşak geçişler (lerp)
-      const lerpFactor = 0.05; // Ne kadar düşükse o kadar yumuşak
-      currentRotation.x += (targetRotation.x - currentRotation.x) * lerpFactor;
-      currentRotation.y += (targetRotation.y - currentRotation.y) * lerpFactor;
-      currentRotation.z += (targetRotation.z - currentRotation.z) * lerpFactor;
+      // Default position (eğer dramatic moment set etmediyse)
+      if (!targetPosition.z && scrollProgress <= 0.45) {
+        targetPosition.x = posX + microPosX;
+        targetPosition.y = posY + microPosY;
+        targetPosition.z = posZ + microPosZ;
+      } else if (!targetPosition.z) {
+        targetPosition.x = posX + microPosX;
+        targetPosition.y = posY + microPosY;
+        targetPosition.z = posZ + microPosZ;
+      }
       
-      currentPosition.x += (targetPosition.x - currentPosition.x) * lerpFactor;
-      currentPosition.y += (targetPosition.y - currentPosition.y) * lerpFactor;
-      currentPosition.z += (targetPosition.z - currentPosition.z) * lerpFactor;
+      // SMOOTH LERP INTERPOLATION
+      const lerpSpeed = 0.08; // Responsive ama smooth
+      currentRotation.x += (targetRotation.x - currentRotation.x) * lerpSpeed;
+      currentRotation.y += (targetRotation.y - currentRotation.y) * lerpSpeed;
+      currentRotation.z += (targetRotation.z - currentRotation.z) * lerpSpeed;
       
-      // Apply interpolated values
+      currentPosition.x += (targetPosition.x - currentPosition.x) * lerpSpeed;
+      currentPosition.y += (targetPosition.y - currentPosition.y) * lerpSpeed;
+      currentPosition.z += (targetPosition.z - currentPosition.z) * lerpSpeed;
+      
+      // APPLY TO MODEL
       model.rotation.x = currentRotation.x + mouse.y * 0.3;
       model.rotation.y = currentRotation.y + mouse.x * 0.4;
-      model.rotation.z = currentRotation.z;
+      model.rotation.z = currentRotation.z + mouse.x * 0.1;
       
       model.position.x = currentPosition.x;
       model.position.y = currentPosition.y;
       model.position.z = currentPosition.z;
       
-      // DYNAMIC SCALE - Scroll bazlı zoom
+      // DYNAMIC SCALE - Scroll + dramatic moments
       const baseScale = model.userData.baseScale || 6.0;
-      const scrollZoom = 1 + scrollProgress * 0.3; // Scroll'da büyüyor
-      const breathe = 1 + Math.sin(elapsedTime * 0.8) * 0.08; // Hafif nefes
-      model.scale.setScalar(baseScale * scrollZoom * breathe);
+      const scrollZoom = 1.0 + scrollProgress * 0.5; // Scroll'da %50 büyüyor
+      const breathe = 1.0 + Math.sin(elapsedTime * 0.7) * 0.06;
+      const dramatic = dramaticMultiplier;
+      model.scale.setScalar(baseScale * scrollZoom * breathe * dramatic);
+      
+      // Reset targets for next frame
+      targetPosition = { x: posX + microPosX, y: posY + microPosY, z: posZ + microPosZ };
+      targetRotation = { 
+        x: baseRotationX + microRotX, 
+        y: baseRotationY * speedBoost + microRotY, 
+        z: baseRotationZ + microRotZ 
+      };
     }
 
     renderer.render(scene, camera);
