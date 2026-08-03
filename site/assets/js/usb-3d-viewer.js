@@ -10,12 +10,8 @@
   let container, isInitialized = false;
   let animationFrameId = null;
 
-  // Ultra smooth interpolation
-  const LERP = 0.15; // Increased for visible movement
-
   // Current animation state
   const state = {
-    scroll: 0,
     target: { rotX: 0, rotY: 0, rotZ: 0, posX: 0, posY: 0, posZ: 0, scale: 1, camZ: 12 },
     current: { rotX: 0, rotY: 0, rotZ: 0, posX: 0, posY: 0, posZ: 0, scale: 1, camZ: 12 }
   };
@@ -102,7 +98,7 @@
     // Load GLB
     const loader = new window.GLTFLoader();
     loader.load(
-      'assets/models/usb-stick_animation.glb?v=4',
+      'assets/models/usb-stick_animation.glb?v=6',
       (gltf) => {
         usbModel = gltf.scene;
         
@@ -141,9 +137,6 @@
 
         isInitialized = true;
         console.log('✅ USB 3D Model loaded and STANDING!');
-        
-        // Force initial scroll calculation
-        updateScrollAnimation();
       },
       (progress) => {
         console.log(`📦 Loading: ${(progress.loaded / progress.total * 100).toFixed(0)}%`);
@@ -163,14 +156,27 @@
     animate();
   }
 
-  // SCROLL ANIMATION - MODERN PRODUCT SHOWCASE
+  // Track target scroll (like showcase.js)
+  let targetScrollProgress = 0;
+  let currentScrollProgress = 0;
+
+  function onScroll() {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+    targetScrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+  }
+
+  // SCROLL ANIMATION - MODERN PRODUCT SHOWCASE (Applied every frame like showcase.js)
   function updateScrollAnimation() {
-    const scroll = state.scroll;
+    // Smooth scroll interpolation (like showcase.js tick function)
+    currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.05;
+    
+    const scroll = currentScrollProgress;
     
     // PHASE 1: DISTANT INTRO - Far away, slowly approaching (0-15%)
     if (scroll < 0.15) {
       const p = scroll / 0.15;
-      const ease = 1 - Math.pow(1 - p, 3); // Ease out cubic
+      const ease = 1 - Math.pow(1 - p, 3);
       state.target.rotX = window.THREE.MathUtils.lerp(1.6, 1.5, ease);
       state.target.rotY = window.THREE.MathUtils.lerp(-0.5, 0, ease);
       state.target.rotZ = window.THREE.MathUtils.lerp(0, 0, ease);
@@ -180,7 +186,7 @@
       state.target.scale = window.THREE.MathUtils.lerp(0.6, 1, ease);
       state.target.camZ = window.THREE.MathUtils.lerp(22, 14, ease);
     }
-    // PHASE 2: SLIDE RIGHT + ROTATE - Moving to right side (15-28%)
+    // PHASE 2: SLIDE RIGHT + ROTATE (15-28%)
     else if (scroll < 0.28) {
       const p = (scroll - 0.15) / 0.13;
       const ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
@@ -193,7 +199,7 @@
       state.target.scale = 1;
       state.target.camZ = window.THREE.MathUtils.lerp(14, 10, ease);
     }
-    // PHASE 3: VERTICAL CLIMB - Rising upward dramatically (28-40%)
+    // PHASE 3: VERTICAL CLIMB (28-40%)
     else if (scroll < 0.40) {
       const p = (scroll - 0.28) / 0.12;
       state.target.rotX = window.THREE.MathUtils.lerp(0.8, 2.2, p);
@@ -205,7 +211,7 @@
       state.target.scale = window.THREE.MathUtils.lerp(1, 1.3, p);
       state.target.camZ = window.THREE.MathUtils.lerp(10, 8, p);
     }
-    // PHASE 4: CENTER SPIN - Spinning in center (40-52%)
+    // PHASE 4: CENTER SPIN (40-52%)
     else if (scroll < 0.52) {
       const p = (scroll - 0.40) / 0.12;
       state.target.rotX = window.THREE.MathUtils.lerp(2.2, 1.57, p);
@@ -217,7 +223,7 @@
       state.target.scale = window.THREE.MathUtils.lerp(1.3, 1, p);
       state.target.camZ = window.THREE.MathUtils.lerp(8, 11, p);
     }
-    // PHASE 5: SLIDE LEFT - Gliding to left side (52-64%)
+    // PHASE 5: SLIDE LEFT (52-64%)
     else if (scroll < 0.64) {
       const p = (scroll - 0.52) / 0.12;
       state.target.rotX = window.THREE.MathUtils.lerp(1.57, 0.7, p);
@@ -229,7 +235,7 @@
       state.target.scale = 1;
       state.target.camZ = window.THREE.MathUtils.lerp(11, 9, p);
     }
-    // PHASE 6: VERTICAL DROP - Descending smoothly (64-76%)
+    // PHASE 6: VERTICAL DROP (64-76%)
     else if (scroll < 0.76) {
       const p = (scroll - 0.64) / 0.12;
       state.target.rotX = window.THREE.MathUtils.lerp(0.7, 0.2, p);
@@ -241,10 +247,10 @@
       state.target.scale = window.THREE.MathUtils.lerp(1, 1.2, p);
       state.target.camZ = window.THREE.MathUtils.lerp(9, 7, p);
     }
-    // PHASE 7: RETURN CENTER - Coming back to center (76-88%)
+    // PHASE 7: RETURN CENTER (76-88%)
     else if (scroll < 0.88) {
       const p = (scroll - 0.76) / 0.12;
-      const ease = p * p * (3 - 2 * p); // Smooth step
+      const ease = p * p * (3 - 2 * p);
       state.target.rotX = window.THREE.MathUtils.lerp(0.2, 1.57, ease);
       state.target.rotY = window.THREE.MathUtils.lerp(6.3, 6.8, ease);
       state.target.rotZ = window.THREE.MathUtils.lerp(0.1, 0, ease);
@@ -254,7 +260,7 @@
       state.target.scale = window.THREE.MathUtils.lerp(1.2, 1, ease);
       state.target.camZ = window.THREE.MathUtils.lerp(7, 12, ease);
     }
-    // PHASE 8: HERO FINALE - Perfect showcase position (88-100%)
+    // PHASE 8: HERO FINALE (88-100%)
     else {
       const p = (scroll - 0.88) / 0.12;
       state.target.rotX = window.THREE.MathUtils.lerp(1.57, 1.57, p);
@@ -266,17 +272,6 @@
       state.target.scale = 1;
       state.target.camZ = window.THREE.MathUtils.lerp(12, 11, p);
     }
-  }
-
-  function onScroll() {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
-    state.scroll = Math.max(0, Math.min(1, scrollTop / maxScroll));
-    
-    console.log('📜 Scroll:', (state.scroll * 100).toFixed(1) + '%', 
-                'Target Y:', state.target.rotY.toFixed(2),
-                'Current Y:', state.current.rotY.toFixed(2));
-    updateScrollAnimation();
   }
 
   function onMouseMove(event) {
@@ -299,27 +294,30 @@
 
     if (!isInitialized || !usbModel) return;
 
+    // **CRITICAL: Update scroll animation EVERY FRAME (like showcase.js)**
+    updateScrollAnimation();
+
     // Smooth mouse
     mouse.x += (mouse.targetX - mouse.x) * LERP * 2;
     mouse.y += (mouse.targetY - mouse.y) * LERP * 2;
 
-    // Smooth all transforms
-    state.current.rotX += (state.target.rotX - state.current.rotX) * LERP;
-    state.current.rotY += (state.target.rotY - state.current.rotY) * LERP;
-    state.current.rotZ += (state.target.rotZ - state.current.rotZ) * LERP;
-    state.current.posX += (state.target.posX - state.current.posX) * LERP;
-    state.current.posY += (state.target.posY - state.current.posY) * LERP;
-    state.current.posZ += (state.target.posZ - state.current.posZ) * LERP;
-    state.current.scale += (state.target.scale - state.current.scale) * LERP;
-    state.current.camZ += (state.target.camZ - state.current.camZ) * LERP;
+    // Smooth all transforms (like showcase.js interpolation)
+    state.current.rotX += (state.target.rotX - state.current.rotX) * 0.08;
+    state.current.rotY += (state.target.rotY - state.current.rotY) * 0.08;
+    state.current.rotZ += (state.target.rotZ - state.current.rotZ) * 0.08;
+    state.current.posX += (state.target.posX - state.current.posX) * 0.08;
+    state.current.posY += (state.target.posY - state.current.posY) * 0.08;
+    state.current.posZ += (state.target.posZ - state.current.posZ) * 0.08;
+    state.current.scale += (state.target.scale - state.current.scale) * 0.08;
+    state.current.camZ += (state.target.camZ - state.current.camZ) * 0.05;
 
-    // Apply with NO mouse influence (for testing)
-    usbModel.rotation.x = state.current.rotX; // + (mouse.y * 0.05);
-    usbModel.rotation.y = state.current.rotY; // + (mouse.x * 0.08);
-    usbModel.rotation.z = state.current.rotZ; // + (mouse.x * 0.02);
+    // Apply transforms with subtle mouse parallax
+    usbModel.rotation.x = state.current.rotX + (mouse.y * 0.1);
+    usbModel.rotation.y = state.current.rotY + (mouse.x * 0.15);
+    usbModel.rotation.z = state.current.rotZ + (mouse.x * 0.03);
 
-    usbModel.position.x = state.current.posX; // + (mouse.x * 0.1);
-    usbModel.position.y = state.current.posY; // + (mouse.y * 0.08);
+    usbModel.position.x = state.current.posX + (mouse.x * 0.2);
+    usbModel.position.y = state.current.posY + (mouse.y * 0.15);
     usbModel.position.z = state.current.posZ;
     
     usbModel.scale.setScalar(state.current.scale);
