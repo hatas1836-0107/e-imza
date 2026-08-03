@@ -312,8 +312,18 @@
 
     // **CRITICAL FIX: Update scroll EVERY FRAME (don't rely on scroll events)**
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const oldTarget = targetScrollProgress;
     if (maxScroll > 0) {
       targetScrollProgress = window.scrollY / maxScroll;
+    }
+    
+    // Debug EVERY frame temporarily
+    if (oldTarget !== targetScrollProgress) {
+      console.log('🔥 SCROLL CHANGED!', {
+        scrollY: window.scrollY,
+        maxScroll,
+        targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%'
+      });
     }
 
     // **CRITICAL: Update scroll animation EVERY FRAME (like showcase.js)**
