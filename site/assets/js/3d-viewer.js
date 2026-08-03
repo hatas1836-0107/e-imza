@@ -102,18 +102,22 @@
       (gltf) => {
         model = gltf.scene;
         
-        // Center and scale model - MUCH LARGER
+        // Center and scale model
         const box = new window.THREE.Box3().setFromObject(model);
         const center = box.getCenter(new window.THREE.Vector3());
         const size = box.getSize(new window.THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 1.0 / maxDim; // Base scale = 1.0, will be multiplied by 6.0 in animate
         
-        model.scale.setScalar(scale * 6.0);
-        model.position.sub(center.multiplyScalar(scale * 6.0));
+        // Base scale for normalization
+        const baseScale = 6.0 / maxDim;
+        model.scale.setScalar(baseScale);
+        model.position.sub(center.multiplyScalar(baseScale));
         
         // Start at center of screen
         model.position.set(0, 0, 0);
+        
+        // Store base scale for breathing animation
+        model.userData.baseScale = baseScale;
         
         scene.add(model);
 
@@ -263,10 +267,9 @@
       camera.lookAt(model.position);
       
       // Dynamic scale based on scroll (breathing effect)
-      const targetScale = 1 + Math.sin(scrollProgress * Math.PI * 2) * 0.15;
-      const currentScale = model.scale.x;
-      const newScale = currentScale + (targetScale - currentScale) * 0.05;
-      model.scale.setScalar(newScale * 6.0);
+      const breathingScale = 1 + Math.sin(scrollProgress * Math.PI * 2) * 0.15;
+      const baseScale = model.userData.baseScale || 6.0;
+      model.scale.setScalar(baseScale * breathingScale);
     }
 
     renderer.render(scene, camera);
