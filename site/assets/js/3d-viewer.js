@@ -10,10 +10,17 @@
   let scene, camera, renderer, model, mixer, clock;
   let container, isInitialized = false;
   let animationFrameId = null;
+  let scrollProgress = 0;
   let mouseX = 0, mouseY = 0;
   
   // Mouse object for showcase-style interaction
   const mouse = { x: 0, y: 0 };
+  
+  // Target values for smooth interpolation
+  let targetRotation = { x: 0, y: 0, z: 0 };
+  let currentRotation = { x: 0, y: 0, z: 0 };
+  let targetPosition = { x: 0, y: 0, z: 0 };
+  let currentPosition = { x: 0, y: 0, z: 0 };
 
   // Lazy load Three.js with importmap
   function loadThreeJS(callback) {
@@ -145,6 +152,11 @@
     // Clock for animations
     clock = new window.THREE.Clock();
     
+    // Scroll listener
+    window.addEventListener('scroll', () => {
+      scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    }, { passive: true });
+    
     // Mouse move listener - showcase style
     window.addEventListener('mousemove', (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -182,72 +194,93 @@
     }
 
     if (model) {
-      // DRAMATIC CINEMATIC ROTATION SEQUENCE
-      // Her 8 saniyede bir fase değişir
-      const phase = Math.floor(elapsedTime / 8) % 5;
-      const phaseTime = elapsedTime % 8;
-      const progress = phaseTime / 8;
+      // SCROLL-BASED CINEMATIC POSES
+      // Sayfa 5 bölüme ayrılıyor, her bölümde farklı bir poz
+      const section = scrollProgress * 5; // 0-5 arası değer
       
-      // Smooth transitions between phases
-      const easeInOut = progress < 0.5 
-        ? 2 * progress * progress 
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      // Easing function for smooth transitions
+      const easeInOutCubic = (t) => {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      };
       
-      switch(phase) {
-        case 0: // FAST SPIN - Hızlı dönüş
-          model.rotation.y = elapsedTime * 1.2;
-          model.rotation.x = Math.sin(elapsedTime * 0.8) * 0.3;
-          model.rotation.z = Math.cos(elapsedTime * 0.9) * 0.4;
-          model.position.y = Math.sin(elapsedTime * 2) * 0.5;
-          model.position.x = Math.cos(elapsedTime * 1.5) * 0.4;
-          model.position.z = Math.sin(elapsedTime * 1.2) * 0.3;
-          break;
-          
-        case 1: // FRONT FACING - USB ucu ekrana bakıyor
-          model.rotation.y = Math.PI * 0.5 + Math.sin(phaseTime * 0.5) * 0.2;
-          model.rotation.x = Math.sin(phaseTime * 0.3) * 0.15;
-          model.rotation.z = 0;
-          model.position.y = Math.sin(phaseTime * 1.5) * 0.3;
-          model.position.x = 0;
-          model.position.z = -1 + Math.sin(phaseTime * 0.8) * 0.3;
-          break;
-          
-        case 2: // TUMBLING - Takla atıyor
-          model.rotation.x = elapsedTime * 0.8;
-          model.rotation.y = elapsedTime * 0.5;
-          model.rotation.z = elapsedTime * 0.6;
-          model.position.y = Math.sin(elapsedTime * 1.8) * 0.6;
-          model.position.x = Math.cos(elapsedTime * 1.2) * 0.5;
-          model.position.z = Math.sin(elapsedTime * 0.9) * 0.4;
-          break;
-          
-        case 3: // SIDE VIEW - Yan görünüm, yavaş sallanma
-          model.rotation.y = Math.PI + Math.sin(phaseTime * 0.4) * 0.3;
-          model.rotation.x = Math.sin(phaseTime * 0.5) * 0.4;
-          model.rotation.z = Math.PI * 0.5 + Math.cos(phaseTime * 0.3) * 0.2;
-          model.position.y = Math.sin(phaseTime * 1.2) * 0.4;
-          model.position.x = Math.sin(phaseTime * 0.6) * 0.3;
-          model.position.z = Math.cos(phaseTime * 0.5) * 0.2;
-          break;
-          
-        case 4: // ZOOM & SPIN - Yaklaşıp dönüyor
-          model.rotation.y = elapsedTime * 0.9;
-          model.rotation.x = Math.sin(elapsedTime * 1.5) * 0.5;
-          model.rotation.z = Math.cos(elapsedTime * 1.3) * 0.5;
-          model.position.y = Math.sin(elapsedTime * 2.2) * 0.5;
-          model.position.x = Math.cos(elapsedTime * 1.8) * 0.4;
-          model.position.z = -1.5 + Math.sin(phaseTime * 1.5) * 1.2; // Yaklaşma efekti
-          break;
+      // Calculate target pose based on scroll position
+      if (section < 1) {
+        // POSE 1: İlk bakış - USB diagonal duruş, hafif dönüyor
+        const t = easeInOutCubic(section);
+        targetRotation.x = 0.3 + Math.sin(elapsedTime * 0.5) * 0.1;
+        targetRotation.y = Math.PI * 0.25 + elapsedTime * 0.1;
+        targetRotation.z = 0.2;
+        targetPosition.x = 0;
+        targetPosition.y = Math.sin(elapsedTime * 0.8) * 0.3;
+        targetPosition.z = 0;
+        
+      } else if (section < 2) {
+        // POSE 2: USB ucu ekrana bakıyor (front view) - YAKINLAŞIYOR
+        const t = easeInOutCubic(section - 1);
+        targetRotation.x = 0 + Math.sin(elapsedTime * 0.3) * 0.08;
+        targetRotation.y = Math.PI * 0.5 + Math.sin(elapsedTime * 0.4) * 0.15;
+        targetRotation.z = 0;
+        targetPosition.x = 0;
+        targetPosition.y = Math.sin(elapsedTime * 1.0) * 0.2;
+        targetPosition.z = -1.2; // Yaklaşma
+        
+      } else if (section < 3) {
+        // POSE 3: Hızlı 360° spin - TAM DÖNÜş
+        const t = easeInOutCubic(section - 2);
+        const spinSpeed = 2.5;
+        targetRotation.x = Math.sin(elapsedTime * 0.6) * 0.4;
+        targetRotation.y = elapsedTime * spinSpeed; // Hızlı dönüş
+        targetRotation.z = Math.cos(elapsedTime * 0.7) * 0.3;
+        targetPosition.x = Math.cos(elapsedTime * 1.2) * 0.4;
+        targetPosition.y = Math.sin(elapsedTime * 1.5) * 0.5;
+        targetPosition.z = Math.sin(elapsedTime * 0.8) * 0.3;
+        
+      } else if (section < 4) {
+        // POSE 4: Yan görünüm (side profile) - USB yatık
+        const t = easeInOutCubic(section - 3);
+        targetRotation.x = Math.PI * 0.15 + Math.sin(elapsedTime * 0.4) * 0.1;
+        targetRotation.y = Math.PI + Math.sin(elapsedTime * 0.3) * 0.2;
+        targetRotation.z = Math.PI * 0.4 + Math.cos(elapsedTime * 0.35) * 0.15;
+        targetPosition.x = Math.sin(elapsedTime * 0.5) * 0.3;
+        targetPosition.y = Math.cos(elapsedTime * 0.7) * 0.4;
+        targetPosition.z = 0;
+        
+      } else {
+        // POSE 5: Büyük finale - ZOOM + DRAMATIC ROTATION
+        const t = easeInOutCubic(section - 4);
+        const dramaticSpin = 1.8;
+        targetRotation.x = Math.sin(elapsedTime * 1.0) * 0.6;
+        targetRotation.y = elapsedTime * dramaticSpin;
+        targetRotation.z = Math.cos(elapsedTime * 1.1) * 0.5;
+        targetPosition.x = Math.cos(elapsedTime * 1.3) * 0.5;
+        targetPosition.y = Math.sin(elapsedTime * 1.8) * 0.6;
+        targetPosition.z = -2.0 + Math.sin(elapsedTime * 1.5) * 0.8; // Çok yakın
       }
       
-      // MOUSE PARALLAX - her fase için aktif
-      model.rotation.x += mouse.y * 0.4;
-      model.rotation.y += mouse.x * 0.5;
+      // SMOOTH INTERPOLATION - Yumuşak geçişler (lerp)
+      const lerpFactor = 0.05; // Ne kadar düşükse o kadar yumuşak
+      currentRotation.x += (targetRotation.x - currentRotation.x) * lerpFactor;
+      currentRotation.y += (targetRotation.y - currentRotation.y) * lerpFactor;
+      currentRotation.z += (targetRotation.z - currentRotation.z) * lerpFactor;
       
-      // DYNAMIC SCALE - Zoom in/out efekti
-      const breathScale = 1 + Math.sin(elapsedTime * 1.2) * 0.2;
+      currentPosition.x += (targetPosition.x - currentPosition.x) * lerpFactor;
+      currentPosition.y += (targetPosition.y - currentPosition.y) * lerpFactor;
+      currentPosition.z += (targetPosition.z - currentPosition.z) * lerpFactor;
+      
+      // Apply interpolated values
+      model.rotation.x = currentRotation.x + mouse.y * 0.3;
+      model.rotation.y = currentRotation.y + mouse.x * 0.4;
+      model.rotation.z = currentRotation.z;
+      
+      model.position.x = currentPosition.x;
+      model.position.y = currentPosition.y;
+      model.position.z = currentPosition.z;
+      
+      // DYNAMIC SCALE - Scroll bazlı zoom
       const baseScale = model.userData.baseScale || 6.0;
-      model.scale.setScalar(baseScale * breathScale);
+      const scrollZoom = 1 + scrollProgress * 0.3; // Scroll'da büyüyor
+      const breathe = 1 + Math.sin(elapsedTime * 0.8) * 0.08; // Hafif nefes
+      model.scale.setScalar(baseScale * scrollZoom * breathe);
     }
 
     renderer.render(scene, camera);
