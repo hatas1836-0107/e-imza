@@ -206,6 +206,9 @@
     const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
     scrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
 
+    // Debug - remove after testing
+    console.log('USB Scroll Progress:', (scrollProgress * 100).toFixed(1) + '%');
+
     // PHASE 1: DRAMATIC ENTRANCE (0% - 12%)
     // USB emerges from distance, rotating gracefully
     if (scrollProgress < 0.12) {
@@ -381,12 +384,12 @@
     transform.current.camX += (transform.target.camX - transform.current.camX) * LERP_FACTOR;
 
     // Apply transformations with subtle mouse parallax
-    usbModel.rotation.x = transform.current.rotX + (mouse.y * 0.15);
-    usbModel.rotation.y = transform.current.rotY + (mouse.x * 0.2);
-    usbModel.rotation.z = transform.current.rotZ + (mouse.x * 0.05);
+    usbModel.rotation.x = transform.current.rotX + (mouse.y * 0.08);
+    usbModel.rotation.y = transform.current.rotY + (mouse.x * 0.1);
+    usbModel.rotation.z = transform.current.rotZ + (mouse.x * 0.03);
 
-    usbModel.position.x = transform.current.posX + (mouse.x * 0.3);
-    usbModel.position.y = transform.current.posY + (mouse.y * 0.25);
+    usbModel.position.x = transform.current.posX + (mouse.x * 0.15);
+    usbModel.position.y = transform.current.posY + (mouse.y * 0.12);
     usbModel.position.z = transform.current.posZ;
     
     usbModel.scale.setScalar(transform.current.scale);
