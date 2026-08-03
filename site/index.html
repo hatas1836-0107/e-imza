@@ -1299,6 +1299,11 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
+<!-- Load products-premium.js FIRST (before Firebase module) -->
+<script src="assets/js/main.js" defer></script>
+<script src="assets/js/nav-liquid.js" defer></script>
+<script src="assets/js/products-premium.js"></script>
+
 <!-- Firebase Ürün Yükleme Scripti - Deferred -->
 <script type="module" defer>
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -1322,12 +1327,25 @@ console.log('✅ [ANASAYFA] Firebase initialized');
 const database = getDatabase(app);
 console.log('✅ [ANASAYFA] Database connected');
 
-// Initialize WebGL background for home page
-if (window.initProductsBackground) {
-  window.initProductsBackground('homeBgCanvas', 'homeBgFallback');
-  console.log('✅ [ANASAYFA] WebGL background initialized');
-} else {
-  console.warn('⚠️ [ANASAYFA] initProductsBackground not found');
+// Initialize WebGL background for home page (with retry)
+function tryInitWebGL() {
+  if (window.initProductsBackground) {
+    window.initProductsBackground('homeBgCanvas', 'homeBgFallback');
+    console.log('✅ [ANASAYFA] WebGL background initialized');
+    return true;
+  }
+  return false;
+}
+
+// Try immediately
+if (!tryInitWebGL()) {
+  console.warn('⚠️ [ANASAYFA] initProductsBackground not ready yet, retrying...');
+  // Retry after a short delay
+  setTimeout(() => {
+    if (!tryInitWebGL()) {
+      console.error('❌ [ANASAYFA] initProductsBackground not found after retry');
+    }
+  }, 100);
 }
 
 const productsRef = ref(database, 'products');
@@ -1391,9 +1409,6 @@ onValue(productsRef, (snapshot) => {
 console.log('✅ [ANASAYFA] Firebase listener kuruldu');
 </script>
 
-<script src="assets/js/main.js" defer></script>
-<script src="assets/js/nav-liquid.js" defer></script>
-<script src="assets/js/products-premium.js" defer></script>
 <!-- Service Worker Registration -->
 <script>
 if('serviceWorker' in navigator){
