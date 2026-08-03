@@ -1,16 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-// Firebase Storage URL - admin panelinden yüklenecek
+// Vercel'de host edilen OG image (site/og-image.png)
+const VERCEL_URL = 'https://e-imza.vercel.app/og-image.png';
+
+// Firebase Storage URL (opsiyonel - admin panelinden yüklenirse)
 const FIREBASE_STORAGE_BASE = 'https://firebasestorage.googleapis.com/v0/b/e-imza-4c867.appspot.com/o/';
-const OG_IMAGE_PATH = 'og-images%2Fog-image.png'; // URL encoded
-const OG_IMAGE_URL = `${FIREBASE_STORAGE_BASE}${OG_IMAGE_PATH}?alt=media`;
+const OG_IMAGE_PATH = 'og-images%2Fog-image.png';
+const FIREBASE_URL = `${FIREBASE_STORAGE_BASE}${OG_IMAGE_PATH}?alt=media`;
 
-// Vercel fallback URL (Firebase'de yoksa)
-const FALLBACK_URL = 'https://e-imza.vercel.app/og-image.png';
-
-// Kullanılacak URL
-const FINAL_URL = OG_IMAGE_URL;
+// Kullanılacak URL - Vercel'i kullan (dosya zaten orada)
+const FINAL_URL = VERCEL_URL;
 
 const htmlFiles = [
   'site/index.html',
