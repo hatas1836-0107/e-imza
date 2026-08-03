@@ -182,23 +182,72 @@
     }
 
     if (model) {
-      // MULTI-AXIS ROTATION - daha dinamik ve farklı açılardan görünüm
-      model.rotation.y = elapsedTime * 0.15;
-      model.rotation.x = Math.sin(elapsedTime * 0.3) * 0.4 + mouse.y * 0.3;
-      model.rotation.z = Math.cos(elapsedTime * 0.25) * 0.3 + mouse.x * 0.2;
+      // DRAMATIC CINEMATIC ROTATION SEQUENCE
+      // Her 8 saniyede bir fase değişir
+      const phase = Math.floor(elapsedTime / 8) % 5;
+      const phaseTime = elapsedTime % 8;
+      const progress = phaseTime / 8;
       
-      // Mouse parallax ekleme
+      // Smooth transitions between phases
+      const easeInOut = progress < 0.5 
+        ? 2 * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      
+      switch(phase) {
+        case 0: // FAST SPIN - Hızlı dönüş
+          model.rotation.y = elapsedTime * 1.2;
+          model.rotation.x = Math.sin(elapsedTime * 0.8) * 0.3;
+          model.rotation.z = Math.cos(elapsedTime * 0.9) * 0.4;
+          model.position.y = Math.sin(elapsedTime * 2) * 0.5;
+          model.position.x = Math.cos(elapsedTime * 1.5) * 0.4;
+          model.position.z = Math.sin(elapsedTime * 1.2) * 0.3;
+          break;
+          
+        case 1: // FRONT FACING - USB ucu ekrana bakıyor
+          model.rotation.y = Math.PI * 0.5 + Math.sin(phaseTime * 0.5) * 0.2;
+          model.rotation.x = Math.sin(phaseTime * 0.3) * 0.15;
+          model.rotation.z = 0;
+          model.position.y = Math.sin(phaseTime * 1.5) * 0.3;
+          model.position.x = 0;
+          model.position.z = -1 + Math.sin(phaseTime * 0.8) * 0.3;
+          break;
+          
+        case 2: // TUMBLING - Takla atıyor
+          model.rotation.x = elapsedTime * 0.8;
+          model.rotation.y = elapsedTime * 0.5;
+          model.rotation.z = elapsedTime * 0.6;
+          model.position.y = Math.sin(elapsedTime * 1.8) * 0.6;
+          model.position.x = Math.cos(elapsedTime * 1.2) * 0.5;
+          model.position.z = Math.sin(elapsedTime * 0.9) * 0.4;
+          break;
+          
+        case 3: // SIDE VIEW - Yan görünüm, yavaş sallanma
+          model.rotation.y = Math.PI + Math.sin(phaseTime * 0.4) * 0.3;
+          model.rotation.x = Math.sin(phaseTime * 0.5) * 0.4;
+          model.rotation.z = Math.PI * 0.5 + Math.cos(phaseTime * 0.3) * 0.2;
+          model.position.y = Math.sin(phaseTime * 1.2) * 0.4;
+          model.position.x = Math.sin(phaseTime * 0.6) * 0.3;
+          model.position.z = Math.cos(phaseTime * 0.5) * 0.2;
+          break;
+          
+        case 4: // ZOOM & SPIN - Yaklaşıp dönüyor
+          model.rotation.y = elapsedTime * 0.9;
+          model.rotation.x = Math.sin(elapsedTime * 1.5) * 0.5;
+          model.rotation.z = Math.cos(elapsedTime * 1.3) * 0.5;
+          model.position.y = Math.sin(elapsedTime * 2.2) * 0.5;
+          model.position.x = Math.cos(elapsedTime * 1.8) * 0.4;
+          model.position.z = -1.5 + Math.sin(phaseTime * 1.5) * 1.2; // Yaklaşma efekti
+          break;
+      }
+      
+      // MOUSE PARALLAX - her fase için aktif
+      model.rotation.x += mouse.y * 0.4;
       model.rotation.y += mouse.x * 0.5;
       
-      // FLOATING with multi-axis movement
-      model.position.y = Math.sin(elapsedTime * 0.8) * 0.4;
-      model.position.x = Math.cos(elapsedTime * 0.6) * 0.3;
-      model.position.z = Math.sin(elapsedTime * 0.4) * 0.2;
-      
-      // Dynamic scale for depth
-      const scaleVar = 1 + Math.sin(elapsedTime * 0.5) * 0.15;
+      // DYNAMIC SCALE - Zoom in/out efekti
+      const breathScale = 1 + Math.sin(elapsedTime * 1.2) * 0.2;
       const baseScale = model.userData.baseScale || 6.0;
-      model.scale.setScalar(baseScale * scaleVar);
+      model.scale.setScalar(baseScale * breathScale);
     }
 
     renderer.render(scene, camera);
