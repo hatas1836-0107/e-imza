@@ -24,27 +24,31 @@
   --gradient-brand: linear-gradient(135deg, var(--indigo-500) 0%, var(--violet-500) 55%, #a855f7 100%);
   --gradient-seal: linear-gradient(135deg, var(--amber-400) 0%, var(--amber-500) 100%);
   --gradient-mesh-dark:
-    radial-gradient(circle at 18% 15%, rgba(79,70,229,0.75), transparent 42%),
-    radial-gradient(circle at 82% 18%, rgba(236,72,153,0.6), transparent 48%),
-    radial-gradient(circle at 48% 45%, rgba(124,58,237,0.5), transparent 55%),
-    radial-gradient(circle at 28% 72%, rgba(99,102,241,0.7), transparent 45%),
-    radial-gradient(circle at 72% 82%, rgba(34,211,238,0.55), transparent 50%),
-    radial-gradient(circle at 88% 52%, rgba(139,92,246,0.48), transparent 52%),
-    radial-gradient(circle at 12% 55%, rgba(168,85,247,0.4), transparent 48%),
-    radial-gradient(circle at 62% 25%, rgba(147,51,234,0.35), transparent 45%),
-    radial-gradient(circle at 35% 88%, rgba(59,130,246,0.45), transparent 50%),
-    radial-gradient(circle at 92% 85%, rgba(249,115,22,0.3), transparent 40%);
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(79,70,229,0.8), transparent 50%),
+    radial-gradient(ellipse 700px 700px at 85% 20%, rgba(236,72,153,0.65), transparent 55%),
+    radial-gradient(circle 900px at 45% 40%, rgba(124,58,237,0.55), transparent 60%),
+    radial-gradient(ellipse 600px 800px at 25% 75%, rgba(99,102,241,0.75), transparent 52%),
+    radial-gradient(ellipse 750px 650px at 75% 85%, rgba(34,211,238,0.6), transparent 58%),
+    radial-gradient(circle 500px at 90% 50%, rgba(139,92,246,0.5), transparent 50%),
+    radial-gradient(ellipse 550px 700px at 8% 60%, rgba(168,85,247,0.45), transparent 52%),
+    radial-gradient(circle 600px at 65% 22%, rgba(147,51,234,0.4), transparent 48%),
+    radial-gradient(ellipse 650px 550px at 32% 92%, rgba(59,130,246,0.5), transparent 55%),
+    radial-gradient(circle 450px at 95% 88%, rgba(249,115,22,0.35), transparent 45%),
+    radial-gradient(ellipse 700px 500px at 50% 95%, rgba(124,58,237,0.4), transparent 50%),
+    radial-gradient(circle 550px at 5% 15%, rgba(99,102,241,0.38), transparent 48%);
   --gradient-mesh-light:
-    radial-gradient(circle at 18% 15%, rgba(79,70,229,0.28), transparent 42%),
-    radial-gradient(circle at 82% 18%, rgba(236,72,153,0.22), transparent 48%),
-    radial-gradient(circle at 48% 45%, rgba(124,58,237,0.18), transparent 55%),
-    radial-gradient(circle at 28% 72%, rgba(99,102,241,0.25), transparent 45%),
-    radial-gradient(circle at 72% 82%, rgba(34,211,238,0.2), transparent 50%),
-    radial-gradient(circle at 88% 52%, rgba(139,92,246,0.16), transparent 52%),
-    radial-gradient(circle at 12% 55%, rgba(168,85,247,0.14), transparent 48%),
-    radial-gradient(circle at 62% 25%, rgba(147,51,234,0.12), transparent 45%),
-    radial-gradient(circle at 35% 88%, rgba(59,130,246,0.16), transparent 50%),
-    radial-gradient(circle at 92% 85%, rgba(249,115,22,0.1), transparent 40%);
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(79,70,229,0.32), transparent 50%),
+    radial-gradient(ellipse 700px 700px at 85% 20%, rgba(236,72,153,0.25), transparent 55%),
+    radial-gradient(circle 900px at 45% 40%, rgba(124,58,237,0.2), transparent 60%),
+    radial-gradient(ellipse 600px 800px at 25% 75%, rgba(99,102,241,0.28), transparent 52%),
+    radial-gradient(ellipse 750px 650px at 75% 85%, rgba(34,211,238,0.22), transparent 58%),
+    radial-gradient(circle 500px at 90% 50%, rgba(139,92,246,0.18), transparent 50%),
+    radial-gradient(ellipse 550px 700px at 8% 60%, rgba(168,85,247,0.16), transparent 52%),
+    radial-gradient(circle 600px at 65% 22%, rgba(147,51,234,0.14), transparent 48%),
+    radial-gradient(ellipse 650px 550px at 32% 92%, rgba(59,130,246,0.18), transparent 55%),
+    radial-gradient(circle 450px at 95% 88%, rgba(249,115,22,0.12), transparent 45%),
+    radial-gradient(ellipse 700px 500px at 50% 95%, rgba(124,58,237,0.15), transparent 50%),
+    radial-gradient(circle 550px at 5% 15%, rgba(99,102,241,0.14), transparent 48%);
 
   /* Dark (varsayılan) */
   --bg: var(--ink-950);
