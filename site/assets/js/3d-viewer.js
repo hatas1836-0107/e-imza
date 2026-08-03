@@ -182,26 +182,6 @@
     renderer.setSize(width, height);
   }
 
-  // Animation scripts - modern approach
-  const animationScripts = [];
-  
-  // LERP utility
-  function lerp(start, end, progress) {
-    return start + (end - start) * progress;
-  }
-  
-  // Scale scroll percent to specific range
-  function scalePercent(start, end, current) {
-    return Math.max(0, Math.min(1, (current - start) / (end - start)));
-  }
-  
-  // Easing functions
-  const ease = {
-    inOut: (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-    out: (t) => 1 - Math.pow(1 - t, 3),
-    in: (t) => t * t * t
-  };
-
   function animate() {
     animationFrameId = requestAnimationFrame(animate);
 
@@ -213,103 +193,99 @@
     if (model) {
       const scrollPct = scrollProgress * 100;
       
-      // Ambient floating (always active)
-      const ambientX = Math.sin(elapsedTime * 0.25) * 0.08;
-      const ambientY = Math.cos(elapsedTime * 0.2) * 0.06;
-      const ambientRotY = elapsedTime * 0.05;
+      // BIG AMBIENT MOVEMENTS - ALWAYS VISIBLE
+      const floatX = Math.sin(elapsedTime * 0.4) * 0.5;
+      const floatY = Math.cos(elapsedTime * 0.35) * 0.4;
+      const floatRotX = Math.sin(elapsedTime * 0.3) * 0.4;
+      const floatRotY = Math.cos(elapsedTime * 0.25) * 0.3;
+      const floatRotZ = Math.sin(elapsedTime * 0.28) * 0.35;
       
-      // ANIMATION 1: Opening (0-20%) - Show connector, gentle approach
+      let targetRotX, targetRotY, targetRotZ, targetPosX, targetPosY, targetPosZ;
+      let targetCamX = 0, targetCamY = 2, targetCamZ = 9;
+      let targetScale = 1.0;
+      
+      // ALWAYS SET BASE VALUES (so it moves even at scroll 0)
+      targetRotX = 0.2 + floatRotX;
+      targetRotY = Math.PI + floatRotY + elapsedTime * 0.1;
+      targetRotZ = floatRotZ;
+      targetPosX = floatX;
+      targetPosY = floatY;
+      targetPosZ = -2.0;
+      
+      // SCROLL MODIFICATIONS
       if (scrollPct >= 0 && scrollPct < 20) {
-        const t = ease.out(scalePercent(0, 20, scrollPct));
-        model.rotation.x = lerp(0.1, 0.2, t) + ambientX;
-        model.rotation.y = Math.PI + ambientRotY;
-        model.rotation.z = lerp(0, 0.1, t);
-        model.position.x = lerp(0, 0.3, t) + ambientX * 2;
-        model.position.y = ambientY;
-        model.position.z = lerp(-2.5, -1.8, t);
-        camera.position.set(0, 2, lerp(10, 9, t));
-        const baseScale = model.userData.baseScale || 6.0;
-        model.scale.setScalar(baseScale * lerp(0.9, 1.1, t));
+        const t = scrollPct / 20;
+        targetRotX = 0.2 + floatRotX + t * 0.3;
+        targetPosX = floatX + t * 0.5;
+        targetPosZ = -2.0 + t * 0.3;
+        targetScale = 1.0 + t * 0.2;
+        
+      } else if (scrollPct >= 20 && scrollPct < 40) {
+        const t = (scrollPct - 20) / 20;
+        targetRotX = 0.5 + floatRotX;
+        targetRotY = Math.PI + Math.PI * 0.4 * t + floatRotY + elapsedTime * 0.1;
+        targetRotZ = 0.3 * t + floatRotZ;
+        targetPosX = floatX - t * 0.8;
+        targetPosY = floatY + t * 0.4;
+        targetPosZ = -1.7;
+        targetCamX = t * 2;
+        targetCamZ = 9 - t * 1;
+        targetScale = 1.2 + t * 0.1;
+        
+      } else if (scrollPct >= 40 && scrollPct < 60) {
+        const t = (scrollPct - 40) / 20;
+        targetRotX = 0.7 + floatRotX * 1.5;
+        targetRotY = Math.PI + Math.PI * (0.4 + t * 0.5) + floatRotY + elapsedTime * 0.08;
+        targetRotZ = 0.3 + floatRotZ * 1.2;
+        targetPosX = -0.8 + floatX * 1.5 + t * 0.8;
+        targetPosY = 0.4 + floatY - t * 0.6;
+        targetPosZ = -1.7 + t * 0.2;
+        targetCamX = 2 - t * 2;
+        targetCamY = 2 + t * 3;
+        targetCamZ = 8 - t * 1;
+        targetScale = 1.3;
+        
+      } else if (scrollPct >= 60 && scrollPct < 80) {
+        const t = (scrollPct - 60) / 20;
+        targetRotX = 0.3 + floatRotX * 0.8;
+        targetRotY = Math.PI + Math.PI * 0.2 * t + floatRotY * 0.5 + elapsedTime * 0.12;
+        targetRotZ = floatRotZ * 0.5;
+        targetPosX = floatX * 0.8;
+        targetPosY = -0.2 + floatY * 1.5 + Math.sin(t * Math.PI) * 0.5;
+        targetPosZ = -1.5 - t * 1.2;
+        targetCamX = 0;
+        targetCamY = 5 - t * 2.5;
+        targetCamZ = 7 - t * 1.5;
+        targetScale = 1.3 + t * 0.3;
+        
+      } else if (scrollPct >= 80) {
+        const t = (scrollPct - 80) / 20;
+        targetRotX = 0.2 + floatRotX * 1.3;
+        targetRotY = Math.PI + Math.PI * (0.2 + t * 0.4) + floatRotY + elapsedTime * 0.15;
+        targetRotZ = 0.2 * t + floatRotZ * 1.5;
+        targetPosX = floatX * 1.2 + t * 0.6;
+        targetPosY = 0.3 + floatY * 1.8;
+        targetPosZ = -2.7 - t * 1.0;
+        targetCamX = t * 1;
+        targetCamY = 2.5 - t * 0.5;
+        targetCamZ = 5.5 - t * 1;
+        targetScale = 1.6 + t * 0.4;
       }
       
-      // ANIMATION 2: Tilt reveal (20-40%) - Show from angle
-      else if (scrollPct >= 20 && scrollPct < 40) {
-        const t = ease.inOut(scalePercent(20, 40, scrollPct));
-        model.rotation.x = lerp(0.2, 0.5, t) + ambientX * 1.5;
-        model.rotation.y = Math.PI + lerp(0, Math.PI * 0.3, t) + ambientRotY;
-        model.rotation.z = lerp(0.1, 0.3, t);
-        model.position.x = lerp(0.3, -0.5, t) + ambientX * 2;
-        model.position.y = lerp(0, 0.3, t) + ambientY;
-        model.position.z = lerp(-1.8, -1.5, t);
-        camera.position.set(
-          lerp(0, 1.5, t),
-          lerp(2, 2.5, t),
-          lerp(9, 8, t)
-        );
-        const baseScale = model.userData.baseScale || 6.0;
-        model.scale.setScalar(baseScale * lerp(1.1, 1.25, t));
-      }
+      // DIRECT APPLY - IMMEDIATE RESPONSE
+      model.rotation.x = targetRotX + mouse.y * 0.3;
+      model.rotation.y = targetRotY + mouse.x * 0.4;
+      model.rotation.z = targetRotZ;
       
-      // ANIMATION 3: Top-down view (40-60%) - Dramatic angle
-      else if (scrollPct >= 40 && scrollPct < 60) {
-        const t = ease.inOut(scalePercent(40, 60, scrollPct));
-        model.rotation.x = lerp(0.5, 0.8, t) + ambientX;
-        model.rotation.y = Math.PI + lerp(Math.PI * 0.3, Math.PI * 0.8, t) + ambientRotY;
-        model.rotation.z = lerp(0.3, 0.2, t);
-        model.position.x = lerp(-0.5, 0, t) + ambientX * 3;
-        model.position.y = lerp(0.3, -0.2, t) + ambientY;
-        model.position.z = lerp(-1.5, -1.3, t);
-        camera.position.set(
-          lerp(1.5, 0, t),
-          lerp(2.5, 5, t),
-          lerp(8, 7, t)
-        );
-        const baseScale = model.userData.baseScale || 6.0;
-        model.scale.setScalar(baseScale * lerp(1.25, 1.15, t));
-      }
+      model.position.x = targetPosX;
+      model.position.y = targetPosY;
+      model.position.z = targetPosZ;
       
-      // ANIMATION 4: Close-up connector (60-80%) - Zoom in
-      else if (scrollPct >= 60 && scrollPct < 80) {
-        const t = ease.out(scalePercent(60, 80, scrollPct));
-        model.rotation.x = lerp(0.8, 0.3, t) + ambientX * 0.5;
-        model.rotation.y = Math.PI + lerp(Math.PI * 0.8, Math.PI * 0.1, t) + ambientRotY * 0.5;
-        model.rotation.z = lerp(0.2, 0, t);
-        model.position.x = lerp(0, -0.2, t) + ambientX;
-        model.position.y = lerp(-0.2, 0.1, t) + ambientY * 2;
-        model.position.z = lerp(-1.3, -2.5, t);
-        camera.position.set(
-          lerp(0, 0, t),
-          lerp(5, 2.5, t),
-          lerp(7, 5.5, t)
-        );
-        const baseScale = model.userData.baseScale || 6.0;
-        model.scale.setScalar(baseScale * lerp(1.15, 1.5, t));
-      }
-      
-      // ANIMATION 5: Final showcase (80-100%) - Elegant finish
-      else if (scrollPct >= 80) {
-        const t = ease.inOut(scalePercent(80, 100, scrollPct));
-        model.rotation.x = lerp(0.3, 0.15, t) + ambientX * 1.2;
-        model.rotation.y = Math.PI + lerp(Math.PI * 0.1, Math.PI * 0.5, t) + ambientRotY;
-        model.rotation.z = lerp(0, 0.15, t);
-        model.position.x = lerp(-0.2, 0.4, t) + ambientX * 2;
-        model.position.y = lerp(0.1, 0.3, t) + ambientY * 1.5;
-        model.position.z = lerp(-2.5, -3.5, t);
-        camera.position.set(
-          lerp(0, 0.5, t),
-          lerp(2.5, 2, t),
-          lerp(5.5, 4.5, t)
-        );
-        const baseScale = model.userData.baseScale || 6.0;
-        model.scale.setScalar(baseScale * lerp(1.5, 1.8, t));
-      }
-      
-      // Mouse parallax
-      model.rotation.x += mouse.y * 0.15;
-      model.rotation.y += mouse.x * 0.2;
-      
-      // Camera always looks at model
+      camera.position.set(targetCamX, targetCamY, targetCamZ);
       camera.lookAt(model.position);
+      
+      const baseScale = model.userData.baseScale || 6.0;
+      model.scale.setScalar(baseScale * targetScale);
     }
 
     renderer.render(scene, camera);
