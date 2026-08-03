@@ -441,6 +441,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   z-index: 1;
 }
 
+/* Sağ taraftaki tracking kartına renkli bokeh background */
+.hero-grid > div:nth-child(2) .glass {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid > div:nth-child(2) .glass::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: 
+    radial-gradient(circle at 25% 80%, rgba(249, 115, 22, 0.3), transparent 45%),
+    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.35), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(99, 102, 241, 0.32), transparent 48%),
+    radial-gradient(circle at 15% 70%, rgba(34, 197, 94, 0.25), transparent 42%);
+  filter: blur(70px);
+  z-index: -1;
+  animation: bokehFloat 20s ease-in-out infinite;
+}
+
+@keyframes bokehFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -15px) scale(1.05); }
+  50% { transform: translate(-15px, 10px) scale(0.95); }
+  75% { transform: translate(15px, 15px) scale(1.02); }
+}
+
 /* Hero scroll parallax effect - KAPALI */
 /* Scroll efekti kaldırıldı, elementler normal kalacak */
 
