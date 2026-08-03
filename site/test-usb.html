@@ -89,8 +89,16 @@ body {
   SON<br>↑ YUKARI SCROLL
 </div>
 
-<script src="assets/js/usb-3d-viewer.js"></script>
+<script src="assets/js/usb-3d-direct.js"></script>
 <script>
+// Init DIRECT viewer (no LERP)
+if (typeof initUSBDirect === 'function') {
+  initUSBDirect('usb-3d-stage');
+  console.log('✅ DIRECT viewer initialized');
+} else {
+  console.error('❌ initUSBDirect not found!');
+}
+
 // Debug display
 window.addEventListener('scroll', () => {
   const scrollTop = window.scrollY;
@@ -112,19 +120,6 @@ window.addEventListener('scroll', () => {
   
   document.getElementById('phase-val').textContent = phase;
 });
-
-// Init viewer
-if (typeof initUSB3DViewer === 'function') {
-  initUSB3DViewer('usb-3d-stage');
-  
-  setTimeout(() => {
-    document.getElementById('model-val').textContent = 'Loaded!';
-    document.getElementById('model-val').style.color = '#0f0';
-  }, 2000);
-} else {
-  document.getElementById('model-val').textContent = 'ERROR!';
-  document.getElementById('model-val').style.color = '#f00';
-}
 </script>
 
 </body>
