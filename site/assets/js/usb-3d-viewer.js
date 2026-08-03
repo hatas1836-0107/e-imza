@@ -164,14 +164,32 @@
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
     targetScrollProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+    
+    console.log('🔵 SCROLL EVENT:', {
+      scrollTop,
+      maxScroll,
+      targetScrollProgress: (targetScrollProgress * 100).toFixed(1) + '%',
+      currentScrollProgress: (currentScrollProgress * 100).toFixed(1) + '%'
+    });
   }
 
   // SCROLL ANIMATION - MODERN PRODUCT SHOWCASE (Applied every frame like showcase.js)
   function updateScrollAnimation() {
     // Smooth scroll interpolation (like showcase.js tick function)
+    const oldProgress = currentScrollProgress;
     currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.05;
     
     const scroll = currentScrollProgress;
+    
+    // Debug log every 60 frames (1 second)
+    if (Math.random() < 0.016) {
+      console.log('🎬 UPDATE ANIMATION:', {
+        scroll: (scroll * 100).toFixed(1) + '%',
+        targetRotY: state.target.rotY.toFixed(2),
+        currentRotY: state.current.rotY.toFixed(2),
+        changed: oldProgress !== currentScrollProgress
+      });
+    }
     
     // PHASE 1: DISTANT INTRO - Far away, slowly approaching (0-15%)
     if (scroll < 0.15) {
@@ -324,6 +342,17 @@
     
     camera.position.z = state.current.camZ;
     camera.lookAt(usbModel.position);
+
+    // Debug log occasionally
+    if (Math.random() < 0.016) {
+      console.log('💎 RENDER:', {
+        rotX: usbModel.rotation.x.toFixed(2),
+        rotY: usbModel.rotation.y.toFixed(2),
+        posX: usbModel.position.x.toFixed(2),
+        posY: usbModel.position.y.toFixed(2),
+        scale: usbModel.scale.x.toFixed(2)
+      });
+    }
 
     renderer.render(scene, camera);
   }
