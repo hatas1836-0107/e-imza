@@ -181,7 +181,7 @@
     animationFrameId = requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
-    const time = clock.getElapsedTime();
+    const elapsedTime = clock.getElapsedTime();
 
     // Update animations
     if (mixer) {
@@ -189,114 +189,29 @@
     }
 
     if (model) {
-      // Calculate phase-specific time (resets each phase)
-      let phaseTime = 0;
-      let phase = 0;
+      // CONTINUOUS BASE ROTATION - exact same as showcase
+      model.rotation.y = elapsedTime * 0.15;
       
-      if (scrollProgress < 0.2) {
-        phase = 0;
-        phaseTime = (scrollProgress / 0.2) * 5; // 0-5 seconds
-      } else if (scrollProgress < 0.4) {
-        phase = 1;
-        phaseTime = ((scrollProgress - 0.2) / 0.2) * 5;
-      } else if (scrollProgress < 0.6) {
-        phase = 2;
-        phaseTime = ((scrollProgress - 0.4) / 0.2) * 5;
-      } else if (scrollProgress < 0.8) {
-        phase = 3;
-        phaseTime = ((scrollProgress - 0.6) / 0.2) * 5;
-      } else {
-        phase = 4;
-        phaseTime = ((scrollProgress - 0.8) / 0.2) * 5;
-      }
+      // MOUSE PARALLAX - added on top like showcase
+      // In showcase: modelsGroup.rotation.x = mouse.y * 0.2; modelsGroup.rotation.y += mouse.x * 0.3;
+      model.rotation.x = mouseY * 0.2;
+      model.rotation.y += mouseX * 0.3;
       
-      let targetRotX = 0, targetRotY = 0, targetRotZ = 0;
-      let targetPosX = 0, targetPosY = 0, targetPosZ = 0;
-      let targetCamZ = 8, targetCamY = 2, targetCamX = 0;
+      // SIMPLE FLOATING like showcase
+      model.position.y = Math.sin(elapsedTime * 0.8) * 0.6;
       
-      if (phase === 0) {
-        // PHASE 1: Front close-up, subtle movement
-        targetRotX = 0;
-        targetRotY = phaseTime * 0.3; // Slow reveal
-        targetRotZ = Math.sin(phaseTime * 2) * 0.05;
-        targetPosX = 0;
-        targetPosY = Math.sin(phaseTime * 1.5) * 0.3;
-        targetPosZ = 0;
-        targetCamZ = 7 - (scrollProgress / 0.2) * 2; // 7→5 zoom in
-        targetCamY = 2;
-        targetCamX = 0;
-        
-      } else if (phase === 1) {
-        // PHASE 2: Rotate to SIDE, move left
-        targetRotX = Math.sin(phaseTime) * 0.1;
-        targetRotY = Math.PI * 0.5 * (scrollProgress - 0.2) / 0.2; // 0→90° smooth
-        targetRotZ = 0;
-        targetPosX = -2.5 * ((scrollProgress - 0.2) / 0.2); // Slide left
-        targetPosY = Math.sin(phaseTime * 2) * 0.4;
-        targetPosZ = 0;
-        targetCamZ = 6;
-        targetCamY = 2.5;
-        targetCamX = 1.5;
-        
-      } else if (phase === 2) {
-        // PHASE 3: TOP VIEW zoom out + fast spin
-        const p = (scrollProgress - 0.4) / 0.2;
-        targetRotX = -Math.PI * 0.4; // Look down
-        targetRotY = Math.PI * 0.5 + phaseTime * 2; // Continue from 90° + fast spin
-        targetRotZ = Math.sin(phaseTime * 3) * 0.2;
-        targetPosX = -2.5 + Math.sin(phaseTime * 1.5) * 1.5;
-        targetPosY = 1 + Math.cos(phaseTime * 2) * 0.6;
-        targetPosZ = -1;
-        targetCamZ = 6 + p * 6; // 6→12 zoom out
-        targetCamY = 2.5 + p * 3; // 2.5→5.5 go up
-        targetCamX = 1.5 - p * 3; // 1.5→-1.5 swing
-        
-      } else if (phase === 3) {
-        // PHASE 4: FLIP 180° + show BACK
-        const p = (scrollProgress - 0.6) / 0.2;
-        const easeP = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2; // Ease in-out
-        targetRotX = Math.PI * easeP; // 0→180° flip
-        targetRotY = Math.PI * 0.5 + Math.PI * easeP; // 90°→270° (show back)
-        targetRotZ = Math.sin(p * Math.PI * 4) * 0.3; // Wobble during flip
-        targetPosX = 2 - p * 4; // Right→Left sweep
-        targetPosY = p * 2 + Math.sin(phaseTime * 2) * 0.5; // Go up
-        targetPosZ = Math.cos(p * Math.PI * 2) * 1;
-        targetCamZ = 12 - p * 7; // 12→5 zoom back in
-        targetCamY = 5.5 - p * 2.5; // 5.5→3 come down
-        targetCamX = -1.5 + p * 1.5; // -1.5→0 center
-        
-      } else {
-        // PHASE 5: ULTRA CLOSE finale + 360° showcase
-        const p = (scrollProgress - 0.8) / 0.2;
-        targetRotX = Math.PI + Math.sin(phaseTime * 1.5) * 0.4;
-        targetRotY = Math.PI * 1.5 + phaseTime * 3; // Full 360° fast
-        targetRotZ = Math.cos(phaseTime * 2) * 0.3;
-        targetPosX = Math.sin(phaseTime * 1.2) * 0.6;
-        targetPosY = Math.cos(phaseTime * 1.8) * 0.7;
-        targetPosZ = Math.sin(phaseTime * 1.4) * 0.5;
-        targetCamZ = 5 - p * 2; // 5→3 very close
-        targetCamY = 3 + Math.sin(p * Math.PI * 4) * 1.5;
-        targetCamX = Math.cos(p * Math.PI * 6) * 1.2;
-      }
+      // Subtle horizontal sway
+      model.position.x = Math.sin(elapsedTime * 0.5) * 0.3;
       
-      // Smooth lerp
-      model.rotation.x += (targetRotX - model.rotation.x) * 0.06;
-      model.rotation.y += (targetRotY - model.rotation.y) * 0.06;
-      model.rotation.z += (targetRotZ - model.rotation.z) * 0.06;
+      // Keep Z position stable
+      model.position.z = 0;
       
-      // Position with mouse parallax
-      model.position.x += (targetPosX + mouseX * 1.2 - model.position.x) * 0.08;
-      model.position.y += (targetPosY + mouseY * 0.8 - model.position.y) * 0.08;
-      model.position.z += (targetPosZ - model.position.z) * 0.08;
+      // Keep camera fixed - no dynamic movement
+      camera.position.set(0, 2, 8);
+      camera.lookAt(0, 0, 0);
       
-      // Camera movement
-      camera.position.x += (targetCamX - camera.position.x) * 0.05;
-      camera.position.y += (targetCamY - camera.position.y) * 0.05;
-      camera.position.z += (targetCamZ - camera.position.z) * 0.05;
-      camera.lookAt(model.position);
-      
-      // Scale breathing
-      const breathScale = 1 + Math.sin(time * 0.6) * 0.08;
+      // BREATHING SCALE - subtle
+      const breathScale = 1 + Math.sin(elapsedTime * 0.6) * 0.08;
       const baseScale = model.userData.baseScale || 6.0;
       model.scale.setScalar(baseScale * breathScale);
     }
