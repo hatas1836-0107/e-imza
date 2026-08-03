@@ -133,7 +133,7 @@
     // Load GLB Model
     const loader = new window.GLTFLoader();
     loader.load(
-      'assets/models/usb-stick_animation.glb', // Path to your GLB file
+      'assets/models/usb-stick_animation.glb?v=2', // Path to your GLB file (cache busting)
       (gltf) => {
         usbModel = gltf.scene;
         
