@@ -357,8 +357,11 @@
 </section>
 
 <!-- Industry Showcase Carousel - Infinite Loop -->
-<section class="industry-carousel-section">
-  <div class="carousel-container">
+<section class="industry-carousel-section" style="position: relative; overflow: hidden;">
+  <!-- Neon Purple Background with Bokeh Effect -->
+  <div style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/neon-purple-background.jpeg'); background-size: cover; background-position: center; filter: blur(12px) brightness(0.25); opacity: 0.6; pointer-events: none;"></div>
+  
+  <div class="carousel-container" style="position: relative; z-index: 1;">
     <div class="carousel-track">
       <!-- Slide 1 -->
       <div class="carousel-slide">
