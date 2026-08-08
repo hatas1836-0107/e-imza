@@ -1807,7 +1807,7 @@ function renderProducts() {
     const statusBadge = isActive
       ? `<span class="badge badge-success">${ICONS.check}Aktif</span>`
       : `<span class="badge badge-muted">${ICONS.pause}Pasif</span>`;
-    const popularBadge = p.popular ? `<span class="badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;">⭐ En Çok Tercih Edilen</span>` : '';
+    const popularBadge = p.popular ? `<span class="badge" style="background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3);font-weight:600;">✦ En Çok Tercih Edilen</span>` : '';
     const image = p.imageUrl ? `<img src="${p.imageUrl}" alt="${escapeHtml(p.name)}">` : ICONS.package;
     const features = (p.features || []).slice(0, 3).map(f => `<li>${ICONS.check}${escapeHtml(f)}</li>`).join('');
 

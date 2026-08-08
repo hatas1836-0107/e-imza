@@ -282,7 +282,7 @@
       // Popular kontrolü - artık product.popular alanına göre
       const isPopular = product.popular === true;
       const popularClass = isPopular ? ' popular' : '';
-      const badgeHTML = isPopular ? '<div class="product-badge">⭐ En Çok Tercih Edilen</div>' : '';
+      const badgeHTML = isPopular ? '<div class="product-badge">En Çok Tercih Edilen</div>' : '';
       const btnVariant = isPopular ? 'primary' : 'secondary';
 
       // Product image (if available)
