@@ -1575,8 +1575,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .carousel-slide {
   flex-shrink: 0;
-  width: 340px;
-  aspect-ratio: 4 / 3;
+  width: 400px;
+  aspect-ratio: 16 / 9;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
@@ -1687,8 +1687,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Tablet responsive */
 @media (max-width: 1024px) {
   .carousel-slide {
-    width: 320px;
-    aspect-ratio: 4 / 3;
+    width: 360px;
+    aspect-ratio: 16 / 9;
   }
   
   .carousel-track {
@@ -1711,12 +1711,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-slide {
-    width: 280px;
-    aspect-ratio: 4 / 3;
+    width: 300px;
+    aspect-ratio: 16 / 9;
   }
   
   .carousel-content {
-    padding: 20px 16px;
+    padding: 18px 16px;
   }
   
   .carousel-content h3 {
@@ -1757,20 +1757,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Small mobile */
 @media (max-width: 480px) {
   .carousel-slide {
-    width: 240px;
-    aspect-ratio: 4 / 3;
+    width: 260px;
+    aspect-ratio: 16 / 9;
   }
   
   .carousel-content {
-    padding: 16px 14px;
+    padding: 14px 12px;
   }
   
   .carousel-content h3 {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
   
   .carousel-content p {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
   }
   
   .carousel-track {
