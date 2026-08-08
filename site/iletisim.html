@@ -457,7 +457,10 @@ document.getElementById('getLocationBtnContact')?.addEventListener('click', func
     if (mesajField && !mesajField.value) {
       let orderInfo = `Ürün: ${productName}`;
       if (productDuration) orderInfo += ` (${productDuration})`;
-      if (productPrice) orderInfo += `\nFiyat: ${productPrice}₺ +KDV`;
+      // Sadece price parametresi varsa fiyatı ekle (showPrice=false ise price gönderilmez)
+      if (productPrice && productPrice !== 'null' && productPrice !== 'undefined') {
+        orderInfo += `\nFiyat: ${productPrice}₺ +KDV`;
+      }
       mesajField.value = orderInfo;
     }
     

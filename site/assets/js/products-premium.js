@@ -308,6 +308,11 @@
            </div>` 
         : '<div class="product-price"><span class="amount" style="font-size:1.1rem;color:var(--text-muted);">Fiyat için iletişime geçin</span></div>';
 
+      // Order button URL - don't include price if showPrice is false
+      const orderUrl = product.showPrice !== false
+        ? `./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}`
+        : `./iletisim.html?product=${encodeURIComponent(product.name)}`;
+
       // Features
       const features = (product.features || [])
         .map(f => `
@@ -330,7 +335,7 @@
             ${priceHTML}
             <div class="product-divider"></div>
             <ul class="product-features">${features}</ul>
-            <a href="./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}" class="product-btn product-btn-${btnVariant}">
+            <a href="${orderUrl}" class="product-btn product-btn-${btnVariant}">
               Sipariş Oluştur
             </a>
           </div>

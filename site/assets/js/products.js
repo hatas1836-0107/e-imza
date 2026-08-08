@@ -337,8 +337,13 @@
     let msg = `*YENİ SİPARİŞ*\n\n`;
     msg += `*Sipariş No:* ${order.id}\n`;
     msg += `*Ürün:* ${order.productName}\n`;
-    msg += `*Fiyat:* ${parseFloat(order.productPrice).toLocaleString('tr-TR')} ₺ +KDV\n\n`;
-    msg += `=== MÜŞTERİ BİLGİLERİ ===\n`;
+    
+    // Sadece productPrice varsa ve geçerli bir değerse fiyatı ekle
+    if (order.productPrice && order.productPrice !== 'null' && order.productPrice !== 'undefined' && order.productPrice !== '') {
+      msg += `*Fiyat:* ${parseFloat(order.productPrice).toLocaleString('tr-TR')} ₺ +KDV\n`;
+    }
+    
+    msg += `\n=== MÜŞTERİ BİLGİLERİ ===\n`;
     msg += `*Ad Soyad:* ${order.customerName}\n`;
     msg += `*Telefon:* ${order.customerPhone}\n`;
     msg += `*E-posta:* ${order.customerEmail}\n`;
