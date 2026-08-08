@@ -793,7 +793,7 @@
 
 
 /* ============================================================
-   CUSTOM CURSOR
+   CUSTOM CURSOR - OPTIMIZED
    ============================================================ */
 (function() {
   'use strict';
@@ -809,91 +809,78 @@
   let cursorY = 0;
   let dotX = 0;
   let dotY = 0;
+  let isAnimating = false;
   
-  // Mouse hareket takibi
+  // Mouse hareket takibi - Passive listener ile optimize edildi
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-  });
+  }, { passive: true });
   
-  // Smooth cursor animasyonu
+  // Smooth cursor animasyonu - GPU acceleration ile
   function animate() {
     // Cursor (outer circle) - smooth follow
-    cursorX += (mouseX - cursorX) * 0.15;
-    cursorY += (mouseY - cursorY) * 0.15;
-    cursor.style.left = cursorX + 'px';
-    cursor.style.top = cursorY + 'px';
+    const dx = mouseX - cursorX;
+    const dy = mouseY - cursorY;
+    
+    cursorX += dx * 0.2;
+    cursorY += dy * 0.2;
+    
+    // Transform3d kullanarak GPU acceleration
+    cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
     
     // Dot (inner circle) - faster follow
-    dotX += (mouseX - dotX) * 0.25;
-    dotY += (mouseY - dotY) * 0.25;
-    cursorDot.style.left = dotX + 'px';
-    cursorDot.style.top = dotY + 'px';
+    const ddx = mouseX - dotX;
+    const ddy = mouseY - dotY;
+    
+    dotX += ddx * 0.35;
+    dotY += ddy * 0.35;
+    
+    cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
     
     requestAnimationFrame(animate);
   }
   
   animate();
   
-  // Hover effect - tıklanabilir elementlerde büyür
-  const hoverElements = 'a, button, input, textarea, select, .card, .btn, .custom-select-trigger, .select-modal-item';
+  // Hover effect - Event delegation ile optimize edildi
+  const hoverSelector = 'a, button, input, textarea, select, .card, .btn, .custom-select-trigger, .select-modal-item';
   
-  document.querySelectorAll(hoverElements).forEach(el => {
-    el.addEventListener('mouseenter', () => {
+  // Event delegation - daha performanslı
+  document.body.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverSelector)) {
       cursor.classList.add('cursor-hover');
       cursorDot.classList.add('cursor-hover');
-    });
-    
-    el.addEventListener('mouseleave', () => {
+    }
+  }, { passive: true });
+  
+  document.body.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverSelector)) {
       cursor.classList.remove('cursor-hover');
       cursorDot.classList.remove('cursor-hover');
-    });
-  });
+    }
+  }, { passive: true });
   
-  // Click effect - pulse animasyonu
+  // Click effect - Passive listener
   document.addEventListener('mousedown', () => {
     cursor.classList.add('cursor-click');
     cursorDot.classList.add('cursor-click');
-  });
+  }, { passive: true });
   
   document.addEventListener('mouseup', () => {
     cursor.classList.remove('cursor-click');
     cursorDot.classList.remove('cursor-click');
-  });
+  }, { passive: true });
   
   // Sayfa dışına çıkınca gizle
   document.addEventListener('mouseleave', () => {
     cursor.style.opacity = '0';
     cursorDot.style.opacity = '0';
-  });
+  }, { passive: true });
   
   document.addEventListener('mouseenter', () => {
     cursor.style.opacity = '1';
     cursorDot.style.opacity = '1';
-  });
-  
-  // Dinamik elementler için (modal, etc.)
-  const observer = new MutationObserver(() => {
-    document.querySelectorAll(hoverElements).forEach(el => {
-      if (!el.dataset.cursorInit) {
-        el.dataset.cursorInit = 'true';
-        
-        el.addEventListener('mouseenter', () => {
-          cursor.classList.add('cursor-hover');
-          cursorDot.classList.add('cursor-hover');
-        });
-        
-        el.addEventListener('mouseleave', () => {
-          cursor.classList.remove('cursor-hover');
-          cursorDot.classList.remove('cursor-hover');
-        });
-      }
-    });
-  });
-  
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  }, { passive: true });
   
 })();
