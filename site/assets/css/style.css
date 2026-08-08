@@ -1797,6 +1797,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .cta-banner-section {
   position: relative;
   overflow: hidden;
+  min-height: 400px;
 }
 
 /* Light mode - show light banner */
@@ -1806,6 +1807,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 [data-theme="light"] .cta-banner-light {
   opacity: 1 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cta-banner-section {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta-banner-section {
+    min-height: 250px;
+  }
 }
 
 /* ---------- Footer ---------- */
