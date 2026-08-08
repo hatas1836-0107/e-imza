@@ -1793,64 +1793,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
 }
 
-/* ---------- Footer Banner with Theme Toggle ---------- */
-.footer-banner-section {
+/* ---------- CTA Banner with Theme Toggle ---------- */
+.cta-banner-section {
   position: relative;
-  width: 100%;
-  height: 300px;
-  margin: 0;
-  padding: 0;
-}
-
-.footer-banner-dark,
-.footer-banner-light {
-  width: 100%;
-  height: 100%;
-  transition: opacity 0.4s ease;
-}
-
-/* Dark mode - show dark banner */
-.footer-banner-dark {
-  opacity: 1;
-}
-
-.footer-banner-light {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
+  overflow: hidden;
 }
 
 /* Light mode - show light banner */
-[data-theme="light"] .footer-banner-dark {
-  opacity: 0;
+[data-theme="light"] .cta-banner-dark {
+  opacity: 0 !important;
 }
 
-[data-theme="light"] .footer-banner-light {
-  opacity: 1;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .footer-banner-section {
-    height: 200px;
-  }
-  
-  .footer-banner-dark,
-  .footer-banner-light {
-    height: 200px;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-banner-section {
-    height: 150px;
-  }
-  
-  .footer-banner-dark,
-  .footer-banner-light {
-    height: 150px;
-  }
+[data-theme="light"] .cta-banner-light {
+  opacity: 1 !important;
 }
 
 /* ---------- Footer ---------- */

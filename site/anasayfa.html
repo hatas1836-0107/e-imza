@@ -821,30 +821,23 @@
   </div>
 </section>
 
-<!-- CTA Section -->
-<section style="padding: 100px 0; background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.05));">
-  <div class="container" style="text-align: center;">
+<!-- CTA Section with Banner Background -->
+<section class="cta-banner-section" style="position: relative; padding: 100px 0; overflow: hidden;">
+  <!-- Background Banner (Theme-aware) -->
+  <div class="cta-banner-dark" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-dark.jpeg'); background-size: cover; background-position: center; opacity: 1; transition: opacity 0.4s ease;"></div>
+  <div class="cta-banner-light" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-light.jpeg'); background-size: cover; background-position: center; opacity: 0; transition: opacity 0.4s ease;"></div>
+  
+  <!-- Fade Overlay - Köşelerden fade -->
+  <div style="position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse at center, transparent 20%, var(--bg) 95%); pointer-events: none;"></div>
+  
+  <!-- Content -->
+  <div class="container" style="position: relative; z-index: 2; text-align: center;">
     <h2 style="font-size: 2.5rem; margin-bottom: 24px; color: var(--text-1);">Hemen E-İmzanızı Alın</h2>
     <p style="font-size: 1.2rem; color: var(--text-2); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">Online başvuru yapın, aynı gün kurye ile e-imzanız kapınızda olsun</p>
     <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
       <a href="fiyatlandirma.html" class="btn btn-primary btn-lg">Fiyatları Görüntüle</a>
       <a href="https://wa.me/905453863407" target="_blank" class="btn btn-whatsapp btn-lg">WhatsApp ile İletişim</a>
     </div>
-  </div>
-</section>
-
-<!-- Footer Banner with Fade Edges -->
-<section class="footer-banner-section" style="position: relative; padding: 0; margin: 0; overflow: hidden; height: 300px; display: block;">
-  <!-- Dark Mode Banner -->
-  <div class="footer-banner-dark" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('assets/img/footer-banner-dark.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; z-index: 1;">
-    <!-- Fade Overlay - Köşelerden fade -->
-    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 100%); pointer-events: none;"></div>
-  </div>
-  
-  <!-- Light Mode Banner (Hidden by default, shown in light mode via CSS) -->
-  <div class="footer-banner-light" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('assets/img/footer-banner-light.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0; transition: opacity 0.3s ease; z-index: 2;">
-    <!-- Fade Overlay - Köşelerden fade -->
-    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 100%); pointer-events: none;"></div>
   </div>
 </section>
 
