@@ -1575,7 +1575,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .carousel-slide {
   flex-shrink: 0;
-  width: 340px; /* 4:3 oranına uygun width */
+  width: 340px;
+  aspect-ratio: 4 / 3;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
@@ -1584,37 +1585,37 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: relative;
-  display: flex;
-  flex-direction: column;
+  cursor: pointer;
 }
 
 .carousel-slide:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.35);
 }
 
 .carousel-image {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: visible;
-  position: relative;
+  height: 100%;
+  position: absolute;
+  inset: 0;
   background-image: url('../img/neon-purple-background.jpeg');
   background-size: cover;
   background-position: center;
-  flex-shrink: 0;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .carousel-image::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(11, 14, 26, 0.3);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(11, 14, 26, 0.25);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  transition: backdrop-filter 0.3s ease;
+}
+
+.carousel-slide:hover .carousel-image::before {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .carousel-image::after {
@@ -1623,65 +1624,83 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   inset: 0;
   background: linear-gradient(180deg, 
     transparent 0%, 
-    rgba(11, 14, 26, 0.9) 100%
+    rgba(11, 14, 26, 0.6) 70%,
+    rgba(11, 14, 26, 0.95) 100%
   );
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-slide:hover .carousel-image::after {
+  opacity: 1;
 }
 
 .carousel-image img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
   transition: transform 0.5s var(--ease), filter 0.5s var(--ease);
-  position: relative;
-  z-index: 1;
-  filter: grayscale(15%) brightness(0.98);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  filter: grayscale(10%) brightness(0.95);
 }
 
 .carousel-slide:hover .carousel-image img {
-  transform: scale(1.05);
-  filter: grayscale(0%) brightness(1.05);
+  transform: scale(1.08);
+  filter: grayscale(0%) brightness(1);
 }
 
 .carousel-content {
-  padding: 20px 18px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(180deg, 
-    rgba(11, 14, 26, 0.4) 0%,
-    rgba(11, 14, 26, 0.6) 100%
-  );
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px;
+  z-index: 2;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.4s var(--ease);
+}
+
+.carousel-slide:hover .carousel-content {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .carousel-content h3 {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 8px;
-  color: var(--text-primary);
+  color: #ffffff;
   font-family: 'Space Grotesk', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .carousel-content p {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
   margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Tablet responsive */
 @media (max-width: 1024px) {
   .carousel-slide {
-    width: 320px; /* 4:3 oranına uygun */
+    width: 320px;
+    aspect-ratio: 4 / 3;
   }
   
   .carousel-track {
     gap: 18px;
+  }
+  
+  .carousel-content h3 {
+    font-size: 1.15rem;
+  }
+  
+  .carousel-content p {
+    font-size: 0.88rem;
   }
 }
 
@@ -1692,11 +1711,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-slide {
-    width: 280px; /* 4:3 oranına uygun */
+    width: 280px;
+    aspect-ratio: 4 / 3;
   }
   
   .carousel-content {
-    padding: 18px 16px;
+    padding: 20px 16px;
   }
   
   .carousel-content h3 {
@@ -1726,12 +1746,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       transparent 100%
     );
   }
+  
+  /* Mobile'de hover yerine her zaman text göster */
+  .carousel-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
   .carousel-slide {
-    width: 240px; /* 4:3 oranına uygun */
+    width: 240px;
+    aspect-ratio: 4 / 3;
   }
   
   .carousel-content {
