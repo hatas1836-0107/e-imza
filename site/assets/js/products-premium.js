@@ -279,9 +279,10 @@
 
     // Generate cards
     const cardsHTML = products.map((product, index) => {
-      const isPopular = index === 1 && products.length >= 3;
+      // Popular kontrolü - artık product.popular alanına göre
+      const isPopular = product.popular === true;
       const popularClass = isPopular ? ' popular' : '';
-      const badgeHTML = isPopular ? '<div class="product-badge">En Popüler</div>' : '';
+      const badgeHTML = isPopular ? '<div class="product-badge">⭐ En Çok Tercih Edilen</div>' : '';
       const btnVariant = isPopular ? 'primary' : 'secondary';
 
       // Product image (if available)

@@ -1807,6 +1807,7 @@ function renderProducts() {
     const statusBadge = isActive
       ? `<span class="badge badge-success">${ICONS.check}Aktif</span>`
       : `<span class="badge badge-muted">${ICONS.pause}Pasif</span>`;
+    const popularBadge = p.popular ? `<span class="badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;">⭐ En Çok Tercih Edilen</span>` : '';
     const image = p.imageUrl ? `<img src="${p.imageUrl}" alt="${escapeHtml(p.name)}">` : ICONS.package;
     const features = (p.features || []).slice(0, 3).map(f => `<li>${ICONS.check}${escapeHtml(f)}</li>`).join('');
 
@@ -1816,7 +1817,7 @@ function renderProducts() {
         <div class="product-body">
           <div class="product-name">${escapeHtml(p.name)}</div>
           <div class="product-price">${Number(p.price || 0).toLocaleString('tr-TR')}₺ <small>+KDV</small></div>
-          <div class="product-badges">${statusBadge}<span class="badge badge-info">${ICONS.clock}${escapeHtml(p.duration || '-')}</span></div>
+          <div class="product-badges">${statusBadge}${popularBadge}<span class="badge badge-info">${ICONS.clock}${escapeHtml(p.duration || '-')}</span></div>
           ${p.description ? `<p class="product-description">${escapeHtml(p.description)}</p>` : ''}
           ${features ? `<ul class="product-features">${features}</ul>` : ''}
         </div>
@@ -1888,6 +1889,13 @@ window.openProductModal = (id) => {
       </label>
     </div>
     <div class="toggle-row">
+      <span>En Çok Tercih Edilen</span>
+      <label class="switch">
+        <input type="checkbox" id="pfPopular" ${product?.popular ? 'checked' : ''}>
+        <span class="slider-track"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
       <span>Ürün Aktif</span>
       <label class="switch">
         <input type="checkbox" id="pfStatus" ${!product || product.status === 'active' ? 'checked' : ''}>
@@ -1943,6 +1951,7 @@ window.submitProduct = async (id) => {
   const isActive = document.getElementById('pfStatus').checked;
   const vatIncluded = document.getElementById('pfVatIncluded').checked;
   const showPrice = document.getElementById('pfShowPrice').checked;
+  const popular = document.getElementById('pfPopular').checked;
   const errorEl = document.getElementById('pfError');
   const submitBtn = document.getElementById('pfSubmit');
 
@@ -1969,6 +1978,7 @@ window.submitProduct = async (id) => {
       status: isActive ? 'active' : 'passive', 
       vatIncluded: vatIncluded,
       showPrice: showPrice,
+      popular: popular,
       imageUrl,
       updatedAt: new Date().toISOString(),
       createdAt: id ? (products[id]?.createdAt || new Date().toISOString()) : new Date().toISOString()
