@@ -908,3 +908,88 @@
   }, { passive: true });
   
 })();
+
+
+/* ============================================================
+   INDUSTRY CAROUSEL - TRUE INFINITE LOOP
+   ============================================================ */
+(function() {
+  'use strict';
+  
+  const track = document.querySelector('.carousel-track');
+  if (!track) return;
+  
+  const slides = Array.from(track.children);
+  if (slides.length === 0) return;
+  
+  // Clone slides for seamless loop
+  slides.forEach(slide => {
+    const clone = slide.cloneNode(true);
+    track.appendChild(clone);
+  });
+  
+  let currentTranslate = 0;
+  const speed = 0.5; // pixels per frame
+  let rafId = null;
+  let isPaused = false;
+  
+  // Calculate when to reset (half way through since we duplicated)
+  function getResetPoint() {
+    const slideWidth = slides[0].offsetWidth;
+    const gap = 24; // matches CSS gap
+    return -(slideWidth + gap) * slides.length;
+  }
+  
+  function animate() {
+    if (!isPaused) {
+      currentTranslate -= speed;
+      
+      // Seamless loop - reset when halfway
+      if (currentTranslate <= getResetPoint()) {
+        currentTranslate = 0;
+      }
+      
+      track.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+    }
+    
+    rafId = requestAnimationFrame(animate);
+  }
+  
+  // Start animation
+  rafId = requestAnimationFrame(animate);
+  
+  // Pause on hover
+  track.addEventListener('mouseenter', () => {
+    isPaused = true;
+  }, { passive: true });
+  
+  track.addEventListener('mouseleave', () => {
+    isPaused = false;
+  }, { passive: true });
+  
+  // Pause when tab inactive
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    } else {
+      if (!rafId) {
+        rafId = requestAnimationFrame(animate);
+      }
+    }
+  }, { passive: true });
+  
+  // Responsive - recalculate on resize
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Reset position on resize to prevent visual glitches
+      currentTranslate = 0;
+      track.style.transform = 'translate3d(0, 0, 0)';
+    }, 250);
+  }, { passive: true });
+  
+})();

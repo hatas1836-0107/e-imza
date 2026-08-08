@@ -1536,7 +1536,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-weight: 500;
 }
 
-/* ---------- Industry Carousel - Infinite Scroll ---------- */
+/* ---------- Industry Carousel - True Infinite Scroll ---------- */
 .industry-carousel-section {
   padding: 80px 0;
   overflow: hidden;
@@ -1569,27 +1569,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .carousel-track {
   display: flex;
   gap: 24px;
-  animation: carousel-scroll 40s linear infinite;
   will-change: transform;
   width: fit-content;
 }
 
-@keyframes carousel-scroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-.carousel-track:hover {
-  animation-play-state: paused;
-}
-
 .carousel-slide {
   flex-shrink: 0;
-  width: 420px;
+  width: 380px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
@@ -1598,6 +1584,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .carousel-slide:hover {
@@ -1611,6 +1599,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   overflow: hidden;
   position: relative;
   background: var(--ink-900);
+  flex-shrink: 0;
 }
 
 .carousel-image::after {
@@ -1636,19 +1625,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 .carousel-content {
-  padding: 28px 26px;
+  padding: 24px 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .carousel-content h3 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: var(--text-primary);
   font-family: 'Space Grotesk', sans-serif;
 }
 
 .carousel-content p {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
@@ -1657,15 +1649,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Tablet responsive */
 @media (max-width: 1024px) {
   .carousel-slide {
-    width: 360px;
-  }
-  
-  .carousel-image {
-    aspect-ratio: 4 / 3;
-  }
-  
-  .carousel-track {
-    animation-duration: 35s;
+    width: 340px;
   }
 }
 
@@ -1676,20 +1660,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-slide {
-    width: 300px;
-  }
-  
-  .carousel-image {
-    aspect-ratio: 4 / 3;
+    width: 280px;
   }
   
   .carousel-content {
-    padding: 22px 20px;
+    padding: 20px 18px;
   }
   
   .carousel-content h3 {
-    font-size: 1.15rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
   }
   
   .carousel-content p {
@@ -1698,7 +1678,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   
   .carousel-track {
     gap: 16px;
-    animation-duration: 30s;
   }
   
   .carousel-container {
@@ -1720,19 +1699,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Small mobile */
 @media (max-width: 480px) {
   .carousel-slide {
-    width: 260px;
-  }
-  
-  .carousel-image {
-    aspect-ratio: 4 / 3;
+    width: 240px;
   }
   
   .carousel-content {
-    padding: 18px 16px;
+    padding: 16px 14px;
   }
   
   .carousel-content h3 {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
   
   .carousel-content p {
@@ -1743,16 +1718,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .carousel-track {
-    animation: carousel-scroll-slow 80s linear infinite;
-  }
-  
-  @keyframes carousel-scroll-slow {
-    0% {
-      transform: translate3d(0, 0, 0);
-    }
-    100% {
-      transform: translate3d(-50%, 0, 0);
-    }
+    animation: none !important;
   }
 }
 
