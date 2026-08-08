@@ -298,6 +298,16 @@
         ? '<span class="period">+KDV</span>' 
         : '';
 
+      // Price visibility logic:
+      // If showPrice is FALSE (switch OFF) -> hide price completely
+      // If showPrice is TRUE or undefined (default) -> show price
+      const priceHTML = product.showPrice !== false 
+        ? `<div class="product-price">
+             <span class="amount">${Number(product.price || 0).toLocaleString('tr-TR')}₺</span>
+             ${vatLabel}
+           </div>` 
+        : '<div class="product-price"><span class="amount" style="font-size:1.1rem;color:var(--text-muted);">Fiyat için iletişime geçin</span></div>';
+
       // Features
       const features = (product.features || [])
         .map(f => `
@@ -317,10 +327,7 @@
           <div class="product-content">
             <h2>${product.name || 'Ürün'}</h2>
             <div class="desc">${product.description || ''}</div>
-            <div class="product-price">
-              <span class="amount">${Number(product.price || 0).toLocaleString('tr-TR')}₺</span>
-              ${vatLabel}
-            </div>
+            ${priceHTML}
             <div class="product-divider"></div>
             <ul class="product-features">${features}</ul>
             <a href="./iletisim.html?product=${encodeURIComponent(product.name)}&price=${product.price}" class="product-btn product-btn-${btnVariant}">

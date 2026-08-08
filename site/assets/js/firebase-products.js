@@ -76,11 +76,16 @@ export function renderProductCards(products, container) {
     
     const buttonClass = isFeatured ? 'btn btn-primary btn-block' : 'btn btn-ghost btn-block';
     
+    // Fiyat gösterimi - showPrice kontrolü
+    const priceDisplay = product.showPrice !== false
+      ? `<div class="price-value">${product.price}₺<span>+KDV</span></div>
+         <div class="price-note">${product.duration} geçerli</div>`
+      : `<div class="price-value" style="font-size:1rem;color:#7d81a0;">Fiyat için iletişime geçin</div>`;
+    
     html += `
       <div class="${cardClass}" style="--i:${index}">
         <div class="price-name">${product.name}</div>
-        <div class="price-value">${product.price}₺<span>+KDV</span></div>
-        <div class="price-note">${product.duration} geçerli</div>
+        ${priceDisplay}
         ${product.description ? `<p style="font-size:0.85rem;color:#7d81a0;margin:10px 0;">${product.description}</p>` : ''}
         <ul class="price-features">
           ${featuresList}

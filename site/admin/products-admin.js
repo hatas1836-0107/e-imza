@@ -63,11 +63,14 @@
     const statusText = product.status === 'active' ? 'Aktif' : 'Pasif';
     const itemClass = product.status === 'active' ? '' : 'inactive';
     const popularBadge = product.popular ? '<span class="badge badge-popular">Popüler</span>' : '';
+    const priceVisibilityBadge = product.showPrice !== false 
+      ? '<span class="badge" style="background:rgba(16,185,129,0.2);color:#10b981;">💰 Fiyat Göster</span>' 
+      : '<span class="badge" style="background:rgba(239,68,68,0.2);color:#ef4444;">🚫 Fiyat Gizli</span>';
     
     return `
       <div class="product-item ${itemClass}">
         <div class="product-info">
-          <h4>${product.name} ${popularBadge} <span class="badge ${statusClass}">${statusText}</span></h4>
+          <h4>${product.name} ${popularBadge} ${priceVisibilityBadge} <span class="badge ${statusClass}">${statusText}</span></h4>
           <p>${product.description || 'Açıklama yok'}</p>
           <div class="product-meta">
             <span><strong>${parseFloat(product.price || 0).toLocaleString('tr-TR')} ₺</strong></span>
@@ -108,6 +111,7 @@
       priceNote: document.getElementById('productPriceNote').value.trim(),
       status: document.getElementById('productStatus').value,
       popular: document.getElementById('productPopular').checked,
+      showPrice: document.getElementById('productShowPrice').checked,
       updatedAt: new Date().toISOString()
     };
     
@@ -152,6 +156,7 @@
       document.getElementById('productPriceNote').value = product.priceNote || '';
       document.getElementById('productStatus').value = product.status || 'active';
       document.getElementById('productPopular').checked = product.popular || false;
+      document.getElementById('productShowPrice').checked = product.showPrice !== false; // Default true
       
       // Scroll to form
       document.querySelector('.product-form').scrollIntoView({ behavior: 'smooth', block: 'start' });

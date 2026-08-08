@@ -169,6 +169,60 @@
       background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
     }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: 0.3s;
+      border-radius: 28px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: #7d81a0;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      border-color: #818cf8;
+    }
+    
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+      background: white;
+    }
+    
+    .toggle-switch input:focus + .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+    }
   </style>
 </head>
 <body class="dark-theme">
@@ -266,6 +320,21 @@
                 <label>
                   <input type="checkbox" id="productPopular" style="width:auto;margin-right:8px;">
                   Popüler ürün olarak işaretle
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;">
+                  <div style="display:flex;flex-direction:column;flex:1;">
+                    <span style="font-weight:600;color:#f3f4f8;margin-bottom:4px;">Fiyat Göster</span>
+                    <span style="font-size:0.8rem;color:#7d81a0;">Ürün kartında fiyat bilgisi görüntülensin mi?</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="productShowPrice" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
                 </label>
               </div>
             </div>
