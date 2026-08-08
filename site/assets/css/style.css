@@ -3238,7 +3238,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 
-/* ---------- Custom Animated Cursor ---------- */
+/* ---------- Premium Glassmorphism Cursor ---------- */
 .custom-cursor,
 .custom-cursor-dot {
   position: fixed;
@@ -3246,107 +3246,135 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   left: 0;
   pointer-events: none;
   z-index: 99999;
-  transition: opacity 0.3s var(--ease);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 
+/* Outer Ring - Glassmorphism */
 .custom-cursor {
-  width: 32px;
-  height: 32px;
-  border: 2px solid;
-  border-color: rgba(124, 58, 237, 0.6);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: 
-    width 0.3s var(--ease), 
-    height 0.3s var(--ease), 
-    border-color 0.3s var(--ease),
-    background 0.3s var(--ease);
-  background: rgba(124, 58, 237, 0.05);
-  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Glassmorphism efekt */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  
+  /* İki katmanlı border */
+  border: 2px solid rgba(139, 92, 246, 0.4);
   box-shadow: 
-    0 0 20px rgba(124, 58, 237, 0.3),
-    inset 0 0 10px rgba(124, 58, 237, 0.1);
+    0 0 20px rgba(139, 92, 246, 0.3),
+    inset 0 0 15px rgba(139, 92, 246, 0.1),
+    0 0 40px rgba(124, 58, 237, 0.2);
 }
 
+/* İç gradient ring efekti */
+.custom-cursor::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(79, 70, 229, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Center Dot - Gradient */
 .custom-cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: 
-    width 0.2s var(--ease), 
-    height 0.2s var(--ease), 
-    background 0.2s var(--ease),
-    box-shadow 0.2s var(--ease);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #7c3aed 100%);
   box-shadow: 
-    0 0 15px rgba(124, 58, 237, 0.8),
-    0 0 30px rgba(124, 58, 237, 0.4);
+    0 0 12px rgba(139, 92, 246, 0.8),
+    0 0 24px rgba(139, 92, 246, 0.4),
+    0 2px 8px rgba(99, 102, 241, 0.5);
 }
 
-/* Hover durumu - Daha büyük ve parlak */
+/* Hover State - Link üzerine gelince */
 .custom-cursor.cursor-hover {
-  width: 50px;
-  height: 50px;
-  border-color: rgba(124, 58, 237, 0.9);
-  background: rgba(124, 58, 237, 0.15);
+  width: 60px;
+  height: 60px;
+  border-color: rgba(139, 92, 246, 0.6);
+  background: rgba(255, 255, 255, 0.08);
   box-shadow: 
-    0 0 30px rgba(124, 58, 237, 0.5),
-    inset 0 0 20px rgba(124, 58, 237, 0.2);
-}
-
-.custom-cursor-dot.cursor-hover {
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  box-shadow: 
-    0 0 20px rgba(124, 58, 237, 1),
-    0 0 40px rgba(124, 58, 237, 0.6),
+    0 0 30px rgba(139, 92, 246, 0.5),
+    inset 0 0 25px rgba(139, 92, 246, 0.15),
     0 0 60px rgba(124, 58, 237, 0.3);
 }
 
-/* Click animasyonu - Pulse efekti */
+.custom-cursor.cursor-hover::before {
+  opacity: 1;
+}
+
+.custom-cursor-dot.cursor-hover {
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%);
+  box-shadow: 
+    0 0 18px rgba(167, 139, 250, 1),
+    0 0 36px rgba(139, 92, 246, 0.6),
+    0 0 54px rgba(124, 58, 237, 0.4);
+}
+
+/* Click Animation - Tıklama efekti */
 .custom-cursor.cursor-click {
-  width: 28px;
-  height: 28px;
-  border-color: rgba(232, 163, 61, 0.8);
-  background: rgba(232, 163, 61, 0.2);
-  transition: width 0.1s var(--ease), height 0.1s var(--ease);
+  width: 35px;
+  height: 35px;
+  border-color: rgba(251, 191, 36, 0.7);
+  background: rgba(251, 191, 36, 0.1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 0 25px rgba(251, 191, 36, 0.6),
+    inset 0 0 15px rgba(251, 191, 36, 0.2);
 }
 
 .custom-cursor-dot.cursor-click {
-  width: 14px;
-  height: 14px;
-  background: linear-gradient(135deg, #e8a33d 0%, #f2b955 100%);
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   box-shadow: 
-    0 0 25px rgba(232, 163, 61, 1),
-    0 0 50px rgba(232, 163, 61, 0.6);
-  transition: width 0.1s var(--ease), height 0.1s var(--ease);
+    0 0 20px rgba(251, 191, 36, 1),
+    0 0 40px rgba(245, 158, 11, 0.6);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Light tema için */
+/* Light Theme */
 [data-theme="light"] .custom-cursor {
+  background: rgba(255, 255, 255, 0.6);
   border-color: rgba(79, 70, 229, 0.5);
-  background: rgba(79, 70, 229, 0.05);
   box-shadow: 
-    0 0 15px rgba(79, 70, 229, 0.2),
-    inset 0 0 10px rgba(79, 70, 229, 0.05);
+    0 0 15px rgba(79, 70, 229, 0.25),
+    inset 0 0 10px rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(79, 70, 229, 0.15);
+}
+
+[data-theme="light"] .custom-cursor::before {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(99, 102, 241, 0.08));
 }
 
 [data-theme="light"] .custom-cursor-dot {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   box-shadow: 
-    0 0 10px rgba(79, 70, 229, 0.6),
-    0 0 20px rgba(79, 70, 229, 0.3);
+    0 0 10px rgba(79, 70, 229, 0.7),
+    0 0 20px rgba(79, 70, 229, 0.4);
 }
 
 [data-theme="light"] .custom-cursor.cursor-hover {
-  border-color: rgba(79, 70, 229, 0.8);
-  background: rgba(79, 70, 229, 0.1);
+  border-color: rgba(79, 70, 229, 0.7);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    0 0 20px rgba(79, 70, 229, 0.35),
+    inset 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
-/* Mobilde gizle */
+/* Mobile - Gizle */
 @media (max-width: 768px), (hover: none) {
   .custom-cursor,
   .custom-cursor-dot {
@@ -3777,99 +3805,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
 }
 
-/* ========== CUSTOM CURSOR DÜZELTMESİ ========== */
-
-/* Custom Animated Cursor */
-.custom-cursor,
-.custom-cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 99999 !important;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  opacity: 1;
-  visibility: visible;
-}
-
-.custom-cursor {
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(124, 58, 237, 0.4);
-  border-radius: 50%;
-  background: rgba(124, 58, 237, 0.08);
-  transition: width 0.2s var(--ease), height 0.2s var(--ease), border-color 0.2s var(--ease), opacity 0.2s var(--ease);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.custom-cursor-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  box-shadow: 
-    0 0 12px rgba(124, 58, 237, 0.6),
-    0 0 24px rgba(124, 58, 237, 0.3);
-  transition: width 0.2s var(--ease), height 0.2s var(--ease), opacity 0.2s var(--ease);
-}
-
-/* Hover durumu - Daha büyük ve parlak */
-.custom-cursor.cursor-hover {
-  width: 50px;
-  height: 50px;
-  border-color: rgba(124, 58, 237, 0.7);
-  background: rgba(124, 58, 237, 0.12);
-}
-
-.custom-cursor-dot.cursor-hover {
-  width: 12px;
-  height: 12px;
-  box-shadow: 
-    0 0 18px rgba(124, 58, 237, 0.8),
-    0 0 32px rgba(124, 58, 237, 0.4);
-}
-
-/* Click animasyonu - Pulse efekti */
-.custom-cursor.cursor-click {
-  width: 28px;
-  height: 28px;
-  border-color: rgba(232, 163, 61, 0.8);
-  background: rgba(232, 163, 61, 0.15);
-}
-
-.custom-cursor-dot.cursor-click {
-  width: 14px;
-  height: 14px;
-  background: linear-gradient(135deg, #e8a33d 0%, #f2b955 100%);
-  box-shadow: 
-    0 0 20px rgba(232, 163, 61, 0.9),
-    0 0 40px rgba(232, 163, 61, 0.5);
-}
-
-/* Light tema için */
-[data-theme="light"] .custom-cursor {
-  border-color: rgba(79, 70, 229, 0.5);
-  background: rgba(79, 70, 229, 0.05);
-}
-
-[data-theme="light"] .custom-cursor-dot {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  box-shadow: 
-    0 0 12px rgba(79, 70, 229, 0.6),
-    0 0 24px rgba(79, 70, 229, 0.3);
-}
-
-[data-theme="light"] .custom-cursor.cursor-hover {
-  border-color: rgba(79, 70, 229, 0.8);
-  background: rgba(79, 70, 229, 0.1);
-}
-
-/* Mobilde gizle */
-@media (max-width: 768px), (hover: none) {
-  .custom-cursor,
-  .custom-cursor-dot {
+/* ========== END OF STYLES ========== */
     display: none !important;
   }
 }
