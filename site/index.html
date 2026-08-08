@@ -818,19 +818,16 @@
   <div class="cta-banner-dark" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-dark.jpeg'); background-size: cover; background-position: center; opacity: 1; transition: opacity 0.4s ease;"></div>
   <div class="cta-banner-light" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-light.jpeg'); background-size: cover; background-position: center; opacity: 0; transition: opacity 0.4s ease;"></div>
   
-  <!-- Strong Overlay - Banner yazılarını gizler, sadece desen kalır -->
-  <div style="position: absolute; inset: 0; z-index: 1; background: var(--bg); opacity: 0.92; pointer-events: none;"></div>
-  
-  <!-- Fade Overlay - Köşelerden fade -->
-  <div style="position: absolute; inset: 0; z-index: 2; background: radial-gradient(ellipse at center, transparent 15%, var(--bg) 90%); pointer-events: none;"></div>
+  <!-- Hafif overlay sadece CTA yazılarının okunabilirliği için -->
+  <div style="position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(11,14,26,0.3) 0%, rgba(11,14,26,0.5) 50%, rgba(11,14,26,0.3) 100%); pointer-events: none;"></div>
   
   <!-- Content -->
-  <div class="container" style="position: relative; z-index: 3; text-align: center;">
-    <h2 style="font-size: 2.5rem; margin-bottom: 24px; color: var(--text-1); text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Hemen E-İmzanızı Alın</h2>
-    <p style="font-size: 1.2rem; color: var(--text-2); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; text-shadow: 0 1px 4px rgba(0,0,0,0.3);">Online başvuru yapın, aynı gün kurye ile e-imzanız kapınızda olsun</p>
+  <div class="container" style="position: relative; z-index: 2; text-align: center;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 24px; color: #ffffff; font-weight: 800; text-shadow: 0 4px 12px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.5);">Hemen E-İmzanızı Alın</h2>
+    <p style="font-size: 1.2rem; color: rgba(255,255,255,0.95); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">Online başvuru yapın, aynı gün kurye ile e-imzanız kapınızda olsun</p>
     <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-      <a href="fiyatlandirma.html" class="btn btn-primary btn-lg">Fiyatları Görüntüle</a>
-      <a href="https://wa.me/905453863407" target="_blank" class="btn btn-whatsapp btn-lg">WhatsApp ile İletişim</a>
+      <a href="fiyatlandirma.html" class="btn btn-primary btn-lg" style="box-shadow: 0 4px 16px rgba(79,70,229,0.4);">Fiyatları Görüntüle</a>
+      <a href="https://wa.me/905453863407" target="_blank" class="btn btn-whatsapp btn-lg" style="box-shadow: 0 4px 16px rgba(37,211,102,0.4);">WhatsApp ile İletişim</a>
     </div>
   </div>
 </section>
