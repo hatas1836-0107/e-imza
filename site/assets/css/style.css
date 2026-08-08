@@ -3238,24 +3238,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 
-/* ---------- Premium Glassmorphism Cursor (Arrow Shape) ---------- */
+/* ---------- Lightweight Custom Cursor (White Arrow) ---------- */
 .custom-cursor,
 .custom-cursor-dot {
   position: fixed;
-  top: 0;
-  left: 0;
   pointer-events: none;
   z-index: 99999;
   will-change: transform;
-  transition: opacity 0.2s ease;
 }
 
-/* Main Cursor - Arrow Shape with Glassmorphism */
+/* Main Cursor - Simple White Arrow */
 .custom-cursor {
-  width: 24px;
-  height: 24px;
-  transform: translate(-2px, -2px);
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 18px;
+  height: 18px;
+  transform: translate(0, 0);
 }
 
 .custom-cursor::before {
@@ -3263,92 +3259,56 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: absolute;
   width: 0;
   height: 0;
-  border-left: 12px solid rgba(139, 92, 246, 0.9);
-  border-right: 12px solid transparent;
-  border-bottom: 20px solid transparent;
-  border-top: 20px solid rgba(139, 92, 246, 0.9);
-  filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.5))
-          drop-shadow(0 0 12px rgba(139, 92, 246, 0.3));
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  clip-path: polygon(0 0, 0 100%, 35% 60%, 60% 100%, 70% 95%, 45% 50%, 100% 45%, 0 0);
+  border-style: solid;
+  border-width: 0 0 18px 11px;
+  border-color: transparent transparent #ffffff transparent;
+  transform: rotate(-45deg);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
-/* Glow dot at cursor tip */
+/* Small dot at cursor point */
 .custom-cursor-dot {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
-  box-shadow: 
-    0 0 8px rgba(167, 139, 250, 0.8),
-    0 0 16px rgba(139, 92, 246, 0.4);
-  transform: translate(-2px, -2px);
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
 }
 
-/* Hover State - Larger and brighter */
+/* Hover State - Slightly larger */
 .custom-cursor.cursor-hover {
-  transform: translate(-2px, -2px) scale(1.2);
-}
-
-.custom-cursor.cursor-hover::before {
-  border-left-color: rgba(167, 139, 250, 1);
-  border-top-color: rgba(167, 139, 250, 1);
-  filter: drop-shadow(0 4px 12px rgba(167, 139, 250, 0.6))
-          drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+  transform: translate(0, 0) scale(1.15);
 }
 
 .custom-cursor-dot.cursor-hover {
-  width: 6px;
-  height: 6px;
-  background: linear-gradient(135deg, #c4b5fd, #a78bfa);
-  box-shadow: 
-    0 0 12px rgba(196, 181, 253, 1),
-    0 0 24px rgba(167, 139, 250, 0.6);
+  width: 4px;
+  height: 4px;
+  transform: translate(-2px, -2px);
 }
 
-/* Click State - Golden accent */
+/* Click State - Quick scale down */
 .custom-cursor.cursor-click {
-  transform: translate(-2px, -2px) scale(0.9);
-}
-
-.custom-cursor.cursor-click::before {
-  border-left-color: rgba(251, 191, 36, 0.95);
-  border-top-color: rgba(251, 191, 36, 0.95);
-  filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.7))
-          drop-shadow(0 0 20px rgba(245, 158, 11, 0.5));
+  transform: translate(0, 0) scale(0.92);
 }
 
 .custom-cursor-dot.cursor-click {
-  width: 6px;
-  height: 6px;
-  background: linear-gradient(135deg, #fde047, #fbbf24);
-  box-shadow: 
-    0 0 14px rgba(253, 224, 71, 1),
-    0 0 28px rgba(251, 191, 36, 0.6);
+  width: 5px;
+  height: 5px;
+  background: #fbbf24;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+  transform: translate(-2.5px, -2.5px);
 }
 
-/* Light Theme */
+/* Light Theme - Dark cursor */
 [data-theme="light"] .custom-cursor::before {
-  border-left-color: rgba(79, 70, 229, 0.85);
-  border-top-color: rgba(79, 70, 229, 0.85);
-  filter: drop-shadow(0 2px 6px rgba(79, 70, 229, 0.4))
-          drop-shadow(0 0 10px rgba(79, 70, 229, 0.2));
+  border-color: transparent transparent #1f2937 transparent;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 [data-theme="light"] .custom-cursor-dot {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  box-shadow: 
-    0 0 6px rgba(99, 102, 241, 0.6),
-    0 0 12px rgba(79, 70, 229, 0.3);
-}
-
-[data-theme="light"] .custom-cursor.cursor-hover::before {
-  border-left-color: rgba(99, 102, 241, 1);
-  border-top-color: rgba(99, 102, 241, 1);
-  filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.5))
-          drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
+  background: #1f2937;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Hide default cursor */
@@ -3357,9 +3317,7 @@ a,
 button,
 input,
 textarea,
-select,
-.card,
-.btn {
+select {
   cursor: none !important;
 }
 
@@ -3375,9 +3333,7 @@ select,
   button,
   input,
   textarea,
-  select,
-  .card,
-  .btn {
+  select {
     cursor: auto !important;
   }
 }
