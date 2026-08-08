@@ -1711,25 +1711,39 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-slide {
-    width: 220px;
+    width: 260px; /* 220px'den 260px'e çıkardık */
     aspect-ratio: 3 / 4;
   }
   
   .carousel-content {
-    padding: 18px 14px;
+    padding: 20px 16px;
+    /* Mobilde default olarak gizli, tıklanınca göster */
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  
+  /* Click ile aktif olan kart */
+  .carousel-slide.active .carousel-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .carousel-slide.active .carousel-image::after {
+    opacity: 1;
   }
   
   .carousel-content h3 {
-    font-size: 1rem;
-    margin-bottom: 6px;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
   }
   
   .carousel-content p {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
   }
   
   .carousel-track {
-    gap: 14px;
+    gap: 16px;
   }
   
   .carousel-container {
@@ -1746,35 +1760,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       transparent 100%
     );
   }
-  
-  /* Mobile'de hover yerine her zaman text göster */
-  .carousel-content {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
   .carousel-slide {
-    width: 190px;
+    width: 240px; /* 190px'den 240px'e çıkardık */
     aspect-ratio: 3 / 4;
   }
   
   .carousel-content {
-    padding: 14px 12px;
+    padding: 18px 14px;
   }
   
   .carousel-content h3 {
-    font-size: 0.92rem;
+    font-size: 1rem;
   }
   
   .carousel-content p {
-    font-size: 0.78rem;
+    font-size: 0.84rem;
   }
   
   .carousel-track {
-    gap: 12px;
+    gap: 14px;
   }
 }
 

@@ -1001,4 +1001,25 @@
     }, 250);
   }, { passive: true });
   
+  // Mobile: Click to toggle content visibility
+  if (window.innerWidth <= 768) {
+    const allSlides = track.querySelectorAll('.carousel-slide');
+    
+    allSlides.forEach(slide => {
+      slide.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Eğer zaten aktifse, kapat
+        if (this.classList.contains('active')) {
+          this.classList.remove('active');
+        } else {
+          // Diğer aktif kartları kapat
+          allSlides.forEach(s => s.classList.remove('active'));
+          // Bu kartı aç
+          this.classList.add('active');
+        }
+      });
+    });
+  }
+  
 })();
