@@ -3238,19 +3238,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 
-/* ---------- Lightweight Custom Cursor (White Arrow) ---------- */
+/* ---------- Modern Custom Cursor (Larger with Bright Yellow Click) ---------- */
 .custom-cursor,
 .custom-cursor-dot {
   position: fixed;
   pointer-events: none;
   z-index: 99999;
   will-change: transform;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Main Cursor - Simple White Arrow */
+/* Main Cursor - Larger White Arrow */
 .custom-cursor {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   transform: translate(0, 0);
 }
 
@@ -3260,55 +3261,72 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 0 18px 11px;
+  border-width: 0 0 24px 15px;
   border-color: transparent transparent #ffffff transparent;
   transform: rotate(-45deg);
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  transition: all 0.15s ease;
 }
 
-/* Small dot at cursor point */
+/* Larger dot at cursor point */
 .custom-cursor-dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  transform: translate(-1.5px, -1.5px);
-}
-
-/* Hover State - Slightly larger */
-.custom-cursor.cursor-hover {
-  transform: translate(0, 0) scale(1.15);
-}
-
-.custom-cursor-dot.cursor-hover {
-  width: 4px;
-  height: 4px;
-  transform: translate(-2px, -2px);
-}
-
-/* Click State - Quick scale down */
-.custom-cursor.cursor-click {
-  transform: translate(0, 0) scale(0.92);
-}
-
-.custom-cursor-dot.cursor-click {
   width: 5px;
   height: 5px;
-  background: #fbbf24;
-  box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transform: translate(-2.5px, -2.5px);
 }
 
-/* Light Theme - Dark cursor */
+/* Hover State - Larger scale */
+.custom-cursor.cursor-hover {
+  transform: translate(0, 0) scale(1.25);
+}
+
+.custom-cursor-dot.cursor-hover {
+  width: 6px;
+  height: 6px;
+  transform: translate(-3px, -3px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Click State - Bright Yellow Flash */
+.custom-cursor.cursor-click {
+  transform: translate(0, 0) scale(0.85);
+}
+
+.custom-cursor.cursor-click::before {
+  border-color: transparent transparent #fbbf24 transparent;
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)) drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
+}
+
+.custom-cursor-dot.cursor-click {
+  width: 8px;
+  height: 8px;
+  background: #fbbf24;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.9), 0 0 28px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.3);
+  transform: translate(-4px, -4px);
+}
+
+/* Light Theme - Dark cursor with yellow click */
 [data-theme="light"] .custom-cursor::before {
   border-color: transparent transparent #1f2937 transparent;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+[data-theme="light"] .custom-cursor.cursor-click::before {
+  border-color: transparent transparent #f59e0b transparent;
+  filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.9)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.6));
 }
 
 [data-theme="light"] .custom-cursor-dot {
   background: #1f2937;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .custom-cursor-dot.cursor-click {
+  background: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.9), 0 0 28px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.3);
 }
 
 /* Hide default cursor */
