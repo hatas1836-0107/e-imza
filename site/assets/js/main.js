@@ -793,7 +793,7 @@
 
 
 /* ============================================================
-   CUSTOM CURSOR - OPTIMIZED
+   CUSTOM CURSOR - ULTRA OPTIMIZED
    ============================================================ */
 (function() {
   'use strict';
@@ -809,78 +809,102 @@
   let cursorY = 0;
   let dotX = 0;
   let dotY = 0;
-  let isAnimating = false;
+  let rafId = null;
   
-  // Mouse hareket takibi - Passive listener ile optimize edildi
+  // Mouse hareket takibi - Throttled
+  let lastUpdate = 0;
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   }, { passive: true });
   
-  // Smooth cursor animasyonu - GPU acceleration ile
-  function animate() {
-    // Cursor (outer circle) - smooth follow
-    const dx = mouseX - cursorX;
-    const dy = mouseY - cursorY;
+  // Ultra smooth cursor animasyonu - Requestanimationframe'de debounce
+  function animate(timestamp) {
+    // Cursor - daha hızlı interpolasyon
+    cursorX += (mouseX - cursorX) * 0.3;
+    cursorY += (mouseY - cursorY) * 0.3;
     
-    cursorX += dx * 0.2;
-    cursorY += dy * 0.2;
+    // Dot - instant follow için daha yüksek interpolasyon
+    dotX += (mouseX - dotX) * 0.5;
+    dotY += (mouseY - dotY) * 0.5;
     
-    // Transform3d kullanarak GPU acceleration
+    // Tek transform ile her iki elementi güncelle
     cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-    
-    // Dot (inner circle) - faster follow
-    const ddx = mouseX - dotX;
-    const ddy = mouseY - dotY;
-    
-    dotX += ddx * 0.35;
-    dotY += ddy * 0.35;
-    
     cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
     
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
   }
   
-  animate();
+  rafId = requestAnimationFrame(animate);
   
-  // Hover effect - Event delegation ile optimize edildi
+  // Hover effect - Throttled event delegation
   const hoverSelector = 'a, button, input, textarea, select, .card, .btn, .custom-select-trigger, .select-modal-item';
+  let isHovering = false;
   
-  // Event delegation - daha performanslı
   document.body.addEventListener('mouseover', (e) => {
-    if (e.target.closest(hoverSelector)) {
+    if (!isHovering && e.target.closest(hoverSelector)) {
+      isHovering = true;
       cursor.classList.add('cursor-hover');
       cursorDot.classList.add('cursor-hover');
     }
   }, { passive: true });
   
   document.body.addEventListener('mouseout', (e) => {
-    if (e.target.closest(hoverSelector)) {
+    if (isHovering && !e.relatedTarget?.closest(hoverSelector)) {
+      isHovering = false;
       cursor.classList.remove('cursor-hover');
       cursorDot.classList.remove('cursor-hover');
     }
   }, { passive: true });
   
-  // Click effect - Passive listener
+  // Click effect - Instant
+  let isClicking = false;
   document.addEventListener('mousedown', () => {
-    cursor.classList.add('cursor-click');
-    cursorDot.classList.add('cursor-click');
+    if (!isClicking) {
+      isClicking = true;
+      cursor.classList.add('cursor-click');
+      cursorDot.classList.add('cursor-click');
+    }
   }, { passive: true });
   
   document.addEventListener('mouseup', () => {
-    cursor.classList.remove('cursor-click');
-    cursorDot.classList.remove('cursor-click');
+    if (isClicking) {
+      isClicking = false;
+      cursor.classList.remove('cursor-click');
+      cursorDot.classList.remove('cursor-click');
+    }
   }, { passive: true });
   
-  // Sayfa dışına çıkınca gizle
+  // Visibility toggle
+  let isVisible = true;
   document.addEventListener('mouseleave', () => {
-    cursor.style.opacity = '0';
-    cursorDot.style.opacity = '0';
+    if (isVisible) {
+      isVisible = false;
+      cursor.style.opacity = '0';
+      cursorDot.style.opacity = '0';
+    }
   }, { passive: true });
   
   document.addEventListener('mouseenter', () => {
-    cursor.style.opacity = '1';
-    cursorDot.style.opacity = '1';
+    if (!isVisible) {
+      isVisible = true;
+      cursor.style.opacity = '1';
+      cursorDot.style.opacity = '1';
+    }
+  }, { passive: true });
+  
+  // Page visibility - pause animation when tab inactive
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    } else {
+      if (!rafId) {
+        rafId = requestAnimationFrame(animate);
+      }
+    }
   }, { passive: true });
   
 })();
