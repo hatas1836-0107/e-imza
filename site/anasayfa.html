@@ -142,13 +142,16 @@
         <p class="hero-lead">Nitelikli elektronik imzanızı (e-imza) online başvuru ile bilgisayarınıza anında teslim ediyor, isterseniz kurye ile aynı gün elinize ulaştırıyoruz.</p>
         
         <!-- Kart5 E-imza Animasyon Kartı -->
-        <div class="glass" style="padding: 42px 38px; margin: 32px 0; position: relative; overflow: hidden;">
-          <div style="position: absolute; inset: 0; z-index: 0; filter: blur(60px); opacity: 0.55; pointer-events: none;">
+        <div class="glass kart5-bg" style="padding: 42px 38px; margin: 32px 0; position: relative; overflow: hidden;">
+          <!-- Neon Purple Background with Bokeh Effect -->
+          <div style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/neon-purple-background.jpeg'); background-size: cover; background-position: center; filter: blur(8px) brightness(0.4); opacity: 0.7; pointer-events: none;"></div>
+          
+          <div style="position: absolute; inset: 0; z-index: 1; filter: blur(60px); opacity: 0.55; pointer-events: none;">
             <span style="position: absolute; width: 32vmax; height: 32vmax; top: -14vmax; left: -10vmax; border-radius: 50%; background: radial-gradient(circle, #8B5CF6, transparent 65%); animation: aurora1 15s ease-in-out infinite;"></span>
             <span style="position: absolute; width: 26vmax; height: 26vmax; bottom: -12vmax; right: 4vmax; border-radius: 50%; background: radial-gradient(circle, #22D3EE, transparent 65%); animation: aurora2 18s ease-in-out infinite;"></span>
           </div>
           
-          <div style="position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;">
+          <div style="position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;">
             <div>
               <span style="display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; background: rgba(139,92,246,0.14); border: 1px solid rgba(139,92,246,0.3); font-size: 12px; font-weight: 600; color: #C4B5FD; letter-spacing: 0.02em; margin-bottom: 16px;">Teknoloji</span>
               <h2 style="font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; line-height: 1.12; background: linear-gradient(90deg, #F5F3FF, #8B5CF6 45%, #F5F3FF); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 14px;">Güvenli e-imza altyapısı</h2>
@@ -225,15 +228,18 @@
 
       <!-- SAĞ TARAF: Tracking Card (kart3) -->
       <div>
-        <div class="glass reveal" style="padding: 32px 28px;">
-          <div class="eyebrow" style="margin-bottom: 16px;">
+        <div class="glass reveal kart3-bg" style="padding: 32px 28px; position: relative; overflow: hidden;">
+          <!-- Neon Purple Background with Bokeh Effect -->
+          <div style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/neon-purple-background.jpeg'); background-size: cover; background-position: center; filter: blur(8px) brightness(0.35); opacity: 0.65; pointer-events: none;"></div>
+          
+          <div class="eyebrow" style="margin-bottom: 16px; position: relative; z-index: 1;">
             <span class="dot"></span>
             Canlı Takip
           </div>
           
-          <h2 style="font-size: 1.4rem; margin-bottom: 24px;">E-İmza başvurunuz yolda</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 24px; position: relative; z-index: 1;">E-İmza başvurunuz yolda</h2>
           
-          <svg class="route-animation" viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; margin-bottom: 8px;">
+          <svg class="route-animation" viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; margin-bottom: 8px; position: relative; z-index: 1;">
             <defs>
               <linearGradient id="routeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#22c55e"/>
@@ -268,13 +274,13 @@
             </g>
           </svg>
           
-          <div class="route-labels" style="display: flex; margin-bottom: 20px;">
+          <div class="route-labels" style="display: flex; margin-bottom: 20px; position: relative; z-index: 1;">
             <div style="flex: 1; text-align: left; font-size: 0.8rem; font-weight: 600; color: var(--emerald-400);">Başvuru<br>Onaylandı</div>
             <div style="flex: 1; text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">E-İmza<br>Hazırlanıyor</div>
             <div style="flex: 1; text-align: right; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Kurye<br>Yolda</div>
           </div>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--surface-border); padding-top: 18px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--surface-border); padding-top: 18px; position: relative; z-index: 1;">
             <div style="padding: 0 8px; text-align: center;">
               <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.8rem; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; display: block; line-height: 1;">Aynı Gün</span>
               <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 4px; display: block;">Teslimat garantisi</span>
