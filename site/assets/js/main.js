@@ -911,7 +911,7 @@
 
 
 /* ============================================================
-   INDUSTRY CAROUSEL - TRUE INFINITE LOOP
+   INDUSTRY CAROUSEL - TRUE INFINITE LOOP (FIXED)
    ============================================================ */
 (function() {
   'use strict';
@@ -922,30 +922,40 @@
   const slides = Array.from(track.children);
   if (slides.length === 0) return;
   
-  // Clone slides for seamless loop
-  slides.forEach(slide => {
-    const clone = slide.cloneNode(true);
-    track.appendChild(clone);
-  });
+  // Clone slides multiple times for seamless infinite loop
+  const cloneCount = 3; // Clone 3 times for buffer
+  for (let i = 0; i < cloneCount; i++) {
+    slides.forEach(slide => {
+      const clone = slide.cloneNode(true);
+      track.appendChild(clone);
+    });
+  }
   
   let currentTranslate = 0;
-  const speed = 0.5; // pixels per frame
+  const speed = 0.8; // Smooth speed
   let rafId = null;
   let isPaused = false;
   
-  // Calculate when to reset (half way through since we duplicated)
+  // Calculate single slide width + gap
+  function getSlideWidth() {
+    const slide = track.children[0];
+    const slideWidth = slide.offsetWidth;
+    const gap = 24;
+    return slideWidth + gap;
+  }
+  
+  // Calculate reset point (one full set)
   function getResetPoint() {
-    const slideWidth = slides[0].offsetWidth;
-    const gap = 24; // matches CSS gap
-    return -(slideWidth + gap) * slides.length;
+    return -getSlideWidth() * slides.length;
   }
   
   function animate() {
     if (!isPaused) {
       currentTranslate -= speed;
       
-      // Seamless loop - reset when halfway
-      if (currentTranslate <= getResetPoint()) {
+      // Seamless infinite loop
+      const resetPoint = getResetPoint();
+      if (currentTranslate <= resetPoint) {
         currentTranslate = 0;
       }
       
@@ -986,7 +996,6 @@
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      // Reset position on resize to prevent visual glitches
       currentTranslate = 0;
       track.style.transform = 'translate3d(0, 0, 0)';
     }, 250);

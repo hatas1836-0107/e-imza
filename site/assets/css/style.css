@@ -1536,7 +1536,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-weight: 500;
 }
 
-/* ---------- Industry Carousel - True Infinite Scroll ---------- */
+/* ---------- Industry Carousel - True Infinite with Neon Background ---------- */
 .industry-carousel-section {
   padding: 80px 0;
   overflow: hidden;
@@ -1568,14 +1568,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .carousel-track {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   will-change: transform;
   width: fit-content;
 }
 
 .carousel-slide {
   flex-shrink: 0;
-  width: 380px;
+  width: 320px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
@@ -1598,7 +1598,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   aspect-ratio: 4 / 3;
   overflow: hidden;
   position: relative;
-  background: var(--ink-900);
+  background-image: url('../img/neon-purple-background.jpeg');
+  background-size: cover;
+  background-position: center;
   flex-shrink: 0;
 }
 
@@ -1608,8 +1610,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   inset: 0;
   background: linear-gradient(180deg, 
     transparent 0%, 
-    rgba(11, 14, 26, 0.7) 100%
+    rgba(11, 14, 26, 0.85) 100%
   );
+  pointer-events: none;
 }
 
 .carousel-image img {
@@ -1618,29 +1621,37 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   object-fit: contain;
   object-position: center;
   transition: transform 0.5s var(--ease);
+  position: relative;
+  z-index: 1;
+  filter: grayscale(20%);
 }
 
 .carousel-slide:hover .carousel-image img {
   transform: scale(1.05);
+  filter: grayscale(0%);
 }
 
 .carousel-content {
-  padding: 24px 22px;
+  padding: 20px 18px;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(180deg, 
+    rgba(11, 14, 26, 0.4) 0%,
+    rgba(11, 14, 26, 0.6) 100%
+  );
 }
 
 .carousel-content h3 {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--text-primary);
   font-family: 'Space Grotesk', sans-serif;
 }
 
 .carousel-content p {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
@@ -1649,7 +1660,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Tablet responsive */
 @media (max-width: 1024px) {
   .carousel-slide {
-    width: 340px;
+    width: 300px;
+  }
+  
+  .carousel-track {
+    gap: 18px;
   }
 }
 
@@ -1660,24 +1675,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-slide {
-    width: 280px;
+    width: 260px;
   }
   
   .carousel-content {
-    padding: 20px 18px;
+    padding: 18px 16px;
   }
   
   .carousel-content h3 {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
   }
   
   .carousel-content p {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
   
   .carousel-track {
-    gap: 16px;
+    gap: 14px;
   }
   
   .carousel-container {
@@ -1699,7 +1714,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Small mobile */
 @media (max-width: 480px) {
   .carousel-slide {
-    width: 240px;
+    width: 220px;
   }
   
   .carousel-content {
@@ -1707,11 +1722,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   
   .carousel-content h3 {
-    font-size: 1rem;
+    font-size: 0.98rem;
   }
   
   .carousel-content p {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+  }
+  
+  .carousel-track {
+    gap: 12px;
   }
 }
 
