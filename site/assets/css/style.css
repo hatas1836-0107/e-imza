@@ -1793,11 +1793,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
 }
 
-/* ---------- CTA Banner ---------- */
+/* ---------- CTA Banner with Theme Toggle ---------- */
 .cta-banner-section {
   position: relative;
   overflow: hidden;
   height: 560px; /* 1376x768 aspect ratio (~56%) */
+}
+
+/* Light mode - show light banner */
+[data-theme="light"] .cta-banner-dark {
+  opacity: 0 !important;
+}
+
+[data-theme="light"] .cta-banner-light {
+  opacity: 1 !important;
 }
 
 /* Responsive */
