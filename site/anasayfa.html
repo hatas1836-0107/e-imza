@@ -834,15 +834,15 @@
 </section>
 
 <!-- Footer Banner with Fade Edges -->
-<section class="footer-banner-section" style="position: relative; padding: 0; margin: 0; overflow: hidden;">
+<section class="footer-banner-section" style="position: relative; padding: 0; margin: 0; overflow: hidden; height: 300px; display: block;">
   <!-- Dark Mode Banner -->
-  <div class="footer-banner-dark" style="position: relative; width: 100%; height: 300px; background-image: url('assets/img/black-Website_footer_banner_with_text_202608090153.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+  <div class="footer-banner-dark" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('assets/img/black-Website_footer_banner_with_text_202608090153.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; z-index: 1;">
     <!-- Fade Overlay - Köşelerden fade -->
     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 100%); pointer-events: none;"></div>
   </div>
   
   <!-- Light Mode Banner (Hidden by default, shown in light mode via CSS) -->
-  <div class="footer-banner-light" style="position: absolute; top: 0; left: 0; width: 100%; height: 300px; background-image: url('assets/img/white-Website_footer_banner_design_202608090156.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0; transition: opacity 0.3s ease;">
+  <div class="footer-banner-light" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('assets/img/white-Website_footer_banner_design_202608090156.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0; transition: opacity 0.3s ease; z-index: 2;">
     <!-- Fade Overlay - Köşelerden fade -->
     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 100%); pointer-events: none;"></div>
   </div>
