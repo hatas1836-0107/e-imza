@@ -1536,6 +1536,225 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-weight: 500;
 }
 
+/* ---------- Industry Carousel - Infinite Scroll ---------- */
+.industry-carousel-section {
+  padding: 80px 0;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, 
+    rgba(79, 70, 229, 0.03) 0%, 
+    rgba(139, 92, 246, 0.02) 50%,
+    rgba(79, 70, 229, 0.03) 100%
+  );
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, 
+    transparent 0%, 
+    black 10%, 
+    black 90%, 
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(to right, 
+    transparent 0%, 
+    black 10%, 
+    black 90%, 
+    transparent 100%
+  );
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  animation: carousel-scroll 40s linear infinite;
+  will-change: transform;
+  width: fit-content;
+}
+
+@keyframes carousel-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+.carousel-slide {
+  flex-shrink: 0;
+  width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.carousel-slide:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.25);
+}
+
+.carousel-image {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+  background: var(--ink-900);
+}
+
+.carousel-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(11, 14, 26, 0.7) 100%
+  );
+}
+
+.carousel-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease);
+}
+
+.carousel-slide:hover .carousel-image img {
+  transform: scale(1.05);
+}
+
+.carousel-content {
+  padding: 28px 26px;
+}
+
+.carousel-content h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.carousel-content p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) {
+  .carousel-slide {
+    width: 360px;
+  }
+  
+  .carousel-image {
+    height: 240px;
+  }
+  
+  .carousel-track {
+    animation-duration: 35s;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .industry-carousel-section {
+    padding: 60px 0;
+  }
+  
+  .carousel-slide {
+    width: 300px;
+  }
+  
+  .carousel-image {
+    height: 200px;
+  }
+  
+  .carousel-content {
+    padding: 22px 20px;
+  }
+  
+  .carousel-content h3 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+  
+  .carousel-content p {
+    font-size: 0.88rem;
+  }
+  
+  .carousel-track {
+    gap: 16px;
+    animation-duration: 30s;
+  }
+  
+  .carousel-container {
+    mask-image: linear-gradient(to right, 
+      transparent 0%, 
+      black 5%, 
+      black 95%, 
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(to right, 
+      transparent 0%, 
+      black 5%, 
+      black 95%, 
+      transparent 100%
+    );
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .carousel-slide {
+    width: 260px;
+  }
+  
+  .carousel-image {
+    height: 180px;
+  }
+  
+  .carousel-content {
+    padding: 18px 16px;
+  }
+  
+  .carousel-content h3 {
+    font-size: 1.05rem;
+  }
+  
+  .carousel-content p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    animation: carousel-scroll-slow 80s linear infinite;
+  }
+  
+  @keyframes carousel-scroll-slow {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+}
+
 /* ---------- Footer ---------- */
 .site-footer { padding: 70px 0 26px; border-top: 1px solid var(--divider); margin-top: 40px; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 46px; }
