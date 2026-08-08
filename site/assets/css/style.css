@@ -88,6 +88,14 @@
   --divider: rgba(20,20,50,0.08);
 }
 
+/* Light mode - Kart3 ve Kart5 için neon purple background */
+[data-theme="light"] .kart3-bg > div:first-child,
+[data-theme="light"] .kart5-bg > div:first-child {
+  background-image: url('../img/neon-purple-light.jpeg') !important;
+  filter: blur(8px) brightness(0.8) !important;
+  opacity: 0.5 !important;
+}
+
 /* ---------- Reset ---------- */
 * , *::before, *::after { box-sizing: border-box; }
 html { 
