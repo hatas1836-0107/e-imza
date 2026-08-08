@@ -1797,7 +1797,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .cta-banner-section {
   position: relative;
   overflow: hidden;
-  min-height: 400px;
+  height: 560px; /* 1376x768 aspect ratio (~56%) */
 }
 
 /* Light mode - show light banner */
@@ -1810,15 +1810,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .cta-banner-section {
+    height: 450px;
+  }
+}
+
 @media (max-width: 768px) {
   .cta-banner-section {
-    min-height: 300px;
+    height: 350px;
   }
 }
 
 @media (max-width: 480px) {
   .cta-banner-section {
-    min-height: 250px;
+    height: 280px;
   }
 }
 

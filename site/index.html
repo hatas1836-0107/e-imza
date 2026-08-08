@@ -813,16 +813,19 @@
 </section>
 
 <!-- CTA Section with Banner Background -->
-<section class="cta-banner-section" style="position: relative; padding: 0; margin: 0; overflow: hidden; min-height: 400px; display: flex; align-items: center; justify-content: center;">
+<section class="cta-banner-section" style="position: relative; padding: 0; margin: 0; overflow: hidden; height: 560px; display: flex; align-items: flex-end; justify-content: center;">
   <!-- Background Banner (Theme-aware) -->
   <div class="cta-banner-dark" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-dark.jpeg'); background-size: cover; background-position: center; opacity: 1; transition: opacity 0.4s ease;"></div>
   <div class="cta-banner-light" style="position: absolute; inset: 0; z-index: 0; background-image: url('assets/img/footer-banner-light.jpeg'); background-size: cover; background-position: center; opacity: 0; transition: opacity 0.4s ease;"></div>
   
-  <!-- Content - Sadece Butonlar -->
-  <div class="container" style="position: relative; z-index: 2; text-align: center; padding: 60px 24px;">
+  <!-- Fade from edges (not dark overlay) -->
+  <div style="position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse at center, transparent 40%, var(--bg) 100%); pointer-events: none;"></div>
+  
+  <!-- Content - Butonlar alta yakın -->
+  <div class="container" style="position: relative; z-index: 2; text-align: center; padding-bottom: 80px;">
     <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
-      <a href="fiyatlandirma.html" class="btn btn-primary btn-lg" style="box-shadow: 0 6px 20px rgba(79,70,229,0.5); font-size: 1.1rem; padding: 16px 36px;">Fiyatları Görüntüle</a>
-      <a href="https://wa.me/905453863407" target="_blank" class="btn btn-whatsapp btn-lg" style="box-shadow: 0 6px 20px rgba(37,211,102,0.5); font-size: 1.1rem; padding: 16px 36px;">WhatsApp ile İletişim</a>
+      <a href="fiyatlandirma.html" class="btn btn-primary btn-lg" style="box-shadow: 0 8px 24px rgba(79,70,229,0.6); font-size: 1.15rem; padding: 18px 42px;">Fiyatları Görüntüle</a>
+      <a href="https://wa.me/905453863407" target="_blank" class="btn btn-whatsapp btn-lg" style="box-shadow: 0 8px 24px rgba(37,211,102,0.6); font-size: 1.15rem; padding: 18px 42px;">WhatsApp ile İletişim</a>
     </div>
   </div>
 </section>
