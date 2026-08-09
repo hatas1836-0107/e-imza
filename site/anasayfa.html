@@ -1888,5 +1888,139 @@ if('serviceWorker' in navigator){
 }
 </script>
 
+<!-- Promo Popup Modal -->
+<div id="promoModal" style="display: none; position: fixed; inset: 0; z-index: 10002; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.4s ease;">
+  <div style="position: relative; max-width: 800px; width: 100%; animation: slideUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
+    <button id="closePromoModal" style="position: absolute; top: -12px; right: -12px; background: linear-gradient(135deg, #ef4444, #dc2626); border: 3px solid #fff; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(239,68,68,0.6); z-index: 10;" aria-label="Kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px; color: #fff;"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    
+    <!-- Desktop Image -->
+    <img src="assets/img/promo-desktop.jpeg" alt="Özel Kampanya" class="promo-desktop" style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); display: block;">
+    
+    <!-- Mobile Image -->
+    <img src="assets/img/promo-mobile.jpeg" alt="Özel Kampanya" class="promo-mobile" style="width: 100%; height: auto; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); display: none;">
+  </div>
+</div>
+
+<style>
+@keyframes slideUpBounce {
+  0% {
+    transform: translateY(100px) scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-10px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+#closePromoModal:hover {
+  transform: scale(1.15) rotate(90deg);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 6px 24px rgba(239,68,68,0.8);
+}
+
+#closePromoModal:active {
+  transform: scale(0.95) rotate(90deg);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .promo-desktop {
+    display: none !important;
+  }
+  
+  .promo-mobile {
+    display: block !important;
+  }
+  
+  #promoModal > div {
+    max-width: 95%;
+  }
+  
+  #closePromoModal {
+    top: -8px;
+    right: -8px;
+    width: 38px;
+    height: 38px;
+  }
+  
+  #closePromoModal svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #promoModal {
+    padding: 10px;
+  }
+  
+  #promoModal img {
+    border-radius: 12px;
+  }
+  
+  #closePromoModal {
+    top: -6px;
+    right: -6px;
+    width: 36px;
+    height: 36px;
+    border-width: 2px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Promo popup'ı localStorage kontrolü ile göster (günde 1 kez)
+  var promoModal = document.getElementById('promoModal');
+  var closePromoBtn = document.getElementById('closePromoModal');
+  
+  if (!promoModal || !closePromoBtn) return;
+  
+  // LocalStorage kontrolü - bugün gösterildi mi?
+  var today = new Date().toDateString();
+  var lastShown = localStorage.getItem('promoLastShown');
+  
+  // Eğer bugün gösterilmediyse veya hiç gösterilmediyse
+  if (lastShown !== today) {
+    // 3 saniye sonra göster
+    setTimeout(function() {
+      promoModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      
+      // Gösterildi olarak işaretle
+      localStorage.setItem('promoLastShown', today);
+    }, 3000);
+  }
+  
+  // Kapatma butonu
+  closePromoBtn.addEventListener('click', function() {
+    promoModal.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+  
+  // Overlay'e tıklayınca kapat
+  promoModal.addEventListener('click', function(e) {
+    if (e.target === promoModal) {
+      promoModal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  });
+  
+  // ESC tuşu ile kapat
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && promoModal.style.display === 'flex') {
+      promoModal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
