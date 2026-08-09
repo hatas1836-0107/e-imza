@@ -412,49 +412,37 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* MOBİL OPTİMİZASYON - PERFORMANS KRİTİK */
 @media (max-width: 768px) {
-  /* Animasyonları hafiflet ama kaldırma */
+  /* Spotlight'ları statik yap ama renkleri koru */
   .spotlight {
-    animation: spotlightMobile 30s ease-in-out infinite !important;
+    animation: none !important;
     filter: blur(80px);
     will-change: auto;
-  }
-  
-  @keyframes spotlightMobile {
-    0%, 100% { 
-      transform: translate(0, 0) scale(1);
-      opacity: 0.3;
-    }
-    50% { 
-      transform: translate(5%, -5%) scale(1.05);
-      opacity: 0.35;
-    }
   }
   
   .spotlight-1 {
     width: 500px;
     height: 500px;
-    opacity: 0.3 !important;
+    opacity: 0.35 !important;
   }
   .spotlight-2 {
     width: 450px;
     height: 450px;
-    opacity: 0.28 !important;
+    opacity: 0.32 !important;
   }
   .spotlight-3 {
     width: 400px;
     height: 400px;
-    opacity: 0.25 !important;
+    opacity: 0.28 !important;
   }
   
   /* Grain overlay hafif tut */
   .grain-overlay {
-    opacity: 0.02;
-    animation: grainMove 15s steps(6) infinite;
+    opacity: 0.025;
+    animation: grainMove 20s steps(6) infinite;
   }
   
   /* Mesh background basit tut */
   .mesh-bg {
-    background: var(--bg);
     animation: none;
     transform: none !important;
   }
@@ -507,10 +495,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* ULTRA DÜŞÜK GÜÇ CİHAZLAR - 480px altı */
 @media (max-width: 480px) {
-  /* Spotlight'ları daha da hafiflet */
+  /* Spotlight'ları statik tut */
   .spotlight {
     animation: none !important;
-    opacity: 0.2 !important;
+    opacity: 0.25 !important;
     filter: blur(60px);
   }
   
@@ -529,7 +517,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   
   /* Grain overlay çok hafif */
   .grain-overlay {
-    opacity: 0.015;
+    opacity: 0.018;
   }
   
   /* Shadow'ları hafiflet */
@@ -537,11 +525,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   }
   
-  /* Gradient'leri koru ama basitleştir */
+  /* Gradient'leri KORU */
   .grad-text {
-    background: linear-gradient(135deg, var(--indigo-400) 0%, var(--violet-500) 100%) !important;
-    -webkit-background-clip: text;
-    background-clip: text;
+    background: var(--gradient-brand) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
   }
   
   /* 3D efektleri hafiflet */
