@@ -967,6 +967,14 @@
           <li><a href="gizlilik-politikasi.html">Gizlilik Politikası &amp; KVKK</a></li>
           <li><a href="iletisim.html">Bize Ulaşın</a></li>
         </ul>
+        
+        <!-- Ghetto Yazilim Logo - Developer Credit -->
+        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <button id="ghettoYazilimBtn" style="background: none; border: none; cursor: pointer; padding: 0; transition: transform 0.3s ease, opacity 0.3s ease; width: 100%;" aria-label="Web Sitesi Geliştiricisi: Ghetto Yazılım">
+            <img src="assets/img/ghetto-yazilim-logo.jpeg" alt="Ghetto Yazılım - Web Geliştirme" style="max-width: 160px; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: box-shadow 0.3s ease;">
+          </button>
+          <p style="margin-top: 10px; font-size: 0.8rem; color: rgba(255,255,255,0.4);">Web Sitesi Geliştirme</p>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -979,17 +987,9 @@
   </div>
 </footer>
 
-<!-- Ghetto Yazilim Logo - Developer Credit (Footer dışında) -->
-<div style="text-align: center; padding: 40px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05);">
-  <button id="ghettoYazilimBtn" style="background: none; border: none; cursor: pointer; padding: 0; transition: transform 0.3s ease, opacity 0.3s ease;" aria-label="Web Sitesi Geliştiricisi: Ghetto Yazılım">
-    <img src="assets/img/ghetto-yazilim-logo.jpeg" alt="Ghetto Yazılım - Web Geliştirme" style="max-width: 200px; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: box-shadow 0.3s ease;">
-  </button>
-  <p style="margin-top: 12px; font-size: 0.85rem; color: rgba(255,255,255,0.5);">Web Sitesi Geliştirme</p>
-</div>
-
 <!-- Ghetto Yazilim Contact Modal -->
-<div id="ghettoModal" style="display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease; cursor: default;">
-  <div style="background: linear-gradient(135deg, #1a1d2e 0%, #0f1118 100%); border-radius: 24px; padding: 40px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(79,70,229,0.3); animation: slideUp 0.3s ease; cursor: default;">
+<div id="ghettoModal" style="display: none; position: fixed; inset: 0; z-index: 10001; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease;">
+  <div style="background: linear-gradient(135deg, #1a1d2e 0%, #0f1118 100%); border-radius: 24px; padding: 40px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(79,70,229,0.3); animation: slideUp 0.3s ease;">
     <button id="closeGhettoModal" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s ease;" aria-label="Kapat">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; color: #fff;"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -1027,7 +1027,7 @@
         </div>
         <div style="flex: 1;">
           <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 4px;">WhatsApp</p>
-          <a href="https://wa.me/905439269670" target="_blank" rel="noopener" style="color: #818cf8; font-size: 1rem; font-weight: 500; text-decoration: none;">0543 926 96 70</a>
+          <a href="https://wa.me/905439269670?text=Merhaba%2C%20web%20siteniz%20i%C3%A7in%20bilgi%20almak%20istiyorum.%20Benimle%20ilgilenebilir%20misiniz%3F" target="_blank" rel="noopener" style="color: #818cf8; font-size: 1rem; font-weight: 500; text-decoration: none;">0543 926 96 70</a>
         </div>
       </div>
     </div>
@@ -1077,10 +1077,17 @@
   box-shadow: 0 8px 20px rgba(79,70,229,0.6) !important;
 }
 
-/* Modal'da custom cursor görünsün */
-#ghettoModal,
-#ghettoModal * {
-  cursor: inherit !important;
+/* Modal'da custom cursor görünsün - Tüm default cursor'ları kaldır */
+#ghettoModal {
+  cursor: auto !important;
+}
+
+#ghettoModal > div {
+  cursor: auto !important;
+}
+
+#ghettoModal img {
+  cursor: auto !important;
 }
 
 #ghettoModal a,
