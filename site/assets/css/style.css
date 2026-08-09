@@ -1548,6 +1548,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   );
 }
 
+/* Light mode - hide neon purple background */
+[data-theme="light"] .industry-carousel-section > div:first-child {
+  display: none !important;
+}
+
 .carousel-container {
   position: relative;
   width: 100%;
