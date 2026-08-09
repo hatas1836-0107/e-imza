@@ -1805,31 +1805,34 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   height: 560px; /* 1376x768 aspect ratio (~56%) */
 }
 
-/* Light mode - show light banner */
-[data-theme="light"] .cta-banner-dark {
-  opacity: 0 !important;
-}
-
-[data-theme="light"] .cta-banner-light {
-  opacity: 1 !important;
-}
-
-/* Responsive */
+/* Responsive - Mobile için arka plan pozisyonu */
 @media (max-width: 1024px) {
   .cta-banner-section {
     height: 450px;
+  }
+  
+  .cta-banner-section > div:first-child {
+    background-position: center center !important;
   }
 }
 
 @media (max-width: 768px) {
   .cta-banner-section {
-    height: 350px;
+    height: 400px;
+  }
+  
+  .cta-banner-section > div:first-child {
+    background-position: 65% center !important;
   }
 }
 
 @media (max-width: 480px) {
   .cta-banner-section {
-    height: 280px;
+    height: 320px;
+  }
+  
+  .cta-banner-section > div:first-child {
+    background-position: 60% center !important;
   }
 }
 
