@@ -1209,48 +1209,41 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .section-head p { font-size: 1.02rem; }
 .section-head.left { margin: 0 0 44px; text-align: left; }
 
-/* Scroll reveal animasyonları - Geliştirilmiş */
+/* Scroll reveal animasyonları - DEVRE DIŞI (CLS önleme için) */
 .reveal { 
-  opacity: 0; 
-  transform: translateY(40px) scale(0.95) translateZ(0); 
-  transition: 
-    opacity .8s var(--ease), 
-    transform .8s var(--ease);
-  will-change: auto;
-  position: relative;
-  z-index: 1;
+  opacity: 1 !important; 
+  transform: none !important;
 }
 
 .reveal.in { 
   opacity: 1; 
-  transform: translateY(0) scale(1) translateZ(0); 
+  transform: none;
 }
 
 .reveal-stagger > * { 
-  transition-delay: calc(var(--i, 0) * 100ms); 
+  transition-delay: 0ms !important;
   position: relative;
   z-index: 1;
 }
 
-/* Revealed kartlar için devam eden parallax */
+/* Revealed kartlar için devam eden parallax - KALDIRILDI */
 .card.revealed {
-  transition: transform 0.3s var(--ease);
+  transition: none;
 }
 
 /* Mobil için reveal animasyonlarını basitleştir */
 @media (max-width: 768px) {
   .reveal {
-    transform: translateY(20px);
-    transition: opacity .4s ease, transform .4s ease;
-    will-change: auto;
+    opacity: 1 !important;
+    transform: none !important;
   }
   
   .reveal.in {
-    transform: translateY(0);
+    transform: none;
   }
   
   .reveal-stagger > * {
-    transition-delay: calc(var(--i, 0) * 50ms);
+    transition-delay: 0ms !important;
   }
   
   .card.revealed {

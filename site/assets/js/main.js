@@ -120,25 +120,11 @@
 
     /* ---------- Scroll reveal + card 3D tilt effect ---------- */
     var revealEls = document.querySelectorAll(".reveal");
-    if ("IntersectionObserver" in window && revealEls.length) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { 
-        threshold: 0.1, 
-        rootMargin: "0px 0px -50px 0px" 
-      });
-      revealEls.forEach(function (el, i) {
-        el.style.setProperty("--i", i % 8);
-        io.observe(el);
-      });
-    } else {
-      revealEls.forEach(function (el) { el.classList.add("in"); });
-    }
+    
+    // SCROLL ANIMASYONLARINI KALDIR - Direkt göster
+    revealEls.forEach(function (el) { 
+      el.classList.add("in"); 
+    });
     
     /* Card 3D tilt on hover (desktop only) */
     if (window.innerWidth > 860) {
@@ -364,70 +350,22 @@
       requestAnimationFrame(step);
     }
 
-    /* ---------- Yukarı çık + header küçülme + parallax + modern scroll efektleri ---------- */
+    /* ---------- Yukarı çık + header küçülme ---------- */
     var fabTop = document.querySelector(".fab-top");
     var header = document.querySelector(".site-header");
-    var meshBg = document.querySelector(".mesh-bg");
-    var heroSection = document.querySelector(".hero");
-    var grainOverlay = document.querySelector(".grain-overlay");
     
-    // MOBİL OPTİMİZASYON - Scroll animasyonlarını devre dışı bırak
-    var isMobile = window.innerWidth <= 768;
-    var isLowEnd = window.innerWidth <= 480;
-    
-    // Scroll animasyon değişkenleri
-    var lastScrollY = 0;
+    // Basit scroll efektleri - sadece gerekli olanlar
     var ticking = false;
     
     function updateScrollEffects() {
       var y = window.scrollY || window.pageYOffset;
-      var scrollProgress = y / (document.documentElement.scrollHeight - window.innerHeight);
-      var windowHeight = window.innerHeight;
       
       // Yukarı çık butonu
       if (fabTop) fabTop.classList.toggle("show", y > 480);
       
-      // Header shadow - Dinamik opacity
-      if (header && !isMobile) {
-        var shadowOpacity = Math.min(y / 100, 1);
-        header.style.boxShadow = y > 12 ? "0 6px 24px rgba(0,0,0," + (0.18 * shadowOpacity) + ")" : "none";
-      }
-      
-      // MOBİLDE TÜM SCROLL EFEKTLERİNİ KAPAT
-      if (isMobile || isLowEnd) {
-        ticking = false;
-        return;
-      }
-      
-      // Desktop only - Mesh Background Parallax
-      if (meshBg && !isMobile) {
-        var translateY = y * 0.3;
-        var rotate = scrollProgress * 3;
-        var scale = 1 + (scrollProgress * 0.05);
-        meshBg.style.transform = "translateY(" + translateY + "px) rotate(" + rotate + "deg) scale(" + scale + ")";
-        var opacity = Math.max(0.4, 1 - (y / (windowHeight * 2)));
-        meshBg.style.opacity = opacity;
-      }
-      
-      // Desktop only - Grain Overlay
-      if (grainOverlay && !isMobile) {
-        var grainOpacity = 0.035 + (scrollProgress * 0.01);
-        grainOverlay.style.opacity = Math.min(grainOpacity, 0.045);
-      }
-      
-      // Desktop only - Kartlar için parallax
-      if (!isMobile) {
-        var revealCards = document.querySelectorAll('.card:not(.revealed)');
-        revealCards.forEach(function(card) {
-          var rect = card.getBoundingClientRect();
-          var cardMiddle = rect.top + (rect.height / 2);
-          
-          if (cardMiddle < windowHeight * 0.85) {
-            card.classList.add('revealed');
-            var cardOffset = (rect.top - windowHeight) * 0.03;
-            card.style.transform = "translateY(" + cardOffset + "px)";
-          }
-        });
+      // Header shadow - Basit
+      if (header) {
+        header.style.boxShadow = y > 12 ? "0 6px 24px rgba(0,0,0,0.18)" : "none";
       }
       
       ticking = false;
@@ -435,12 +373,6 @@
     
     function requestTick() {
       if (!ticking) {
-        if (isMobile || isLowEnd) {
-          // Mobilde sadece basit scroll efektleri
-          var y = window.scrollY || window.pageYOffset;
-          if (fabTop) fabTop.classList.toggle("show", y > 480);
-          return;
-        }
         window.requestAnimationFrame(updateScrollEffects);
         ticking = true;
       }
@@ -451,16 +383,6 @@
     
     // İlk yükleme
     updateScrollEffects();
-    
-    // Resize'da mobile check yenile
-    var resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        isMobile = window.innerWidth <= 768;
-        isLowEnd = window.innerWidth <= 480;
-      }, 200);
-    }, { passive: true });
     
     if (fabTop) fabTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
 
