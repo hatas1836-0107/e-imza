@@ -128,7 +128,10 @@
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
+      }, { 
+        threshold: 0.1, 
+        rootMargin: "0px 0px -50px 0px" 
+      });
       revealEls.forEach(function (el, i) {
         el.style.setProperty("--i", i % 8);
         io.observe(el);
@@ -148,11 +151,11 @@
           var centerY = rect.height / 2;
           var rotateX = (y - centerY) / 20;
           var rotateY = (centerX - x) / 20;
-          card.style.transform = "translateY(-8px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
-        });
+          card.style.transform = "translateY(-8px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateZ(0)";
+        }, { passive: true });
         card.addEventListener("mouseleave", function() {
           card.style.transform = "";
-        });
+        }, { passive: true });
       });
     }
 
@@ -206,7 +209,7 @@
           if (index === 0) dot.classList.add("active");
           
           (function(idx) {
-            dot.addEventListener("click", function() { goToSlide(idx); });
+            dot.addEventListener("click", function() { goToSlide(idx); }, { passive: true });
           })(index);
           
           dotsContainer.appendChild(dot);
@@ -294,8 +297,8 @@
       startAutoplay();
       
       // Pause on hover
-      carousel.addEventListener("mouseenter", stopAutoplay);
-      carousel.addEventListener("mouseleave", startAutoplay);
+      carousel.addEventListener("mouseenter", stopAutoplay, { passive: true });
+      carousel.addEventListener("mouseleave", startAutoplay, { passive: true });
       
       // Handle resize
       var resizeTimer;
@@ -304,7 +307,7 @@
         resizeTimer = setTimeout(function() {
           updateSlides();
         }, 150);
-      });
+      }, { passive: true });
       
       // Touch swipe support
       var touchStartX = 0;
@@ -368,6 +371,10 @@
     var heroSection = document.querySelector(".hero");
     var grainOverlay = document.querySelector(".grain-overlay");
     
+    // MOBİL OPTİMİZASYON - Scroll animasyonlarını devre dışı bırak
+    var isMobile = window.innerWidth <= 768;
+    var isLowEnd = window.innerWidth <= 480;
+    
     // Scroll animasyon değişkenleri
     var lastScrollY = 0;
     var ticking = false;
@@ -381,64 +388,79 @@
       if (fabTop) fabTop.classList.toggle("show", y > 480);
       
       // Header shadow - Dinamik opacity
-      if (header) {
+      if (header && !isMobile) {
         var shadowOpacity = Math.min(y / 100, 1);
         header.style.boxShadow = y > 12 ? "0 6px 24px rgba(0,0,0," + (0.18 * shadowOpacity) + ")" : "none";
       }
       
-      // Hero scroll efekti KAPALI - artık herhangi bir scroll animasyonu yok
-      // Elementler normal kalacak, opacity ve position değişmeyecek
+      // MOBİLDE TÜM SCROLL EFEKTLERİNİ KAPAT
+      if (isMobile || isLowEnd) {
+        ticking = false;
+        return;
+      }
       
-      // Mesh Background - Gelişmiş parallax ve rotate
-      if (meshBg) {
-        var translateY = y * 0.4; // Daha hızlı hareket
-        var rotate = scrollProgress * 5; // Scroll ile hafif döndürme (0-5deg)
-        var scale = 1 + (scrollProgress * 0.1); // Scroll ile hafif büyüme
+      // Desktop only - Mesh Background Parallax
+      if (meshBg && !isMobile) {
+        var translateY = y * 0.3;
+        var rotate = scrollProgress * 3;
+        var scale = 1 + (scrollProgress * 0.05);
         meshBg.style.transform = "translateY(" + translateY + "px) rotate(" + rotate + "deg) scale(" + scale + ")";
-        
-        // Opacity - Sayfa aşağı indikçe soluklaş
-        var opacity = Math.max(0.3, 1 - (y / (windowHeight * 2)));
+        var opacity = Math.max(0.4, 1 - (y / (windowHeight * 2)));
         meshBg.style.opacity = opacity;
       }
       
-      // Grain Overlay - Scroll ile dinamik opacity
-      if (grainOverlay) {
-        var grainOpacity = 0.035 + (scrollProgress * 0.015);
-        grainOverlay.style.opacity = Math.min(grainOpacity, 0.05);
+      // Desktop only - Grain Overlay
+      if (grainOverlay && !isMobile) {
+        var grainOpacity = 0.035 + (scrollProgress * 0.01);
+        grainOverlay.style.opacity = Math.min(grainOpacity, 0.045);
       }
       
-      // Hero Section - Parallax KAPALI (artık hareket etmeyecek)
-      // Scroll yapınca elementler normal kalacak
-      
-      // Kartlar için scroll-triggered animations
-      var revealCards = document.querySelectorAll('.card:not(.revealed)');
-      revealCards.forEach(function(card) {
-        var rect = card.getBoundingClientRect();
-        var cardMiddle = rect.top + (rect.height / 2);
-        
-        if (cardMiddle < windowHeight * 0.85) {
-          card.classList.add('revealed');
+      // Desktop only - Kartlar için parallax
+      if (!isMobile) {
+        var revealCards = document.querySelectorAll('.card:not(.revealed)');
+        revealCards.forEach(function(card) {
+          var rect = card.getBoundingClientRect();
+          var cardMiddle = rect.top + (rect.height / 2);
           
-          // Hafif parallax her karta
-          var cardOffset = (rect.top - windowHeight) * 0.05;
-          card.style.transform = "translateY(" + cardOffset + "px)";
-        }
-      });
+          if (cardMiddle < windowHeight * 0.85) {
+            card.classList.add('revealed');
+            var cardOffset = (rect.top - windowHeight) * 0.03;
+            card.style.transform = "translateY(" + cardOffset + "px)";
+          }
+        });
+      }
       
       ticking = false;
     }
     
     function requestTick() {
       if (!ticking) {
+        if (isMobile || isLowEnd) {
+          // Mobilde sadece basit scroll efektleri
+          var y = window.scrollY || window.pageYOffset;
+          if (fabTop) fabTop.classList.toggle("show", y > 480);
+          return;
+        }
         window.requestAnimationFrame(updateScrollEffects);
         ticking = true;
       }
     }
     
+    // Passive scroll listener
     window.addEventListener("scroll", requestTick, { passive: true });
     
     // İlk yükleme
     updateScrollEffects();
+    
+    // Resize'da mobile check yenile
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        isMobile = window.innerWidth <= 768;
+        isLowEnd = window.innerWidth <= 480;
+      }, 200);
+    }, { passive: true });
     
     if (fabTop) fabTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
 
@@ -811,8 +833,17 @@
   let dotY = 0;
   let rafId = null;
   
-  // Mouse hareket takibi - Throttled
+  // Mouse hareket takibi - Throttled + Mobile detection
   let lastUpdate = 0;
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  
+  // Mobil cihazlarda custom cursor'u tamamen devre dışı bırak
+  if (isMobileDevice) {
+    cursor.style.display = 'none';
+    cursorDot.style.display = 'none';
+    return;
+  }
+  
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
