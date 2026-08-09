@@ -1821,18 +1821,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     height: 400px;
   }
   
+  /* Mobilde farklı görsel */
   .cta-banner-section > div:first-child {
-    background-position: 65% center !important;
+    background-image: url('../img/cta-courier-mobile.jpeg') !important;
+    background-position: center center !important;
   }
 }
 
 @media (max-width: 480px) {
   .cta-banner-section {
-    height: 320px;
+    height: 350px;
   }
   
   .cta-banner-section > div:first-child {
-    background-position: 60% center !important;
+    background-image: url('../img/cta-courier-mobile.jpeg') !important;
+    background-position: center center !important;
   }
 }
 
