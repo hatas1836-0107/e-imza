@@ -1143,14 +1143,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   overflow: hidden; 
   position: relative;
   z-index: 1;
-  contain: layout style paint;
-  content-visibility: auto;
 }
 
 /* Mobil section optimizasyonu */
 @media (max-width: 768px) {
   .section {
     padding: 60px 0;
+    contain: layout style paint;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
   }
 }
 
@@ -1180,14 +1181,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   overflow: hidden; 
   position: relative;
   z-index: 1;
-  contain: layout style paint;
-  content-visibility: auto;
 }
 
 /* Mobil section-tight optimizasyonu */
 @media (max-width: 768px) {
   .section-tight {
     padding: 40px 0;
+    contain: layout style paint;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
   }
 }
 
