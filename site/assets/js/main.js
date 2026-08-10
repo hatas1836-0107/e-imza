@@ -62,10 +62,19 @@
     }
   }
 
+  // HTML'de data-theme varsa onu kullan (override), yoksa localStorage'a bak
+  var htmlTheme = root.getAttribute("data-theme");
   var savedTheme = null;
-  try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
-  if (!savedTheme) {
-    savedTheme = "light"; // Varsayılan aydınlık mod
+  
+  if (htmlTheme) {
+    // HTML'de açıkça belirtilmişse onu kullan
+    savedTheme = htmlTheme;
+  } else {
+    // HTML'de yoksa localStorage'dan oku
+    try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+    if (!savedTheme) {
+      savedTheme = "light"; // Varsayılan aydınlık mod
+    }
   }
   applyTheme(savedTheme);
 
