@@ -1,4 +1,4 @@
-// Firebase Configuration
+﻿// Firebase Configuration
 // e-imza-4c867 projesi - GERÇEK CONFIG
 
 export const firebaseConfig = {

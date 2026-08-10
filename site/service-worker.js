@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zirve-eimza-v1';
+﻿const CACHE_NAME = 'zirve-eimza-v1';
 const urlsToCache = [
   '/',
   '/assets/css/style.css',

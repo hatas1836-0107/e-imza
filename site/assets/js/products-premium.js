@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Premium Products Renderer with WebGL Shader Background
  * Features:
  * - Animated WebGL shader background (like the reference design)

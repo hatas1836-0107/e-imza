@@ -1,4 +1,4 @@
-// Lazy Loading Script - Images & Iframes
+﻿// Lazy Loading Script - Images & Iframes
 (function() {
   'use strict';
   

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Optimized & Cinematic 3D GLB Background Viewer with Three.js
  * Fixed background with multi-stage scroll-reactive transitions
  * Includes micro-mouse parallax & high-fidelity smoothing

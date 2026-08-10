@@ -1,4 +1,4 @@
-// Firebase Products Integration for Frontend
+﻿// Firebase Products Integration for Frontend
 // Bu dosya Firebase'den ürünleri çeker ve sitede gösterir
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
