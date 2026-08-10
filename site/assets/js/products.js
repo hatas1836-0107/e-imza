@@ -334,29 +334,31 @@
   
   // Create WhatsApp message (WITHOUT coordinates)
   function createWhatsAppMessage(order) {
-    let msg = `*YENİ SİPARİŞ*\n\n`;
-    msg += `*Sipariş No:* ${order.id}\n`;
-    msg += `*Ürün:* ${order.productName}\n`;
+    let msg = `🎯 *YENİ SİPARİŞ ALINDI!*\n\n`;
+    msg += `📋 *Sipariş No:* ${order.id}\n`;
+    msg += `🔗 *Takip:* www.imzaistanbul.com/takip?kod=${order.id}\n\n`;
+    msg += `📦 *Ürün:* ${order.productName}\n`;
     
     // Sadece productPrice varsa ve geçerli bir değerse fiyatı ekle
     if (order.productPrice && order.productPrice !== 'null' && order.productPrice !== 'undefined' && order.productPrice !== '') {
-      msg += `*Fiyat:* ${parseFloat(order.productPrice).toLocaleString('tr-TR')} ₺ +KDV\n`;
+      msg += `💰 *Fiyat:* ${parseFloat(order.productPrice).toLocaleString('tr-TR')} ₺ +KDV\n`;
     }
     
-    msg += `\n=== MÜŞTERİ BİLGİLERİ ===\n`;
-    msg += `*Ad Soyad:* ${order.customerName}\n`;
-    msg += `*Telefon:* ${order.customerPhone}\n`;
-    msg += `*E-posta:* ${order.customerEmail}\n`;
-    msg += `*İlçe:* ${order.district}, İstanbul\n`;
-    msg += `*Adres:* ${order.address}\n\n`;
-    msg += `*Teslimat:* ${order.deliveryType === 'courier' ? 'Aynı Gün Kurye' : 'Online Teslim'}\n`;
+    msg += `\n👤 *MÜŞTERİ BİLGİLERİ*\n`;
+    msg += `━━━━━━━━━━━━━━━━━\n`;
+    msg += `👨‍💼 *Ad Soyad:* ${order.customerName}\n`;
+    msg += `📱 *Telefon:* ${order.customerPhone}\n`;
+    msg += `📧 *E-posta:* ${order.customerEmail}\n`;
+    msg += `📍 *İlçe:* ${order.district}, İstanbul\n`;
+    msg += `🏠 *Adres:* ${order.address}\n\n`;
+    msg += `🚚 *Teslimat:* ${order.deliveryType === 'courier' ? '⚡ Aynı Gün Kurye' : '💻 Online Teslim'}\n`;
     
     if (order.notes) {
-      msg += `\n*Not:* ${order.notes}\n`;
+      msg += `\n📝 *Not:* ${order.notes}\n`;
     }
     
-    msg += `\n---\n`;
-    msg += `_Tarih: ${new Date(order.createdAt).toLocaleString('tr-TR')}_`;
+    msg += `\n━━━━━━━━━━━━━━━━━\n`;
+    msg += `📅 _${new Date(order.createdAt).toLocaleString('tr-TR')}_`;
     
     // NOT: Koordinatlar WhatsApp'a GİTMİYOR, sadece Firebase'de kalıyor
     
