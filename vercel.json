@@ -3,6 +3,12 @@
   "outputDirectory": "site",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/takip/:kod",
+      "destination": "/takip.html?kod=:kod"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*).html",
