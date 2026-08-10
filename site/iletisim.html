@@ -515,18 +515,18 @@ document.getElementById('quoteForm')?.addEventListener('submit', async function(
     console.log('📋 Takip Kodu:', trackingCode);
     
     // Temiz WhatsApp mesajı oluştur
-    let msg = `🔷 *YENİ SİPARİŞ*\n\n`;
-    msg += `📋 *Takip Kodu:* ${trackingCode}\n\n`;
+    let msg = `🔥 *YENİ SİPARİŞ* 🔥\n\n`;
+    msg += `*Takip Linki:* www.imzaistanbul.com/takip/${trackingCode}\n\n`;
     
     if (orderData.productName) {
-      msg += `📦 *${orderData.productName}*\n`;
+      msg += `📦 *${orderData.productName}* 📦\n`;
     }
     if (orderData.productPrice) {
-      msg += `💰 ${orderData.productPrice}\n`;
+      msg += `${orderData.productPrice}\n`;
     }
     
     msg += `\n👤 ${orderData.customerName}\n`;
-    msg += `📞 ${orderData.customerPhone}\n`;
+    msg += `📱 ${orderData.customerPhone}\n`;
     
     if (orderData.customerEmail) {
       msg += `📧 ${orderData.customerEmail}\n`;
