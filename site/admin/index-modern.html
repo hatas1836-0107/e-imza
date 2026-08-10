@@ -1694,32 +1694,30 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
       const fcmToken = tokenSnap.val().token;
       console.log('✅ FCM Token bulundu, bildirim gönderiliyor...');
       
-      // NOT: Gerçek bildirim göndermek için Firebase Admin SDK ve backend gerekir
-      // Şimdilik sadece Firebase'e bildirim kaydı oluşturalım
-      await set(ref(database, `notifications/${orderId}_${Date.now()}`), {
-        orderId: orderId,
-        trackingCode: order.trackingCode || orderId,
-        customerEmail: customerEmail,
-        fcmToken: fcmToken,
-        title: notification.title,
-        body: notification.body,
-        status: newStatus,
-        timestamp: new Date().toISOString(),
-        sent: false // Backend tarafından gönderilecek
+      // API endpoint'e istek gönder (Vercel Serverless Function)
+      const apiResponse = await fetch('/api/send-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fcmToken: fcmToken,
+          title: notification.title,
+          body: notification.body,
+          orderId: orderId,
+          trackingCode: order.trackingCode || orderId
+        })
       });
       
-      console.log('✅ Bildirim kuyruğa eklendi (Backend tarafından gönderilecek)');
-      showToast('Durum güncellendi ve bildirim kuyruğa eklendi', 'success');
+      const result = await apiResponse.json();
       
-      // TODO: Backend'de Firebase Cloud Functions ile otomatik gönderim yapılabilir
-      // exports.sendNotification = functions.database.ref('/notifications/{id}')
-      //   .onCreate((snapshot, context) => {
-      //     const notification = snapshot.val();
-      //     return admin.messaging().send({
-      //       notification: { title: notification.title, body: notification.body },
-      //       token: notification.fcmToken
-      //     });
-      //   });
+      if (result.success) {
+        console.log('✅ Bildirim başarıyla gönderildi:', result.messageId);
+        showToast('Durum güncellendi ve bildirim gönderildi! 🎉', 'success');
+      } else {
+        console.error('❌ Bildirim gönderme hatası:', result.error);
+        showToast('Durum güncellendi ama bildirim gönderilemedi', 'warning');
+      }
       
     } else {
       console.log('⚠️ Müşterinin FCM token\'ı yok (henüz bildirim izni vermemiş)');

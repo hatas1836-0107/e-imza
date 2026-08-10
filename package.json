@@ -1,8 +1,12 @@
 {
+  "name": "imza-istanbul",
+  "version": "1.0.0",
+  "description": "E-imza teslimat ve takip sistemi",
+  "type": "module",
   "dependencies": {
-    "firebase-admin": "^14.2.0"
+    "firebase-admin": "^12.0.0"
   },
-  "devDependencies": {
-    "glob": "^13.0.6"
+  "engines": {
+    "node": ">=18"
   }
 }
