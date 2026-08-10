@@ -1624,7 +1624,16 @@ const STATUS_COLORS = {
 
 // ---------- NOTIFICATION SYSTEM ----------
 async function sendStatusChangeNotification(orderId, order, newStatus) {
-  console.log('📬 Sipariş durum bildirimi gönderiliyor:', orderId, newStatus);
+  console.log('🔔 ========== BİLDİRİM SİSTEMİ BAŞLADI ==========');
+  console.log('📋 Sipariş ID:', orderId);
+  console.log('📋 Yeni Durum:', newStatus);
+  console.log('📋 Sipariş Detayları:', {
+    customerName: order.customerName,
+    customerEmail: order.customerEmail,
+    customerPhone: order.customerPhone,
+    productName: order.productName,
+    trackingCode: order.trackingCode
+  });
   
   // Bildirim mesajları
   const notificationMessages = {
@@ -1660,12 +1669,16 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
   
   const notification = notificationMessages[newStatus];
   if (!notification) {
-    console.warn('Bu durum için bildirim mesajı tanımlı değil:', newStatus);
+    console.warn('⚠️ Bu durum için bildirim mesajı tanımlı değil:', newStatus);
     return;
   }
   
+  console.log('📬 Bildirim Mesajı:', notification);
+  
   // WhatsApp bildirimi (mevcut sistem)
   const phone = (order.customerPhone || '').replace(/\D/g, '');
+  console.log('📱 Telefon numarası:', phone || 'YOK');
+  
   if (phone) {
     const whatsappMessage = `*${notification.title}*\n\n${notification.body}\n\n_İmza İstanbul_`;
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
@@ -1673,58 +1686,93 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
     // WhatsApp'ı yeni sekmede aç (admin manuel gönderir)
     if (newStatus === 'shipped' || newStatus === 'delivered') {
       window.open(whatsappUrl, '_blank');
-      console.log('📱 WhatsApp bildirimi hazırlandı');
+      console.log('✅ WhatsApp bildirimi hazırlandı ve açıldı');
+    } else {
+      console.log('ℹ️ WhatsApp bildirimi sadece shipped/delivered durumunda açılır');
     }
   }
   
   // Web Push Notification (FCM Token varsa)
+  console.log('🔍 FCM Token kontrolü başlatılıyor...');
+  
   try {
     // Müşterinin email'inden token'ı al
     const customerEmail = order.customerEmail;
+    console.log('📧 Müşteri Email:', customerEmail || 'YOK');
+    
     if (!customerEmail) {
-      console.log('⚠️ Müşteri email adresi yok, web push gönderilemedi');
+      console.error('❌ Müşteri email adresi yok, web push gönderilemedi');
+      showToast('Durum güncellendi ama müşteri email\'i yok!', 'warning');
       return;
     }
     
     const emailKey = customerEmail.replace(/[.@]/g, '_');
+    console.log('🔑 Email Key:', emailKey);
+    
     const tokenRef = ref(database, `fcmTokens/${emailKey}`);
+    console.log('🔍 Firebase\'den token sorgulanıyor...');
+    
     const tokenSnap = await get(tokenRef);
+    console.log('📊 Token Snapshot exists:', tokenSnap.exists());
     
     if (tokenSnap.exists()) {
-      const fcmToken = tokenSnap.val().token;
-      console.log('✅ FCM Token bulundu, bildirim gönderiliyor...');
+      const tokenData = tokenSnap.val();
+      const fcmToken = tokenData.token;
+      console.log('✅ FCM Token bulundu!');
+      console.log('🔑 Token (ilk 20 karakter):', fcmToken.substring(0, 20) + '...');
+      console.log('📱 Cihaz:', tokenData.device || 'bilinmiyor');
+      console.log('⏰ Token Tarihi:', new Date(tokenData.timestamp).toLocaleString('tr-TR'));
       
       // API endpoint'e istek gönder (Vercel Serverless Function)
+      console.log('📡 API\'ye istek gönderiliyor...');
+      console.log('🌐 API URL: /api/send-notification');
+      
+      const payload = {
+        fcmToken: fcmToken,
+        title: notification.title,
+        body: notification.body,
+        orderId: orderId,
+        trackingCode: order.trackingCode || orderId
+      };
+      console.log('📦 Payload:', payload);
+      
       const apiResponse = await fetch('/api/send-notification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          fcmToken: fcmToken,
-          title: notification.title,
-          body: notification.body,
-          orderId: orderId,
-          trackingCode: order.trackingCode || orderId
-        })
+        body: JSON.stringify(payload)
       });
       
+      console.log('📡 API Response Status:', apiResponse.status);
+      console.log('📡 API Response OK:', apiResponse.ok);
+      
       const result = await apiResponse.json();
+      console.log('📡 API Response Data:', result);
       
       if (result.success) {
-        console.log('✅ Bildirim başarıyla gönderildi:', result.messageId);
+        console.log('✅✅✅ Bildirim başarıyla gönderildi!');
+        console.log('📬 Message ID:', result.messageId);
         showToast('Durum güncellendi ve bildirim gönderildi! 🎉', 'success');
       } else {
         console.error('❌ Bildirim gönderme hatası:', result.error);
-        showToast('Durum güncellendi ama bildirim gönderilemedi', 'warning');
+        console.error('❌ Detay:', result.details);
+        showToast(`Durum güncellendi ama bildirim gönderilemedi: ${result.error}`, 'error');
       }
       
     } else {
-      console.log('⚠️ Müşterinin FCM token\'ı yok (henüz bildirim izni vermemiş)');
+      console.warn('⚠️ Müşterinin FCM token\'ı yok!');
+      console.warn('ℹ️ Müşteri henüz takip sayfasını açmamış veya bildirim izni vermemiş');
+      console.warn('💡 Çözüm: Müşteri takip sayfasını açıp bildirim izni vermeli');
+      showToast('Durum güncellendi ama müşterinin bildirim token\'ı yok', 'warning');
     }
   } catch (error) {
-    console.error('❌ Web push gönderme hatası:', error);
+    console.error('❌❌❌ Web push gönderme hatası:', error);
+    console.error('❌ Error Stack:', error.stack);
+    showToast('Bildirim gönderme hatası: ' + error.message, 'error');
   }
+  
+  console.log('🔔 ========== BİLDİRİM SİSTEMİ BİTTİ ==========');
 }
 
 // ---------- ADMIN ----------
