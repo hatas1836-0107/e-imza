@@ -1696,20 +1696,20 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
   console.log('🔍 FCM Token kontrolü başlatılıyor...');
   
   try {
-    // Müşterinin email'inden token'ı al
-    const customerEmail = order.customerEmail;
-    console.log('📧 Müşteri Email:', customerEmail || 'YOK');
+    // Müşterinin telefon numarasından token'ı al
+    const customerPhone = (order.customerPhone || '').replace(/\D/g, '');
+    console.log('📱 Müşteri Telefon:', customerPhone || 'YOK');
     
-    if (!customerEmail) {
-      console.error('❌ Müşteri email adresi yok, web push gönderilemedi');
-      showToast('Durum güncellendi ama müşteri email\'i yok!', 'warning');
+    if (!customerPhone) {
+      console.error('❌ Müşteri telefon numarası yok, web push gönderilemedi');
+      showToast('Durum güncellendi ama müşteri telefonu yok!', 'warning');
       return;
     }
     
-    const emailKey = customerEmail.replace(/[.@]/g, '_');
-    console.log('🔑 Email Key:', emailKey);
+    const phoneKey = 'phone_' + customerPhone;
+    console.log('🔑 Phone Key:', phoneKey);
     
-    const tokenRef = ref(database, `fcmTokens/${emailKey}`);
+    const tokenRef = ref(database, `fcmTokens/${phoneKey}`);
     console.log('🔍 Firebase\'den token sorgulanıyor...');
     
     const tokenSnap = await get(tokenRef);

@@ -1019,15 +1019,20 @@ async function requestNotificationPermission() {
         if (token) {
           console.log('✅ FCM Token alındı:', token.substring(0, 20) + '...');
           
-          // Token'ı Firebase'e kaydet
-          if (currentUser) {
-            const emailKey = currentUser.email.replace(/[.@]/g, '_');
-            await set(ref(database, `fcmTokens/${emailKey}`), {
+          // Token'ı Firebase'e kaydet - TELEFON NUMARASI ile
+          if (currentOrder && currentOrder.customerPhone) {
+            const customerPhone = currentOrder.customerPhone.replace(/\D/g, '');
+            const phoneKey = 'phone_' + customerPhone;
+            await set(ref(database, `fcmTokens/${phoneKey}`), {
               token: token,
               timestamp: Date.now(),
-              device: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+              device: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop',
+              customerName: currentOrder.customerName || '',
+              trackingCode: currentOrder.trackingCode || currentOrder.id
             });
-            console.log('✅ Token Firebase\'e kaydedildi');
+            console.log('✅ Token Firebase\'e kaydedildi (Telefon:', customerPhone + ')');
+          } else {
+            console.warn('⚠️ Sipariş bilgisi yok, token kaydedilemedi');
           }
           
           showToastNotification('Bildirimler Aktif! 🔔', 'Site kapalıyken bile bildirim alacaksınız.');
