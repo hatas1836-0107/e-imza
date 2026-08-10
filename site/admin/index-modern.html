@@ -1655,7 +1655,7 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
     },
     shipped: {
       title: 'Teslimatçı Yola Çıktı! 🚗',
-      body: `${order.productName} teslimatçı ile yolda! Canlı takip: imzaistanbul.com/takip.html?kod=${order.trackingCode || orderId}`
+      body: `${order.productName} teslimatçı ile yolda! Canlı takip: imzaistanbul.com/takip/${order.trackingCode || orderId}`
     },
     delivered: {
       title: 'Teslim Edildi! 🎉',
@@ -2338,7 +2338,7 @@ window.viewOrder = (id) => {
   
   // Takip kodu - trackingCode varsa onu göster, yoksa ID'yi göster
   const displayTrackingCode = o.trackingCode || id;
-  const trackingUrl = `${window.location.origin}/takip.html?kod=${encodeURIComponent(displayTrackingCode)}`;
+  const trackingUrl = `${window.location.origin}/takip/${encodeURIComponent(displayTrackingCode)}`;
 
   openModal(`
     <div class="modal-header">
@@ -2379,7 +2379,7 @@ window.viewOrder = (id) => {
 
 window.copyTrackingCode = (trackingCode) => {
   // WhatsApp'a gönderilecek mesaj - Takip linki formatında
-  const trackingUrl = `www.imzaistanbul.com/takip.html?kod=${trackingCode}`;
+  const trackingUrl = `www.imzaistanbul.com/takip/${trackingCode}`;
   const whatsappMessage = encodeURIComponent(`Siparişiniz oluşturuldu!\n\nTakip linkiniz:\n${trackingUrl}\n\nBu link ile siparişinizi anlık olarak takip edebilirsiniz.`);
   const whatsappUrl = `https://wa.me/905453863407?text=${whatsappMessage}`;
   
@@ -2399,7 +2399,7 @@ function generateTrackingCode() {
 function sendOrderNotificationToWhatsApp(orderData) {
   const { trackingCode, customerName, customerPhone, customerEmail, productName, productPrice, address, city, district } = orderData;
   
-  const trackingUrl = `www.imzaistanbul.com/takip.html?kod=${trackingCode}`;
+  const trackingUrl = `www.imzaistanbul.com/takip/${trackingCode}`;
   
   const message = `🔥 *YENİ SİPARİŞ* 🔥
 
