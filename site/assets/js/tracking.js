@@ -1,6 +1,7 @@
 ﻿import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, onValue, get, set, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
 
 // Firebase config
 import { firebaseConfig } from '../../admin/firebase-config.js';
@@ -8,6 +9,14 @@ import { firebaseConfig } from '../../admin/firebase-config.js';
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
+
+// FCM Messaging
+let messaging = null;
+try {
+  messaging = getMessaging(app);
+} catch (error) {
+  console.warn('FCM not supported:', error);
+}
 
 let map = null;
 let courierMarker = null;
@@ -959,10 +968,88 @@ window.addEventListener('beforeunload', () => {
 });
 
 
-// ========== PUSH NOTIFICATION SYSTEM (Simplified) ==========
+// ========== PUSH NOTIFICATION SYSTEM (Full FCM) ==========
 
-// Basit bildirim izni sistemi - VAPID key gerekmez
+const VAPID_KEY = 'BILTltlkm818xaZ_8gwOwwRWEvp3_XqDqZQY2v2O-1fnOjHv3hrIbSUtMtY1qdp9Mb-oMDYChfU2Oo6cRx6YSNo';
+
+// Service Worker'ı kaydet
+async function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) {
+    console.warn('Service Worker desteklenmiyor');
+    return null;
+  }
+  
+  try {
+    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    console.log('✅ Service Worker kaydedildi');
+    return registration;
+  } catch (error) {
+    console.error('❌ Service Worker kayıt hatası:', error);
+    return null;
+  }
+}
+
+// FCM Token al ve kaydet
 async function requestNotificationPermission() {
+  if (!messaging) {
+    console.warn('Messaging desteklenmiyor, standart bildirimlere geçiliyor');
+    return requestSimpleNotificationPermission();
+  }
+  
+  try {
+    const permission = await Notification.requestPermission();
+    
+    if (permission === 'granted') {
+      console.log('✅ Bildirim izni verildi');
+      
+      // Service Worker'ı kaydet
+      const registration = await registerServiceWorker();
+      if (!registration) {
+        console.warn('Service Worker kaydedilemedi, standart bildirimlere geçiliyor');
+        return;
+      }
+      
+      // FCM Token al
+      try {
+        const token = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration
+        });
+        
+        if (token) {
+          console.log('✅ FCM Token alındı:', token.substring(0, 20) + '...');
+          
+          // Token'ı Firebase'e kaydet
+          if (currentUser) {
+            const emailKey = currentUser.email.replace(/[.@]/g, '_');
+            await set(ref(database, `fcmTokens/${emailKey}`), {
+              token: token,
+              timestamp: Date.now(),
+              device: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+            });
+            console.log('✅ Token Firebase\'e kaydedildi');
+          }
+          
+          showToastNotification('Bildirimler Aktif! 🔔', 'Site kapalıyken bile bildirim alacaksınız.');
+        }
+      } catch (tokenError) {
+        console.error('Token alma hatası:', tokenError);
+        console.log('Standart bildirimlere geçiliyor...');
+      }
+      
+    } else if (permission === 'denied') {
+      console.warn('❌ Bildirim izni reddedildi');
+      alert('Bildirimler engellenmiş. Tarayıcı ayarlarından bildirimlere izin vermeniz gerekiyor.');
+    } else {
+      console.log('⏳ Bildirim izni askıda');
+    }
+  } catch (error) {
+    console.error('Bildirim izni hatası:', error);
+  }
+}
+
+// Basit bildirim izni (fallback)
+async function requestSimpleNotificationPermission() {
   if (!('Notification' in window)) {
     console.warn('Bu tarayıcı bildirimleri desteklemiyor');
     return;
@@ -972,16 +1059,24 @@ async function requestNotificationPermission() {
     const permission = await Notification.requestPermission();
     
     if (permission === 'granted') {
-      console.log('✅ Bildirim izni verildi');
+      console.log('✅ Basit bildirim izni verildi');
       showToastNotification('Bildirimler Aktif! 🔔', 'Teslimatçı yaklaştığında bildirim alacaksınız.');
-    } else if (permission === 'denied') {
-      console.warn('❌ Bildirim izni reddedildi');
-    } else {
-      console.log('⏳ Bildirim izni askıda');
     }
   } catch (error) {
     console.error('Bildirim izni hatası:', error);
   }
+}
+
+// Ön planda bildirim dinle (site açıkken)
+if (messaging) {
+  onMessage(messaging, (payload) => {
+    console.log('📬 Ön plan bildirimi alındı:', payload);
+    
+    const title = payload.notification?.title || 'İmza İstanbul';
+    const body = payload.notification?.body || 'Yeni güncelleme';
+    
+    showBrowserNotification(title, body);
+  });
 }
 
 // Toast notification göster
@@ -991,7 +1086,7 @@ function showToastNotification(title, message) {
   }
 }
 
-// Sayfa yüklendiğinde bildirim izni iste (sadece takip kodu girildiğinde)
+// Sayfa yüklendiğinde bildirim izni iste
 let notificationPermissionRequested = false;
 
 // Check proximity notification için güncelleme
@@ -1008,6 +1103,12 @@ function checkProximityNotification(locationData, customerLat, customerLng) {
   // Bildirim spam'ini önlemek için 30 saniye bekleme
   if (now - lastNotificationTime < 30000) {
     return;
+  }
+  
+  // İlk bildirimde izin iste
+  if (!notificationPermissionRequested && Notification.permission === 'default') {
+    requestNotificationPermission();
+    notificationPermissionRequested = true;
   }
   
   // Yakınlık bildirimleri
@@ -1028,12 +1129,6 @@ function checkProximityNotification(locationData, customerLat, customerLng) {
 
 // Browser notification göster
 function showBrowserNotification(title, body) {
-  // İlk bildirimi göstermeden önce izin iste
-  if (!notificationPermissionRequested && Notification.permission === 'default') {
-    requestNotificationPermission();
-    notificationPermissionRequested = true;
-  }
-  
   if ('Notification' in window && Notification.permission === 'granted') {
     const notification = new Notification(title, { 
       body,
@@ -1056,6 +1151,9 @@ function showBrowserNotification(title, body) {
     };
     
     console.log('📬 Bildirim gönderildi:', title);
+  } else if (Notification.permission === 'default') {
+    // İzin istenmemişse iste
+    requestNotificationPermission();
   } else {
     console.log('⚠️ Bildirim izni yok veya desteklenmiyor');
   }
