@@ -781,6 +781,7 @@ function stopLocationTracking() {
 
 // Check proximity notification
 let lastProximityAlert = null;
+let lastNotificationTime = 0;
 
 function checkProximityNotification(locationData, customerLat, customerLng) {
   const courierLat = locationData.latitude;
@@ -1102,10 +1103,6 @@ function showToastNotification(title, message) {
 
 // Sayfa yüklendiğinde bildirim izni iste
 let notificationPermissionRequested = false;
-
-// Check proximity notification için güncelleme
-let lastProximityAlert = null;
-let lastNotificationTime = 0;
 
 function checkProximityNotification(locationData, customerLat, customerLng) {
   const courierLat = locationData.latitude;
