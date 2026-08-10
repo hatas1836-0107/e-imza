@@ -988,6 +988,22 @@ async function registerServiceWorker() {
   try {
     const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
     console.log('✅ Service Worker kaydedildi');
+    
+    // Service Worker'ın aktif olmasını bekle
+    if (registration.installing) {
+      await new Promise((resolve) => {
+        registration.installing.addEventListener('statechange', (e) => {
+          if (e.target.state === 'activated') {
+            resolve();
+          }
+        });
+      });
+    } else if (!registration.active) {
+      // Zaten kayıtlı ama aktif değilse, biraz bekle
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    console.log('✅ Service Worker aktif');
     return registration;
   } catch (error) {
     console.error('❌ Service Worker kayıt hatası:', error);
