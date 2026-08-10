@@ -201,6 +201,16 @@ function displayOrderInfo(order) {
       mapSection.style.display = 'none';
     }
   }
+  
+  // Sipariş görüntülendiğinde bildirim izni iste ve token kaydet
+  setTimeout(() => {
+    if (Notification.permission === 'default') {
+      requestNotificationPermission();
+    } else if (Notification.permission === 'granted') {
+      // İzin zaten verilmişse direkt token kaydet
+      requestNotificationPermission();
+    }
+  }, 2000); // 2 saniye bekle, kullanıcı sipariş bilgilerini görsün
 }
 
 // Display queue information
