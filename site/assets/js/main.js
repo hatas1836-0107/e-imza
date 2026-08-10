@@ -65,7 +65,7 @@
   var savedTheme = null;
   try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
   if (!savedTheme) {
-    savedTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    savedTheme = "light"; // Varsayılan aydınlık mod
   }
   applyTheme(savedTheme);
 
