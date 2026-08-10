@@ -1,7 +1,6 @@
 ﻿import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, onValue, get, set, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
 
 // Firebase config
 import { firebaseConfig } from '../../admin/firebase-config.js';
@@ -9,14 +8,6 @@ import { firebaseConfig } from '../../admin/firebase-config.js';
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
-
-// FCM Messaging
-let messaging = null;
-try {
-  messaging = getMessaging(app);
-} catch (error) {
-  console.warn('FCM not supported:', error);
-}
 
 let map = null;
 let courierMarker = null;
@@ -968,145 +959,104 @@ window.addEventListener('beforeunload', () => {
 });
 
 
-// ========== PUSH NOTIFICATION SYSTEM ==========
+// ========== PUSH NOTIFICATION SYSTEM (Simplified) ==========
 
-// VAPID key - Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
-// Bu key'i Firebase Console'dan almanız gerekiyor
-const VAPID_KEY = 'YOUR_VAPID_KEY_HERE'; // TODO: Firebase Console'dan alınacak
-
-// Service Worker'ı kaydet
-async function registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) {
-    console.warn('Service Worker desteklenmiyor');
-    return null;
-  }
-  
-  try {
-    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('✅ Service Worker kaydedildi');
-    return registration;
-  } catch (error) {
-    console.error('❌ Service Worker kayıt hatası:', error);
-    return null;
-  }
-}
-
-// FCM Token al ve kaydet
+// Basit bildirim izni sistemi - VAPID key gerekmez
 async function requestNotificationPermission() {
-  if (!messaging) {
-    console.warn('Messaging desteklenmiyor');
+  if (!('Notification' in window)) {
+    console.warn('Bu tarayıcı bildirimleri desteklemiyor');
     return;
   }
   
   try {
-    // Bildirim izni iste
     const permission = await Notification.requestPermission();
     
     if (permission === 'granted') {
       console.log('✅ Bildirim izni verildi');
-      
-      // Service Worker'ı kaydet
-      const registration = await registerServiceWorker();
-      if (!registration) return;
-      
-      // FCM Token al
-      // NOT: VAPID_KEY'i Firebase Console'dan almanız gerekiyor
-      // const token = await getToken(messaging, {
-      //   vapidKey: VAPID_KEY,
-      //   serviceWorkerRegistration: registration
-      // });
-      
-      // if (token) {
-      //   console.log('✅ FCM Token:', token);
-      //   // Token'ı Firebase'e kaydet (opsiyonel)
-      //   if (currentUser) {
-      //     const emailKey = currentUser.email.replace(/[.@]/g, '_');
-      //     await set(ref(database, `fcmTokens/${emailKey}`), {
-      //       token: token,
-      //       timestamp: Date.now()
-      //     });
-      //   }
-      // }
-      
-      console.log('⚠️ FCM Token almak için VAPID_KEY eklemeniz gerekiyor');
-      
+      showToastNotification('Bildirimler Aktif! 🔔', 'Teslimatçı yaklaştığında bildirim alacaksınız.');
     } else if (permission === 'denied') {
       console.warn('❌ Bildirim izni reddedildi');
-      alert('Bildirimler engellenmiş. Tarayıcı ayarlarından bildirimlere izin vermeniz gerekiyor.');
     } else {
-      console.log('⏳ Bildirim izni bekleniyor');
+      console.log('⏳ Bildirim izni askıda');
     }
   } catch (error) {
     console.error('Bildirim izni hatası:', error);
   }
 }
 
-// Ön planda bildirim dinle (site açıkken)
-if (messaging) {
-  onMessage(messaging, (payload) => {
-    console.log('📬 Ön plan bildirimi:', payload);
-    
-    const title = payload.notification?.title || 'İmza İstanbul';
-    const body = payload.notification?.body || 'Yeni güncelleme';
-    
-    // Browser notification göster
-    if (Notification.permission === 'granted') {
-      new Notification(title, {
-        body: body,
-        icon: '/assets/images/logo.png',
-        tag: 'courier-update',
-        requireInteraction: true
-      });
-    }
-    
-    // UI'yi güncelle (eğer tracking sayfasındaysa)
-    if (currentOrder) {
-      // Realtime güncellemeler zaten çalışıyor
-      console.log('UI otomatik güncellenecek (realtime)');
-    }
-  });
+// Toast notification göster
+function showToastNotification(title, message) {
+  if (typeof showToast === 'function') {
+    showToast(title, message, 'success');
+  }
 }
 
-// Sayfa yüklendiğinde bildirim izni iste
-window.addEventListener('DOMContentLoaded', () => {
-  // 2 saniye sonra iste (UX için)
-  setTimeout(() => {
-    requestNotificationPermission();
-  }, 2000);
-});
+// Sayfa yüklendiğinde bildirim izni iste (sadece takip kodu girildiğinde)
+let notificationPermissionRequested = false;
 
 // Check proximity notification için güncelleme
 let lastProximityAlert = null;
+let lastNotificationTime = 0;
 
 function checkProximityNotification(locationData, customerLat, customerLng) {
   const courierLat = locationData.latitude;
   const courierLng = locationData.longitude;
   
   const distance = calculateDistance(courierLat, courierLng, customerLat, customerLng);
+  const now = Date.now();
+  
+  // Bildirim spam'ini önlemek için 30 saniye bekleme
+  if (now - lastNotificationTime < 30000) {
+    return;
+  }
   
   // Yakınlık bildirimleri
   if (distance < 0.1 && lastProximityAlert !== 'arrived') {
-    showNotification('Teslimatçı Geldi! 🎉', 'Teslimatçı kapınızda!');
+    showBrowserNotification('Teslimatçı Geldi! 🎉', 'Teslimatçı kapınızda!');
     lastProximityAlert = 'arrived';
+    lastNotificationTime = now;
   } else if (distance < 0.5 && lastProximityAlert !== 'close') {
-    showNotification('Teslimatçı Çok Yakın! 📍', '500 metre içerisinde. Hazır olun!');
+    showBrowserNotification('Teslimatçı Çok Yakın! 📍', '500 metre içerisinde. Hazır olun!');
     lastProximityAlert = 'close';
+    lastNotificationTime = now;
   } else if (distance < 2 && lastProximityAlert === null) {
-    showNotification('Teslimatçı Yaklaşıyor 🚗', `${distance.toFixed(1)} km uzaklıkta.`);
+    showBrowserNotification('Teslimatçı Yaklaşıyor 🚗', `${distance.toFixed(1)} km uzaklıkta.`);
     lastProximityAlert = 'approaching';
+    lastNotificationTime = now;
   }
 }
 
-// Show notification fonksiyonu
-function showNotification(title, body) {
+// Browser notification göster
+function showBrowserNotification(title, body) {
+  // İlk bildirimi göstermeden önce izin iste
+  if (!notificationPermissionRequested && Notification.permission === 'default') {
+    requestNotificationPermission();
+    notificationPermissionRequested = true;
+  }
+  
   if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification(title, { 
+    const notification = new Notification(title, { 
       body,
-      icon: '/assets/images/logo.png',
-      badge: '/assets/images/badge.png',
+      icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Cdefs%3E%3ClinearGradient id="g" x1="0" y1="0" x2="1" y2="1"%3E%3Cstop offset="0" stop-color="%234f46e5"/%3E%3Cstop offset="1" stop-color="%237c3aed"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100" height="100" rx="20" fill="url(%23g)"/%3E%3Cpath d="M20 70 c15-30 25-10 35-35 c7 15 10 25 17 10" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/%3E%3C/svg%3E',
       tag: 'courier-proximity',
-      requireInteraction: true,
-      vibrate: [200, 100, 200]
+      requireInteraction: false,
+      vibrate: [200, 100, 200],
+      silent: false
     });
+    
+    // Otomatik kapat (10 saniye)
+    setTimeout(() => {
+      notification.close();
+    }, 10000);
+    
+    // Tıklandığında focus yap
+    notification.onclick = function() {
+      window.focus();
+      this.close();
+    };
+    
+    console.log('📬 Bildirim gönderildi:', title);
+  } else {
+    console.log('⚠️ Bildirim izni yok veya desteklenmiyor');
   }
 }
