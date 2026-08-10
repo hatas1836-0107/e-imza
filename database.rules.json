@@ -176,6 +176,28 @@
       "ogImage": {
         ".validate": "!newData.exists() || newData.isString()"
       }
+    },
+    "fcmTokens": {
+      ".read": "auth != null",
+      ".write": true,
+      "$trackingCode": {
+        "token": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "timestamp": {
+          ".validate": "!newData.exists() || newData.isString()"
+        },
+        "userAgent": {
+          ".validate": "!newData.exists() || newData.isString()"
+        }
+      }
+    },
+    "orderTokens": {
+      ".read": "auth != null",
+      ".write": true,
+      "$trackingCode": {
+        ".validate": "newData.hasChildren(['token', 'timestamp'])"
+      }
     }
   }
 }
