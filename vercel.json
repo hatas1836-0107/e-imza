@@ -5,12 +5,21 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/takip",
+      "destination": "/takip.html",
+      "permanent": false
+    },
+    {
       "source": "/takip.html",
       "destination": "/takip",
       "permanent": false
     }
   ],
   "rewrites": [
+    {
+      "source": "/takip",
+      "destination": "/takip.html"
+    },
     {
       "source": "/takip/:kod",
       "destination": "/takip.html?kod=:kod"
