@@ -1622,6 +1622,113 @@ const STATUS_COLORS = {
   shipped: 'info', delivered: 'success', cancelled: 'danger'
 };
 
+// ---------- NOTIFICATION SYSTEM ----------
+async function sendStatusChangeNotification(orderId, order, newStatus) {
+  console.log('📬 Sipariş durum bildirimi gönderiliyor:', orderId, newStatus);
+  
+  // Bildirim mesajları
+  const notificationMessages = {
+    pending: {
+      title: 'Sipariş Alındı 📋',
+      body: `${order.productName} siparişiniz alındı. Takip kodu: ${order.trackingCode || orderId}`
+    },
+    confirmed: {
+      title: 'Sipariş Onaylandı ✅',
+      body: `${order.productName} siparişiniz onaylandı! Hazırlanmaya başlanacak.`
+    },
+    preparing: {
+      title: 'Hazırlanıyor 📦',
+      body: `${order.productName} siparişiniz hazırlanıyor...`
+    },
+    ready: {
+      title: 'Teslimata Hazır 🎁',
+      body: `${order.productName} siparişiniz teslimata hazır! Yakında kurye yola çıkacak.`
+    },
+    shipped: {
+      title: 'Teslimatçı Yola Çıktı! 🚗',
+      body: `${order.productName} teslimatçı ile yolda! Canlı takip: imzaistanbul.com/takip/${order.trackingCode || orderId}`
+    },
+    delivered: {
+      title: 'Teslim Edildi! 🎉',
+      body: `${order.productName} siparişiniz başarıyla teslim edildi. Bizi tercih ettiğiniz için teşekkürler!`
+    },
+    cancelled: {
+      title: 'Sipariş İptal Edildi ❌',
+      body: `${order.productName} siparişiniz iptal edildi. Sorularınız için bize ulaşın.`
+    }
+  };
+  
+  const notification = notificationMessages[newStatus];
+  if (!notification) {
+    console.warn('Bu durum için bildirim mesajı tanımlı değil:', newStatus);
+    return;
+  }
+  
+  // WhatsApp bildirimi (mevcut sistem)
+  const phone = (order.customerPhone || '').replace(/\D/g, '');
+  if (phone) {
+    const whatsappMessage = `*${notification.title}*\n\n${notification.body}\n\n_İmza İstanbul_`;
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    // WhatsApp'ı yeni sekmede aç (admin manuel gönderir)
+    if (newStatus === 'shipped' || newStatus === 'delivered') {
+      window.open(whatsappUrl, '_blank');
+      console.log('📱 WhatsApp bildirimi hazırlandı');
+    }
+  }
+  
+  // Web Push Notification (FCM Token varsa)
+  try {
+    // Müşterinin email'inden token'ı al
+    const customerEmail = order.customerEmail;
+    if (!customerEmail) {
+      console.log('⚠️ Müşteri email adresi yok, web push gönderilemedi');
+      return;
+    }
+    
+    const emailKey = customerEmail.replace(/[.@]/g, '_');
+    const tokenRef = ref(database, `fcmTokens/${emailKey}`);
+    const tokenSnap = await get(tokenRef);
+    
+    if (tokenSnap.exists()) {
+      const fcmToken = tokenSnap.val().token;
+      console.log('✅ FCM Token bulundu, bildirim gönderiliyor...');
+      
+      // NOT: Gerçek bildirim göndermek için Firebase Admin SDK ve backend gerekir
+      // Şimdilik sadece Firebase'e bildirim kaydı oluşturalım
+      await set(ref(database, `notifications/${orderId}_${Date.now()}`), {
+        orderId: orderId,
+        trackingCode: order.trackingCode || orderId,
+        customerEmail: customerEmail,
+        fcmToken: fcmToken,
+        title: notification.title,
+        body: notification.body,
+        status: newStatus,
+        timestamp: new Date().toISOString(),
+        sent: false // Backend tarafından gönderilecek
+      });
+      
+      console.log('✅ Bildirim kuyruğa eklendi (Backend tarafından gönderilecek)');
+      showToast('Durum güncellendi ve bildirim kuyruğa eklendi', 'success');
+      
+      // TODO: Backend'de Firebase Cloud Functions ile otomatik gönderim yapılabilir
+      // exports.sendNotification = functions.database.ref('/notifications/{id}')
+      //   .onCreate((snapshot, context) => {
+      //     const notification = snapshot.val();
+      //     return admin.messaging().send({
+      //       notification: { title: notification.title, body: notification.body },
+      //       token: notification.fcmToken
+      //     });
+      //   });
+      
+    } else {
+      console.log('⚠️ Müşterinin FCM token\'ı yok (henüz bildirim izni vermemiş)');
+    }
+  } catch (error) {
+    console.error('❌ Web push gönderme hatası:', error);
+  }
+}
+
 // ---------- ADMIN ----------
 const ADMIN_EMAILS = [
   'huseyinatas@gmail.com', 'huseyin.atas@gmail.com', 'hüseyinataş@gmail.com',
@@ -2320,6 +2427,9 @@ window.submitStatusChange = async (id) => {
     };
     
     await update(ref(database, `orders/${id}`), updates);
+    
+    // Müşteriye bildirim gönder
+    await sendStatusChangeNotification(id, o, newStatus);
     
     // Eğer "shipped" (yolda) durumuna geçildiyse ve courier atanmışsa
     // Courier'in activeOrders listesine ekle
