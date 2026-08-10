@@ -2141,6 +2141,19 @@ window.submitOrder = async (id) => {
         createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         history: [{ status: 'pending', timestamp: new Date().toISOString(), note: 'Sipariş oluşturuldu' }]
       });
+      
+      // WhatsApp bildirimi gönder
+      sendOrderNotificationToWhatsApp({
+        trackingCode: orderId,
+        customerName,
+        customerPhone,
+        customerEmail,
+        productName,
+        productPrice,
+        address,
+        city,
+        district
+      });
     }
     closeModal();
     showToast(id ? 'Sipariş güncellendi.' : 'Sipariş eklendi.', 'success');
@@ -2217,6 +2230,32 @@ window.copyTrackingCode = (trackingCode) => {
   window.open(whatsappUrl, '_blank');
   showToast(`✅ WhatsApp'ta takip linki gönderiliyor: ${trackingUrl}`, 'success');
 };
+
+// WhatsApp sipariş bildirimi gönder
+function sendOrderNotificationToWhatsApp(orderData) {
+  const { trackingCode, customerName, customerPhone, customerEmail, productName, productPrice, address, city, district } = orderData;
+  
+  const trackingUrl = `www.imzaistanbul.com/takip/${trackingCode}`;
+  
+  const message = `🔥 *YENİ SİPARİŞ* 🔥
+
+*Takip Linki:* ${trackingUrl}
+
+📦 *${productName}* 📦
+${productPrice}₺ +KDV
+
+👤 ${customerName}
+📱 ${customerPhone}
+📧 ${customerEmail || '-'}
+📍 ${city || ''} ${district || ''}
+🏠 ${address}
+
+Siparişi görmek için takip linkine tıklayın!`;
+  
+  const whatsappUrl = `https://wa.me/905453863407?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+  showToast('✅ Sipariş WhatsApp\'ta bildirildi', 'success');
+}
 
 function fallbackCopy(text) {
   const textarea = document.createElement('textarea');
