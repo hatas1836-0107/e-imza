@@ -14,6 +14,10 @@
     {
       "source": "/takip/:kod",
       "destination": "/takip.html?kod=:kod"
+    },
+    {
+      "source": "/takip/:kod*",
+      "destination": "/takip.html?kod=:kod*"
     }
   ],
   "headers": [

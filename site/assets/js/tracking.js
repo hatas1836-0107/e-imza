@@ -57,8 +57,18 @@ const statusMap = {
 
 // Sayfa yüklendiğinde URL'den kodu al ve inputa yerleştir
 window.addEventListener('DOMContentLoaded', () => {
+  // Hem query string (?kod=XXX) hem de path (/takip/XXX) destekle
   const urlParams = new URLSearchParams(window.location.search);
-  const trackingCode = urlParams.get('kod');
+  let trackingCode = urlParams.get('kod');
+  
+  // Eğer query string'de yoksa, path'den al (/takip/ZE-2026-XXXX)
+  if (!trackingCode) {
+    const pathMatch = window.location.pathname.match(/\/takip\/([^\/]+)/);
+    if (pathMatch) {
+      trackingCode = pathMatch[1];
+    }
+  }
+  
   const trackingInput = document.getElementById('trackingCode');
   
   if (trackingCode && trackingInput) {
