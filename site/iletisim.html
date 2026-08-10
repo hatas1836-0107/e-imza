@@ -516,7 +516,7 @@ document.getElementById('quoteForm')?.addEventListener('submit', async function(
     
     // Temiz WhatsApp mesajı oluştur
     let msg = `🔥 *YENİ SİPARİŞ* 🔥\n\n`;
-    msg += `*Takip Linki:* www.imzaistanbul.com/takip/${trackingCode}\n\n`;
+    msg += `*Takip Linki:* www.imzaistanbul.com/takip.html?kod=${trackingCode}\n\n`;
     
     if (orderData.productName) {
       msg += `📦 *${orderData.productName}* 📦\n`;
