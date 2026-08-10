@@ -783,21 +783,6 @@ function stopLocationTracking() {
 let lastProximityAlert = null;
 let lastNotificationTime = 0;
 
-function checkProximityNotification(locationData, customerLat, customerLng) {
-  const courierLat = locationData.latitude;
-  const courierLng = locationData.longitude;
-  
-  const distance = calculateDistance(courierLat, courierLng, customerLat, customerLng);
-  
-  if (distance < 0.5 && lastProximityAlert !== 'close') {
-    showNotification('Teslimatçı Yakınınızda!', 'Teslimatçı 500 metre içerisinde.');
-    lastProximityAlert = 'close';
-  } else if (distance < 2 && lastProximityAlert === null) {
-    showNotification('Teslimatçı Yaklaşıyor', `Teslimatçı ${distance.toFixed(1)} km uzaklıkta.`);
-    lastProximityAlert = 'approaching';
-  }
-}
-
 // Show notification
 function showNotification(title, body) {
   if ('Notification' in window && Notification.permission === 'granted') {
