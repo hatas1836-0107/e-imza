@@ -3,6 +3,13 @@
   "outputDirectory": "site",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/takip.html",
+      "destination": "/takip",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/takip/:kod",
