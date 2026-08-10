@@ -2544,6 +2544,13 @@ window.startDelivery = async (orderId) => {
         
         console.log('✅ Konum izni alındı');
         
+        // Auth kontrolü
+        if (!currentUser) {
+          console.error('❌ Kullanıcı giriş yapmamış!');
+          showToast('Lütfen önce giriş yapın!', 'error');
+          return;
+        }
+        
         // Siparişe courier ata (eğer yoksa)
         if (!order.courier || !order.courier.email) {
           console.log('📝 Siparişe courier atanıyor...');
