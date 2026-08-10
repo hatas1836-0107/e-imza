@@ -1693,23 +1693,14 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
   }
   
   // Web Push Notification (FCM Token varsa)
-  console.log('🔍 FCM Token kontrolü başlatılıyor...');
+  console.log('🔍 Bildirim gönderimi başlatılıyor...');
   
   try {
-    // Müşterinin telefon numarasından token'ı al
-    const customerPhone = (order.customerPhone || '').replace(/\D/g, '');
-    console.log('📱 Müşteri Telefon:', customerPhone || 'YOK');
+    // Siparişe ait token'ı bul (takip kodu veya sipariş ID ile)
+    const trackingCode = order.trackingCode || orderId;
+    console.log('🔍 Tracking Code:', trackingCode);
     
-    if (!customerPhone) {
-      console.error('❌ Müşteri telefon numarası yok, web push gönderilemedi');
-      showToast('Durum güncellendi ama müşteri telefonu yok!', 'warning');
-      return;
-    }
-    
-    const phoneKey = 'phone_' + customerPhone;
-    console.log('🔑 Phone Key:', phoneKey);
-    
-    const tokenRef = ref(database, `fcmTokens/${phoneKey}`);
+    const tokenRef = ref(database, `orderTokens/${trackingCode}`);
     console.log('🔍 Firebase\'den token sorgulanıyor...');
     
     const tokenSnap = await get(tokenRef);
@@ -1732,7 +1723,7 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
         title: notification.title,
         body: notification.body,
         orderId: orderId,
-        trackingCode: order.trackingCode || orderId
+        trackingCode: trackingCode
       };
       console.log('📦 Payload:', payload);
       
@@ -1761,10 +1752,10 @@ async function sendStatusChangeNotification(orderId, order, newStatus) {
       }
       
     } else {
-      console.warn('⚠️ Müşterinin FCM token\'ı yok!');
+      console.warn('⚠️ Bu sipariş için FCM token yok!');
       console.warn('ℹ️ Müşteri henüz takip sayfasını açmamış veya bildirim izni vermemiş');
       console.warn('💡 Çözüm: Müşteri takip sayfasını açıp bildirim izni vermeli');
-      showToast('Durum güncellendi ama müşterinin bildirim token\'ı yok', 'warning');
+      showToast('Durum güncellendi ama bildirim token\'ı bulunamadı', 'warning');
     }
   } catch (error) {
     console.error('❌❌❌ Web push gönderme hatası:', error);
