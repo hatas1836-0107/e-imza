@@ -1,48 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Ana Sayfa -->
   <url>
-    <loc>https://www.zirveeimza.com/index.html</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.imzaistanbul.com/</loc>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- Hizmetler -->
   <url>
-    <loc>https://www.zirveeimza.com/hizmetlerimiz.html</loc>
+    <loc>https://www.imzaistanbul.com/hizmetlerimiz</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-08-10</lastmod>
+  </url>
+  
+  <!-- Fiyatlandırma -->
+  <url>
+    <loc>https://www.imzaistanbul.com/fiyatlandirma</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-08-10</lastmod>
+  </url>
+  
+  <!-- Bölgeler -->
+  <url>
+    <loc>https://www.imzaistanbul.com/bolgeler</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- Hakkımızda -->
   <url>
-    <loc>https://www.zirveeimza.com/fiyatlandirma.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.imzaistanbul.com/hakkimizda</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- SSS -->
   <url>
-    <loc>https://www.zirveeimza.com/bolgeler.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.imzaistanbul.com/sss</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- İletişim -->
   <url>
-    <loc>https://www.zirveeimza.com/hakkimizda.html</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://www.imzaistanbul.com/iletisim</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- Sipariş Takip -->
   <url>
-    <loc>https://www.zirveeimza.com/sss.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.imzaistanbul.com/takip</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- Kullanım Koşulları -->
   <url>
-    <loc>https://www.zirveeimza.com/iletisim.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.imzaistanbul.com/kullanim-kosullari</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
+  
+  <!-- Gizlilik Politikası -->
   <url>
-    <loc>https://www.zirveeimza.com/kullanim-kosullari.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.zirveeimza.com/gizlilik-politikasi.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.imzaistanbul.com/gizlilik-politikasi</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-10</lastmod>
   </url>
 </urlset>
