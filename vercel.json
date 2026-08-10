@@ -3,18 +3,7 @@
   "outputDirectory": "site",
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/takip",
-      "destination": "/takip.html",
-      "permanent": false
-    },
-    {
-      "source": "/takip.html",
-      "destination": "/takip",
-      "permanent": false
-    }
-  ],
+  "redirects": [],
   "rewrites": [
     {
       "source": "/takip",
