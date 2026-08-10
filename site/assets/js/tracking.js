@@ -46,6 +46,21 @@ const statusMap = {
   cancelled: { text: 'İptal Edildi', class: 'status-cancelled', icon: '•' }
 };
 
+// Sayfa yüklendiğinde URL'den kodu al ve inputa yerleştir
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const trackingCode = urlParams.get('kod');
+  const trackingInput = document.getElementById('trackingCode');
+  
+  if (trackingCode && trackingInput) {
+    trackingInput.value = trackingCode;
+    // Otomatik olarak formu submit et
+    setTimeout(() => {
+      document.getElementById('searchForm')?.dispatchEvent(new Event('submit'));
+    }, 500);
+  }
+});
+
 // Search form
 document.getElementById('searchForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -942,12 +957,3 @@ window.addEventListener('beforeunload', () => {
     remove(locationRef).catch(() => {});
   }
 });
-
-// Check URL params for auto-search
-const urlParams = new URLSearchParams(window.location.search);
-const autoTrackingCode = urlParams.get('kod');
-
-if (autoTrackingCode) {
-  document.getElementById('trackingCode').value = autoTrackingCode;
-  document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-}
