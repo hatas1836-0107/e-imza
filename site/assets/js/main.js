@@ -62,20 +62,25 @@
     }
   }
 
-  // HTML'de data-theme varsa onu kullan (override), yoksa localStorage'a bak
-  var htmlTheme = root.getAttribute("data-theme");
-  var savedTheme = null;
-  
-  if (htmlTheme) {
-    // HTML'de açıkça belirtilmişse onu kullan
-    savedTheme = htmlTheme;
-  } else {
-    // HTML'de yoksa localStorage'dan oku
-    try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
-    if (!savedTheme) {
-      savedTheme = "light"; // Varsayılan aydınlık mod
+  // FORCED RESET: localStorage'daki eski dark tema ayarını temizle
+  try {
+    var oldTheme = localStorage.getItem(THEME_KEY);
+    if (oldTheme === "dark") {
+      localStorage.removeItem(THEME_KEY); // Eski dark ayarını sil
     }
-  }
+  } catch (e) {}
+  
+  // Varsayılan olarak light tema
+  var savedTheme = "light";
+  
+  // localStorage'dan oku (light tema varsa onu kullan)
+  try {
+    var userPreference = localStorage.getItem(THEME_KEY);
+    if (userPreference === "light") {
+      savedTheme = "light";
+    }
+  } catch (e) {}
+  
   applyTheme(savedTheme);
 
   document.addEventListener("DOMContentLoaded", function () {
