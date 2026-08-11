@@ -1,296 +1,211 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ümraniye E-İmza | Aynı Gün Kurye Teslimatı | İmza İstanbul</title>
-<meta name="description" content="Ümraniye'de e-imza satan yer arıyorsanız İmza İstanbul! Aynı gün ücretsiz kurye teslimatı, online başvuru, kurulum desteği. Hemen alın!">
+<meta name="description" content="Ümraniye'de e-imza satan yer arıyorsanız İmza İstanbul! Aynı gün ücretsiz kurye teslimatı, online başvuru, kurulum desteği.">
 <link rel="canonical" href="https://www.imzaistanbul.com/umraniye-e-imza.html">
-<meta name="keywords" content="Ümraniye e-imza, Ümraniye elektronik imza, Ümraniye e-imza satan yerler, Ümraniye e-imza nereden alınır, Ümraniye e-imza başvurusu, Ümraniye aynı gün e-imza">
 <link rel="stylesheet" href="assets/css/style.css">
 
-<!-- Local Business Schema - Ümraniye -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "İmza İstanbul - Ümraniye E-İmza Teslimatı",
-  "image": "https://www.imzaistanbul.com/api/og-image",
+  "name": "İmza İstanbul - Ümraniye E-İmza",
   "url": "https://www.imzaistanbul.com/umraniye-e-imza.html",
   "telephone": "+905453863407",
-  "priceRange": "₺₺₺",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Ümraniye",
-    "addressRegion": "İstanbul",
-    "addressCountry": "TR"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 41.0214,
-    "longitude": 29.1058
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Ümraniye, İstanbul"
-  },
-  "openingHoursSpecification": [{
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-    "opens": "09:00",
-    "closes": "19:00"
-  }],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "127"
-  }
+  "address": {"@type": "PostalAddress", "addressLocality": "Ümraniye", "addressRegion": "İstanbul", "addressCountry": "TR"},
+  "geo": {"@type": "GeoCoordinates", "latitude": 41.0214, "longitude": 29.1058},
+  "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127"}
 }
 </script>
 
-<!-- FAQ Schema - Ümraniye Özel -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [{
-    "@type": "Question",
-    "name": "Ümraniye'de e-imza satan yer var mı?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "İmza İstanbul Ümraniye'ye aynı gün ücretsiz kurye teslimatı yapmaktadır. Online başvuru yapın, kurye e-imzanızı kapınıza getirsin."
-    }
-  },{
-    "@type": "Question",
-    "name": "Ümraniye'ye teslimat ne kadar sürer?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Sabah saat 13:00'e kadar onaylanan başvurular aynı gün Ümraniye'ye teslim edilir. Ortalama teslimat süresi 2-4 saattir."
-    }
-  },{
-    "@type": "Question",
-    "name": "Ümraniye'de kurye ücreti var mı?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Hayır, Ümraniye'ye kurye teslimatı tamamen ücretsizdir. Ürün fiyatına dahildir."
-    }
-  }]
-}
-</script>
-
-<!-- Breadcrumb -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [{
-    "@type": "ListItem",
-    "position": 1,
-    "name": "Ana Sayfa",
-    "item": "https://www.imzaistanbul.com/"
-  },{
-    "@type": "ListItem",
-    "position": 2,
-    "name": "Ümraniye E-İmza",
-    "item": "https://www.imzaistanbul.com/umraniye-e-imza.html"
-  }]
-}
-</script>
+<style>
+::-webkit-scrollbar {width: 12px;}
+::-webkit-scrollbar-track {background: #0f172a;}
+::-webkit-scrollbar-thumb {background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 6px;}
+.district-hero {padding: 120px 0 80px; background: linear-gradient(135deg, #667eea, #764ba2); color: white;}
+.feature-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin: 60px 0;}
+.feature-card {padding: 40px 30px; text-align: center; transition: transform 0.3s;}
+.feature-card:hover {transform: translateY(-8px);}
+.price-cards {display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 60px 0;}
+.price-card {border: 2px solid var(--surface-border); border-radius: 20px; padding: 40px 30px; text-align: center; transition: all 0.3s; position: relative;}
+.price-card:hover {border-color: #667eea; transform: scale(1.05);}
+.price-value {font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0;}
+.faq-item {padding: 24px; margin: 16px 0; border: 1px solid var(--surface-border); border-radius: 12px;}
+.faq-item:hover {border-color: #667eea;}
+</style>
 </head>
 <body>
-<div class="mesh-bg" aria-hidden="true"></div>
-<div class="grain-overlay" aria-hidden="true"></div>
+<div class="mesh-bg"></div>
+<div class="grain-overlay"></div>
 
 <header class="site-header">
   <div class="container">
     <a href="anasayfa.html" class="brand">
       <span class="brand-mark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z"/></svg></span>
-      <span>İmza İstanbul<small>Aynı Gün Kurye ile Teslim</small></span>
+      <span>İmza İstanbul</span>
     </a>
     <nav class="main-nav">
         <a href="anasayfa.html">Ana Sayfa</a>
-        <a href="hizmetlerimiz.html">Hizmetlerimiz</a>
-        <a href="fiyatlandirma.html">Fiyatlandırma</a>
+        <a href="hizmetlerimiz.html">Hizmetler</a>
+        <a href="fiyatlandirma.html">Fiyatlar</a>
         <a href="iletisim.html">İletişim</a>
     </nav>
   </div>
 </header>
 
+<div class="district-hero">
+  <div class="container" style="max-width: 1000px; text-align: center; position: relative; z-index: 1;">
+    <h1 style="font-size: 3rem; margin-bottom: 24px;">Ümraniye E-İmza Teslimatı</h1>
+    <p style="font-size: 1.3rem; opacity: 0.95; margin-bottom: 40px;">Aynı gün ücretsiz kurye ile e-imzanız kapınızda</p>
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+      <a href="fiyatlandirma.html" class="btn btn-primary btn-lg" style="background: white; color: #667eea;">Fiyatları Gör</a>
+      <a href="tel:+905453863407" class="btn btn-ghost btn-lg" style="border-color: white; color: white;">0 545 386 34 07</a>
+    </div>
+  </div>
+</div>
+
 <main style="padding: 80px 0;">
-  <div class="container">
-    <div style="max-width: 900px; margin: 0 auto;">
-      
-      <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Ümraniye E-İmza - Aynı Gün Kurye Teslimatı</h1>
-      
-      <p style="font-size: 1.2rem; color: #94a3b8; margin-bottom: 40px;">Ümraniye'de e-imza arıyorsanız İmza İstanbul! Online başvuru yap, aynı gün e-imzan kapında olsun. Kurye teslimatı ücretsiz, kurulum desteği dahil.</p>
+  <div class="container" style="max-width: 1200px;">
+    
+    <div class="feature-grid">
+      <div class="feature-card glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 60px; height: 60px; margin: 0 auto 20px; color: #667eea;"><path d="M13 2L3 14h7l-1 8 11-14h-7l0-6Z"/></svg>
+        <h3>Aynı Gün Teslimat</h3>
+        <p>Sabah başvur, akşam Ümraniye'deki adresinde hazır</p>
+      </div>
+      <div class="feature-card glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 60px; height: 60px; margin: 0 auto 20px; color: #667eea;"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17 10 8h4l3 5"/></svg>
+        <h3>Ücretsiz Kurye</h3>
+        <p>Ümraniye'nin tüm mahallelerine ücretsiz</p>
+      </div>
+      <div class="feature-card glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 60px; height: 60px; margin: 0 auto 20px; color: #667eea;"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+        <h3>Kurulum Desteği</h3>
+        <p>Kurye yerinde kurulum yapar</p>
+      </div>
+    </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0;">
-        <div class="glass" style="padding: 30px;">
-          <h3>⚡ Aynı Gün Teslimat</h3>
-          <p>Sabah başvur, akşam Ümraniye'deki adresinde e-imzan hazır</p>
-        </div>
-        <div class="glass" style="padding: 30px;">
-          <h3>🚚 Ücretsiz Kurye</h3>
-          <p>Ümraniye'nin tüm mahallelerine ücretsiz teslimat</p>
-        </div>
-        <div class="glass" style="padding: 30px;">
-          <h3>💻 Kurulum Desteği</h3>
-          <p>Kurye yerinde kurulum yapar ve test eder</p>
+    <section style="margin: 100px 0;">
+      <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 60px;">E-İmza Fiyatları</h2>
+      <div class="price-cards" id="priceCardsContainer">
+        <div class="price-card glass">
+          <h3>Fiyatlar Yükleniyor...</h3>
         </div>
       </div>
+      <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Kurye teslimatı ve kurulum desteği fiyata dahildir</p>
+    </section>
 
-      <h2>Ümraniye E-İmza Nasıl Alınır?</h2>
-      <ol style="font-size: 1.1rem; line-height: 1.8;">
-        <li><strong>Online Başvuru:</strong> Formu doldurun veya WhatsApp'tan yazın</li>
-        <li><strong>Onay:</strong> Kimlik doğrulama yapılır, ödeme alınır</li>
-        <li><strong>Teslimat:</strong> Kurye aynı gün Ümraniye'deki adresinize teslim eder</li>
-        <li><strong>Kurulum:</strong> Kurye yerinde kurulum yapar, test eder</li>
-      </ol>
-
-      <h2>Ümraniye'nin Hangi Mahallelerine Hizmet Veriyoruz?</h2>
-      <p>Ümraniye'nin tüm mahallelerine aynı gün teslimat:</p>
-      <div style="columns: 2; column-gap: 20px; margin: 20px 0;">
-        <ul>
-          <li>Armağanevler</li>
-          <li>Aşağı Dudullu</li>
-          <li>Atakent</li>
-          <li>Atatürk</li>
-          <li>Çakmak</li>
-          <li>Cemil Meriç</li>
-          <li>Çamlık</li>
-          <li>Dumlupınar</li>
-          <li>Esenevler</li>
-          <li>Esenkent</li>
-          <li>Fatih Sultan Mehmet</li>
-          <li>Finans Merkezi</li>
-          <li>Hekimbaşı</li>
-          <li>Huzur</li>
-          <li>İnkılap</li>
-          <li>İstiklal</li>
-          <li>Kazım Karabekir</li>
-          <li>Küçükbakkalköy</li>
-          <li>Madenler</li>
-          <li>Mehmet Akif</li>
-          <li>Merkez</li>
-          <li>Necip Fazıl</li>
-          <li>Parseller</li>
-          <li>Saray</li>
-          <li>Site</li>
-          <li>Tantavi</li>
-          <li>Tepeüstü</li>
-          <li>Toki Yeni Yukarıdudullu</li>
-          <li>Topağacı</li>
-          <li>Yamanevler</li>
-          <li>Yenişehir</li>
-          <li>Yukarı Dudullu</li>
-        </ul>
-      </div>
-
-      <h2>E-İmza Fiyatları 2026</h2>
-      <div style="background: #1e293b; padding: 30px; border-radius: 12px; margin: 30px 0;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-          <div style="text-align: center;">
-            <h3 style="color: #22d3ee;">1 Yıl</h3>
-            <p style="font-size: 2rem; font-weight: 700;">850 TL</p>
-            <p style="color: #94a3b8;">Kurye ücretsiz</p>
+    <section style="margin: 80px 0;">
+      <h2 style="font-size: 2rem; margin-bottom: 40px;">Ümraniye E-İmza Nasıl Alınır?</h2>
+      <div style="display: grid; gap: 24px;">
+        <div class="glass" style="padding: 30px; display: flex; gap: 24px; align-items: start;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; flex-shrink: 0;">1</div>
+          <div>
+            <h3>Online Başvuru</h3>
+            <p>Formu doldurun veya WhatsApp'tan yazın</p>
           </div>
-          <div style="text-align: center;">
-            <h3 style="color: #8b5cf6;">2 Yıl</h3>
-            <p style="font-size: 2rem; font-weight: 700;">1.450 TL</p>
-            <p style="color: #94a3b8;">%15 indirim</p>
+        </div>
+        <div class="glass" style="padding: 30px; display: flex; gap: 24px; align-items: start;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; flex-shrink: 0;">2</div>
+          <div>
+            <h3>Onay & Ödeme</h3>
+            <p>Kimlik doğrulama yapılır, ödeme alınır</p>
           </div>
-          <div style="text-align: center;">
-            <h3 style="color: #22c55e;">3 Yıl</h3>
-            <p style="font-size: 2rem; font-weight: 700;">1.950 TL</p>
-            <p style="color: #94a3b8;">En avantajlı</p>
+        </div>
+        <div class="glass" style="padding: 30px; display: flex; gap: 24px; align-items: start;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; flex-shrink: 0;">3</div>
+          <div>
+            <h3>Kurye Teslimatı</h3>
+            <p>Aynı gün Ümraniye'deki adresinize teslim edilir</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <h2>Ümraniye'de E-İmza Kullanım Alanları</h2>
-      <ul style="font-size: 1.1rem; line-height: 1.8;">
-        <li><strong>SGK İşlemleri:</strong> Sigorta bildirimleri, işten çıkış bildirgeleri</li>
-        <li><strong>Vergi Dairesi:</strong> E-fatura, e-arşiv, beyannameler</li>
-        <li><strong>Noter:</strong> Noter onaylı belgeler</li>
-        <li><strong>Bankacılık:</strong> Kredi başvuruları, hesap işlemleri</li>
-        <li><strong>Sözleşmeler:</strong> İş, kira ve ticari sözleşmeler</li>
-      </ul>
-
-      <h2>Neden İmza İstanbul?</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 40px 0;">
-        <div class="card glass">
-          <div class="card-icon">✓</div>
-          <h3>Aynı Gün Teslimat</h3>
-          <p>Ümraniye'ye sabah başvur akşam teslim al</p>
-        </div>
-        <div class="card glass">
-          <div class="card-icon">✓</div>
-          <h3>Ücretsiz Kurye</h3>
-          <p>Ümraniye'ye teslimat tamamen ücretsiz</p>
-        </div>
-        <div class="card glass">
-          <div class="card-icon">✓</div>
-          <h3>Yerinde Kurulum</h3>
-          <p>Kurye kurulum yapar ve test eder</p>
-        </div>
-        <div class="card glass">
-          <div class="card-icon">✓</div>
-          <h3>7/24 Destek</h3>
-          <p>WhatsApp ve telefondan anlık destek</p>
-        </div>
+    <section style="margin: 80px 0;">
+      <h2 style="font-size: 2rem; margin-bottom: 40px;">Sıkça Sorulan Sorular</h2>
+      <div class="faq-item glass">
+        <h3 class="faq-question">Ümraniye'de e-imza satan yer var mı?</h3>
+        <p>İmza İstanbul Ümraniye'ye aynı gün ücretsiz kurye teslimatı yapıyor. Online başvuru yapın, ofise gitmenize gerek yok.</p>
       </div>
-
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 50px; border-radius: 16px; text-align: center; color: white; margin: 60px 0;">
-        <h2 style="margin-top: 0; font-size: 2rem;">Ümraniye'ye Aynı Gün E-İmza Teslimatı</h2>
-        <p style="font-size: 1.2rem; margin: 20px 0;">Sabah başvur, akşam e-imzan Ümraniye'deki adresinde olsun!</p>
-        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
-          <a href="fiyatlandirma.html" class="btn btn-primary btn-lg" style="background: white; color: #667eea;">Hemen Başvur</a>
-          <a href="tel:+905453863407" class="btn btn-ghost btn-lg" style="border-color: white; color: white;">0 545 386 34 07</a>
-        </div>
-      </div>
-
-      <h2>Sıkça Sorulan Sorular - Ümraniye</h2>
-      
-      <div class="glass" style="padding: 20px; margin: 15px 0;">
-        <h3>Ümraniye'de e-imza satan yer var mı?</h3>
-        <p>İmza İstanbul Ümraniye'ye aynı gün ücretsiz kurye teslimatı yapıyor. Ofise gitmenize gerek yok, online başvuru yapın.</p>
-      </div>
-
-      <div class="glass" style="padding: 20px; margin: 15px 0;">
-        <h3>Ümraniye'ye teslimat ne kadar sürer?</h3>
+      <div class="faq-item glass">
+        <h3 class="faq-question">Teslimat ne kadar sürer?</h3>
         <p>Sabah 13:00'e kadar onaylanan başvurular aynı gün Ümraniye'ye teslim edilir. Ortalama 2-4 saat.</p>
       </div>
-
-      <div class="glass" style="padding: 20px; margin: 15px 0;">
-        <h3>Ümraniye'de kurye ücreti var mı?</h3>
+      <div class="faq-item glass">
+        <h3 class="faq-question">Kurye ücreti var mı?</h3>
         <p>Hayır, Ümraniye'ye kurye teslimatı tamamen ücretsizdir.</p>
       </div>
-
-      <div class="glass" style="padding: 20px; margin: 15px 0;">
-        <h3>Hangi mahallelere teslimat yapılıyor?</h3>
-        <p>Ümraniye'nin tüm mahallelerine teslimat yapıyoruz: Armağanevler, Dudullu, Çakmak, Çamlık, Esenkent, Finans Merkezi, Küçükbakkalköy ve tüm diğer mahalleler.</p>
+      <div class="faq-item glass">
+        <h3 class="faq-question">Hangi mahallelere teslimat yapılıyor?</h3>
+        <p>Ümraniye'nin tüm mahallelerine: Armağanevler, Dudullu, Çakmak, Çamlık, Esenkent, Finans Merkezi, Küçükbakkalköy ve diğer tüm mahalleler.</p>
       </div>
+    </section>
 
-    </div>
   </div>
 </main>
 
-<footer style="background: #0b0e1a; padding: 60px 0; color: #94a3b8;">
+<footer style="background: #0b0e1a; padding: 60px 0; color: #94a3b8; text-align: center;">
   <div class="container">
-    <div style="text-align: center;">
-      <h3>İmza İstanbul</h3>
-      <p>Ümraniye'ye Aynı Gün E-İmza Teslimatı</p>
-      <p style="margin: 20px 0;">
-        <a href="tel:+905453863407" style="font-size: 1.5rem; color: #22d3ee;">0 545 386 34 07</a>
-      </p>
-      <p>
-        <a href="anasayfa.html">Ana Sayfa</a> | 
-        <a href="fiyatlandirma.html">Fiyatlandırma</a> | 
-        <a href="iletisim.html">İletişim</a>
-      </p>
-      <p style="margin-top: 30px;">&copy; 2026 İmza İstanbul. Tüm hakları saklıdır.</p>
-    </div>
+    <h3>İmza İstanbul</h3>
+    <p>Ümraniye'ye Aynı Gün E-İmza Teslimatı</p>
+    <p style="margin: 20px 0;"><a href="tel:+905453863407" style="font-size: 1.5rem; color: #22d3ee;">0 545 386 34 07</a></p>
+    <p><a href="anasayfa.html">Ana Sayfa</a> | <a href="fiyatlandirma.html">Fiyatlar</a> | <a href="iletisim.html">İletişim</a></p>
+    <p style="margin-top: 30px;">&copy; 2026 İmza İstanbul</p>
   </div>
 </footer>
+
+<!-- Firebase Fiyat Yükleme -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBLXJE3RW5nO4KrYpnZhd6ydpnZg5tTrGU",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867",
+  storageBucket: "e-imza-4c867.appspot.com",
+  messagingSenderId: "234567890123",
+  appId: "1:234567890123:web:abc123def456"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+onValue(ref(db, 'products'), (snapshot) => {
+  const products = snapshot.val();
+  const container = document.getElementById('priceCardsContainer');
+  
+  if (!products) {
+    container.innerHTML = '<div class="price-card glass"><p>Fiyatlar için bizimle iletişime geçin</p></div>';
+    return;
+  }
+
+  let html = '';
+  const sortedProducts = Object.values(products)
+    .filter(p => p.status === 'active')
+    .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
+    .slice(0, 3);
+
+  sortedProducts.forEach((product, index) => {
+    const featured = index === 1 ? ' featured' : '';
+    html += `
+      <div class="price-card glass${featured}">
+        ${index === 1 ? '<div class="price-badge">En Popüler</div>' : ''}
+        <h3>${product.name}</h3>
+        <div class="price-value">${product.price} ₺</div>
+        <p style="color: var(--text-secondary); margin-bottom: 30px;">${product.deliveryType || 'Kurye teslimatı dahil'}</p>
+        <a href="fiyatlandirma.html" class="btn btn-primary btn-block">Hemen Başvur</a>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+});
+</script>
 </body>
 </html>
