@@ -1,4 +1,25 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /kaynak-scriptler/
+Disallow: /backup/
+Disallow: /*.html.backup$
+Disallow: /*.html.broken$
+Disallow: /test-*.html
+Disallow: /init-products.html
 
+# Crawl-delay
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://www.imzaistanbul.com/sitemap.xml
+
+# Specific search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
