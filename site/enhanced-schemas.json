@@ -1,0 +1,261 @@
+{
+  "faqSchema": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "İstanbul'da aynı gün e-imza nasıl alırım?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "İmza İstanbul üzerinden online başvuru yapın. Saat 13:00'e kadar onaylanan başvurular aynı gün kuryeyle teslim edilir. 39 ilçeye ücretsiz teslimat."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ümraniye'de e-imza satan yer var mı?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet, İmza İstanbul Ümraniye'ye aynı gün kurye teslimatı yapmaktadır. Online başvuru yapın, kurye imzanızı kapınıza getirsin."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "E-imza fiyatları 2026 ne kadar?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bireysel e-imza 1 yıllık 850 TL, 2 yıllık 1.450 TL, 3 yıllık 1.950 TL'den başlayan fiyatlarla. Kurye teslimatı ücretsiz. Toplu başvurularda indirim."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kadıköy'de e-imza nereden alınır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "İmza İstanbul Kadıköy'e aynı gün ücretsiz kurye teslimatı yapar. Online başvuru yapın, kurye imzanızı ofise veya evinize getirsin."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "E-imza hangi belgelerde kullanılır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "E-imza SGK, vergi dairesi, noter, e-fatura, e-arşiv, bankacılık işlemleri, sözleşmeler ve tüm resmi belgelerde ıslak imza yerine geçer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "E-imza başvurusu için hangi belgeler gerekli?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bireysel başvuru için sadece TC kimlik kartı yeterli. Kurumsal başvurularda imza sirküleri ve yetki belgesi istenir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Beşiktaş'a e-imza teslimatı var mı?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Evet, Beşiktaş'a aynı gün ücretsiz kurye teslimatı yapıyoruz. İstanbul'un 39 ilçesine hizmet veriyoruz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Maltepe'de e-imza nereden alınır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "İmza İstanbul Maltepe'ye aynı gün kurye teslimatı yapar. Online başvuru sonrası kurye imzanızı adresinize teslim eder."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Şişli'de e-imza satan yerler neresi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "İmza İstanbul Şişli'ye aynı gün ücretsiz teslimat yapar. Ofise gitmeden online başvuru ile imzanızı alın."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Pendik'te e-imza nasıl alınır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pendik'e aynı gün kurye teslimatı ile e-imza alabilirsiniz. İmza İstanbul üzerinden online başvuru yapın."
+        }
+      }
+    ]
+  },
+  
+  "localBusinessSchema": {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "İmza İstanbul - E-İmza Teslimatı",
+    "image": "https://www.imzaistanbul.com/api/og-image",
+    "@id": "https://www.imzaistanbul.com",
+    "url": "https://www.imzaistanbul.com",
+    "telephone": "+905453863407",
+    "priceRange": "₺₺₺",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Online Hizmet",
+      "addressLocality": "İstanbul",
+      "postalCode": "34000",
+      "addressCountry": "TR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 41.0082,
+      "longitude": 28.9784
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        "opens": "09:00",
+        "closes": "19:00"
+      }
+    ],
+    "sameAs": [],
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Ümraniye, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Kadıköy, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Beşiktaş, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Şişli, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Maltepe, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Pendik, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Ataşehir, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Kartal, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Bakırköy, İstanbul"
+      },
+      {
+        "@type": "City",
+        "name": "Beylikdüzü, İstanbul"
+      }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "127",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": {
+          "@type": "Person",
+          "name": "Emre K."
+        },
+        "datePublished": "2026-07-15",
+        "reviewBody": "Sabah WhatsApp'tan yazdım, öğleden sonra kurye kapıya geldi. Ümraniye'ye aynı gün teslimat gerçekten çalışıyor.",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        }
+      },
+      {
+        "@type": "Review",
+        "author": {
+          "@type": "Person",
+          "name": "Merve T."
+        },
+        "datePublished": "2026-07-20",
+        "reviewBody": "Kadıköy'e aynı gün teslim edildi. Kurulum desteği de çok iyiydi, hemen kullanmaya başladım.",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        }
+      }
+    ]
+  },
+  
+  "productSchema": {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Nitelikli Elektronik İmza (E-İmza) - 1 Yıl",
+    "image": "https://www.imzaistanbul.com/api/og-image",
+    "description": "5070 Sayılı Kanuna uygun nitelikli elektronik imza. Aynı gün kurye teslimatı ile İstanbul'un 39 ilçesine ücretsiz gönderim.",
+    "brand": {
+      "@type": "Brand",
+      "name": "İmza İstanbul"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "url": "https://www.imzaistanbul.com/fiyatlandirma.html",
+      "priceCurrency": "TRY",
+      "lowPrice": "850",
+      "highPrice": "1950",
+      "priceValidUntil": "2026-12-31",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "İmza İstanbul"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "127"
+    }
+  },
+  
+  "breadcrumbSchema": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Ana Sayfa",
+        "item": "https://www.imzaistanbul.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Hizmetlerimiz",
+        "item": "https://www.imzaistanbul.com/hizmetlerimiz.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Fiyatlandırma",
+        "item": "https://www.imzaistanbul.com/fiyatlandirma.html"
+      }
+    ]
+  }
+}
