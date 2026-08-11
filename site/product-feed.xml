@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>İmza İstanbul - E-İmza Ürünleri</title>
+    <link>https://www.imzaistanbul.com/</link>
+    <description>Nitelikli elektronik imza ürünleri - İstanbul'da aynı gün kurye teslimatı</description>
+    
+    <!-- 1 Yıllık Bireysel E-İmza -->
+    <item>
+      <g:id>e-imza-1yil</g:id>
+      <g:title>E-İmza 1 Yıl - Aynı Gün Teslimat</g:title>
+      <g:description>Nitelikli elektronik imza 1 yıllık paket. İstanbul'un 39 ilçesine aynı gün ücretsiz kurye teslimatı. Akıllı kart okuyucu dahil, kurulum desteği dahil.</g:description>
+      <g:link>https://www.imzaistanbul.com/fiyatlandirma.html</g:link>
+      <g:image_link>https://www.imzaistanbul.com/api/og-image</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in stock</g:availability>
+      <g:price>850 TRY</g:price>
+      <g:brand>İmza İstanbul</g:brand>
+      <g:product_type>Elektronik İmza > Nitelikli E-İmza</g:product_type>
+      <g:google_product_category>Software > Computer Software</g:google_product_category>
+      <g:mpn>EIMZA-1Y-2026</g:mpn>
+      <g:gtin></g:gtin>
+      <g:shipping>
+        <g:country>TR</g:country>
+        <g:region>İstanbul</g:region>
+        <g:service>Kurye</g:service>
+        <g:price>0 TRY</g:price>
+      </g:shipping>
+    </item>
+    
+    <!-- 2 Yıllık Bireysel E-İmza -->
+    <item>
+      <g:id>e-imza-2yil</g:id>
+      <g:title>E-İmza 2 Yıl - Aynı Gün Teslimat</g:title>
+      <g:description>Nitelikli elektronik imza 2 yıllık paket. İstanbul'un 39 ilçesine aynı gün ücretsiz kurye teslimatı. Akıllı kart okuyucu dahil, kurulum desteği dahil. %15 indirimli.</g:description>
+      <g:link>https://www.imzaistanbul.com/fiyatlandirma.html</g:link>
+      <g:image_link>https://www.imzaistanbul.com/api/og-image</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in stock</g:availability>
+      <g:price>1450 TRY</g:price>
+      <g:brand>İmza İstanbul</g:brand>
+      <g:product_type>Elektronik İmza > Nitelikli E-İmza</g:product_type>
+      <g:google_product_category>Software > Computer Software</g:google_product_category>
+      <g:mpn>EIMZA-2Y-2026</g:mpn>
+      <g:gtin></g:gtin>
+      <g:shipping>
+        <g:country>TR</g:country>
+        <g:region>İstanbul</g:region>
+        <g:service>Kurye</g:service>
+        <g:price>0 TRY</g:price>
+      </g:shipping>
+    </item>
+    
+    <!-- 3 Yıllık Bireysel E-İmza -->
+    <item>
+      <g:id>e-imza-3yil</g:id>
+      <g:title>E-İmza 3 Yıl - Aynı Gün Teslimat - En Avantajlı</g:title>
+      <g:description>Nitelikli elektronik imza 3 yıllık paket. İstanbul'un 39 ilçesine aynı gün ücretsiz kurye teslimatı. Akıllı kart okuyucu dahil, kurulum desteği dahil. En avantajlı fiyat.</g:description>
+      <g:link>https://www.imzaistanbul.com/fiyatlandirma.html</g:link>
+      <g:image_link>https://www.imzaistanbul.com/api/og-image</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in stock</g:availability>
+      <g:price>1950 TRY</g:price>
+      <g:brand>İmza İstanbul</g:brand>
+      <g:product_type>Elektronik İmza > Nitelikli E-İmza</g:product_type>
+      <g:google_product_category>Software > Computer Software</g:google_product_category>
+      <g:mpn>EIMZA-3Y-2026</g:mpn>
+      <g:gtin></g:gtin>
+      <g:shipping>
+        <g:country>TR</g:country>
+        <g:region>İstanbul</g:region>
+        <g:service>Kurye</g:service>
+        <g:price>0 TRY</g:price>
+      </g:shipping>
+    </item>
+    
+  </channel>
+</rss>
