@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.zirveeimza.com/sitemap.xml
+Sitemap: https://www.imzaistanbul.com/sitemap.xml
