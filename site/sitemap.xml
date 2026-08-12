@@ -10,28 +10,28 @@
   
   <!-- Ana Hizmet Sayfaları -->
   <url>
-    <loc>https://www.imzaistanbul.com/hizmetlerimiz.html</loc>
+    <loc>https://www.imzaistanbul.com/hizmetlerimiz</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/fiyatlandirma.html</loc>
+    <loc>https://www.imzaistanbul.com/fiyatlandirma</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/takip.html</loc>
+    <loc>https://www.imzaistanbul.com/takip</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/bolgeler.html</loc>
+    <loc>https://www.imzaistanbul.com/bolgeler</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
@@ -39,21 +39,21 @@
   
   <!-- Kurumsal Sayfalar -->
   <url>
-    <loc>https://www.imzaistanbul.com/hakkimizda.html</loc>
+    <loc>https://www.imzaistanbul.com/hakkimizda</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/iletisim.html</loc>
+    <loc>https://www.imzaistanbul.com/iletisim</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/sss.html</loc>
+    <loc>https://www.imzaistanbul.com/sss</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <lastmod>2026-08-12</lastmod>
@@ -61,14 +61,14 @@
   
   <!-- Yasal Sayfalar -->
   <url>
-    <loc>https://www.imzaistanbul.com/kullanim-kosullari.html</loc>
+    <loc>https://www.imzaistanbul.com/kullanim-kosullari</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <url>
-    <loc>https://www.imzaistanbul.com/gizlilik-politikasi.html</loc>
+    <loc>https://www.imzaistanbul.com/gizlilik-politikasi</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2026-08-12</lastmod>
@@ -76,236 +76,231 @@
   
   <!-- Blog/İçerik -->
   <url>
-    <loc>https://www.imzaistanbul.com/blog-e-imza-nedir.html</loc>
+    <loc>https://www.imzaistanbul.com/blog-e-imza-nedir</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   
   <!-- İlçe Bazlı Sayfalar (39 İlçe) -->
-  <!-- Anadolu Yakası -->
   <url>
-    <loc>https://www.imzaistanbul.com/umraniye-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/umraniye-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/kadikoy-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/kadikoy-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/maltepe-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/maltepe-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/pendik-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/pendik-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/atasehir-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/atasehir-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/kartal-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/kartal-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/uskudar-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/uskudar-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sancaktepe-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sancaktepe-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/cekmekoy-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/cekmekoy-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sultanbeyli-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sultanbeyli-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/tuzla-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/tuzla-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/beykoz-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/beykoz-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sile-e-imza.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <lastmod>2026-08-12</lastmod>
-  </url>
-  
-  <!-- Avrupa Yakası -->
-  <url>
-    <loc>https://www.imzaistanbul.com/besiktas-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sile-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sisli-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/besiktas-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/bakirkoy-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sisli-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/beylikduzu-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/bakirkoy-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/esenyurt-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/beylikduzu-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/avcilar-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/esenyurt-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/kucukcekmece-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/avcilar-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/bahcelievler-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/kucukcekmece-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/bagcilar-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/bahcelievler-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/esenler-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/bagcilar-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sultangazi-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/esenler-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/gaziosmanpasa-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sultangazi-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/eyupsultan-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/gaziosmanpasa-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/sariyer-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/eyupsultan-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/basaksehir-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/sariyer-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/arnavutkoy-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/basaksehir-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/catalca-e-imza.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <lastmod>2026-08-12</lastmod>
-  </url>
-  
-  <!-- Merkez İlçeler -->
-  <url>
-    <loc>https://www.imzaistanbul.com/fatih-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/arnavutkoy-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/beyoglu-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/catalca-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/kagithane-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/fatih-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/zeytinburnu-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/beyoglu-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/gungoren-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/kagithane-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/bayrampasa-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/zeytinburnu-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
   </url>
   <url>
-    <loc>https://www.imzaistanbul.com/adalar-e-imza.html</loc>
+    <loc>https://www.imzaistanbul.com/gungoren-e-imza</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/bayrampasa-e-imza</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/adalar-e-imza</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-08-12</lastmod>
