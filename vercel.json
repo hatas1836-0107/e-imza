@@ -2,6 +2,9 @@
   "functions": {
     "api/merchant-sync-endpoint.js": {
       "maxDuration": 30
+    },
+    "api/product-feed.js": {
+      "maxDuration": 10
     }
   }
 }
