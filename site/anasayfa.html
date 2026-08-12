@@ -1,6 +1,38 @@
 ﻿<!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-315P2FGR91"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-315P2FGR91', {
+    'send_page_view': true,
+    'allow_google_signals': true,
+    'allow_ad_personalization_signals': false,
+    'cookie_flags': 'SameSite=None;Secure'
+  });
+</script>
+
+<!-- Schema.org Structured Data --  >
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "İmza İstanbul",
+  "description": "İstanbul'un 39 ilçesinde aynı gün kurye ile e-imza teslimatı",
+  "url": "https://www.imzaistanbul.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "İstanbul",
+    "addressCountry": "TR"
+  },
+  "priceRange": "₺₺",
+  "areaServed": {"@type": "City", "name": "İstanbul"}
+}
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
 <title>E-İmza Başvurusu ve Aynı Gün Kurye Teslimatı | İmza İstanbul</title>
@@ -2742,6 +2774,9 @@ if('serviceWorker' in navigator){
   });
 })();
 </script>
+
+<!-- Enhanced Event Tracking -->
+<script src="/analytics-tracking.js" defer></script>
 
 </body>
 </html>
