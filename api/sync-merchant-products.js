@@ -63,12 +63,11 @@ async function syncProducts() {
         availability: 'in stock',
         condition: 'new',
         price: {
-          value: product.price,
+          value: product.price.toString(),
           currency: 'TRY'
         },
         shipping: [{
           country: 'TR',
-          region: 'İstanbul',
           service: 'Kurye',
           price: {
             value: '0',
@@ -76,10 +75,10 @@ async function syncProducts() {
           }
         }],
         brand: 'İmza İstanbul',
-        gtin: '',
+        identifierExists: false,
         mpn: `EIMZA-${productId.toUpperCase()}-2026`,
         googleProductCategory: 'Software > Computer Software',
-        productTypes: ['Elektronik İmza', 'Nitelikli E-İmza']
+        productTypes: ['Elektronik İmza > Nitelikli E-İmza']
       };
 
       try {

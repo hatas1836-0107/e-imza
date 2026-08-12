@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merchant Center Senkronizasyon | İmza İstanbul</title>
+<style>
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #f5f5f5;
+}
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+h1 {
+  color: #667eea;
+  margin-bottom: 10px;
+}
+.btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.product-list {
+  margin: 20px 0;
+}
+.product-item {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.status.success {
+  background: #d1fae5;
+  color: #047857;
+}
+.status.error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.status.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+.log {
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  margin-top: 20px;
+}
+.xml-preview {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🚀 Google Merchant Center Senkronizasyon</h1>
+  <p>Firebase'deki ürünleri Google Shopping'e otomatik yükler</p>
+  
+  <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 15px; border-radius: 8px;">
+    <strong>⚠️ ÖNEMLİ UYARILAR:</strong>
+    <ol style="margin: 10px 0 0 0; padding-left: 20px;">
+      <li>API kullanmadan önce <a href="https://merchants.google.com/mc/products/sources" target="_blank" style="color: #764ba2;">mevcut feed'leri silin</a></li>
+      <li><strong>Localhost'tan çalışmaz!</strong> Production URL'i kullanılır (www.imzaistanbul.com)</li>
+      <li>API endpoint'in Vercel'e deploy edilmiş olması gerekir</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <h2>1. Firebase'den Ürünleri Yükle</h2>
+  <button class="btn" onclick="loadProducts()">Ürünleri Yükle</button>
+  <div id="productList" class="product-list"></div>
+</div>
+
+<div class="card">
+  <h2>2. Product Feed XML Oluştur</h2>
+  <button class="btn" onclick="generateXML()" id="generateBtn" disabled>XML Oluştur</button>
+  <div id="xmlPreview"></div>
+</div>
+
+<div class="card">
+  <h2>3. Otomatik API Senkronizasyonu</h2>
+  <p><strong>Content API ile direkt yükleme:</strong></p>
+  <button class="btn" onclick="syncToMerchantAPI()" id="syncBtn" disabled>Google Shopping'e Yükle</button>
+  <div id="syncStatus" style="margin-top: 15px;"></div>
+</div>
+
+<div class="card">
+  <h2>4. Alternatif: Manuel XML Yükleme</h2>
+  <p>API çalışmazsa manuel yükleme:</p>
+  <a href="https://merchants.google.com" target="_blank" class="btn">Merchant Center'a Git</a>
+</div>
+
+<div class="card">
+  <h2>📋 İşlem Logu</h2>
+  <div id="log" class="log">Sistem hazır...</div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBLXJE3RW5nO4KrYpnZhd6ydpnZg5tTrGU",
+  authDomain: "e-imza-4c867.firebaseapp.com",
+  databaseURL: "https://e-imza-4c867-default-rtdb.firebaseio.com",
+  projectId: "e-imza-4c867"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+let productsData = [];
+
+function log(message, type = 'info') {
+  const logDiv = document.getElementById('log');
+  const timestamp = new Date().toLocaleTimeString();
+  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+  logDiv.textContent += `\n[${timestamp}] ${icon} ${message}`;
+  logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+function escapeXML(str) {
+  if (!str) return '';
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+window.loadProducts = function() {
+  log('Firebase\'den ürünler yükleniyor...');
+  
+  const productsRef = ref(db, 'products');
+  onValue(productsRef, (snapshot) => {
+    const products = snapshot.val();
+    
+    if (!products) {
+      log('Firebase\'de ürün bulunamadı!', 'error');
+      return;
+    }
+
+    productsData = Object.entries(products).map(([id, product]) => ({
+      id,
+      ...product
+    })).filter(p => p.status === 'active');
+
+    log(`${productsData.length} aktif ürün bulundu`, 'success');
+
+    const listDiv = document.getElementById('productList');
+    listDiv.innerHTML = productsData.map(p => `
+      <div class="product-item">
+        <div>
+          <strong>${p.name}</strong><br>
+          <span style="color: #666;">Fiyat: ${p.price} TL</span>
+        </div>
+        <span class="status success">Aktif</span>
+      </div>
+    `).join('');
+
+    document.getElementById('generateBtn').disabled = false;
+    document.getElementById('syncBtn').disabled = false;
+  }, (error) => {
+    log(`Hata: ${error.message}`, 'error');
+  });
+};
+
+window.generateXML = function() {
+  if (productsData.length === 0) {
+    log('Önce ürünleri yükleyin!', 'error');
+    return;
+  }
+
+  log('Product Feed XML oluşturuluyor...');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>İmza İstanbul - E-İmza Ürünleri</title>
+    <link>https://www.imzaistanbul.com/</link>
+    <description>Nitelikli elektronik imza ürünleri</description>
+${productsData.map(product => `
+    <item>
+      <g:id>${product.id}</g:id>
+      <g:title>${escapeXML(product.name)} - E-İmza Aynı Gün Teslimat</g:title>
+      <g:description>Nitelikli elektronik imza ${escapeXML(product.name)}. İstanbul'un 39 ilçesine aynı gün ücretsiz kurye teslimatı. Akıllı kart okuyucu dahil, kurulum desteği dahil.</g:description>
+      <g:link>https://www.imzaistanbul.com/fiyatlandirma.html</g:link>
+      <g:image_link>https://www.imzaistanbul.com/api/og-image</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in stock</g:availability>
+      <g:price>${product.price} TRY</g:price>
+      <g:brand>İmza İstanbul</g:brand>
+      <g:gtin>GTIN00${product.id.replace(/[^0-9]/g, '').padStart(11, '0')}</g:gtin>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:product_type>Elektronik İmza &gt; Nitelikli E-İmza</g:product_type>
+      <g:google_product_category>Software &gt; Computer Software</g:google_product_category>
+      <g:mpn>EIMZA-${product.id.toUpperCase()}-2026</g:mpn>
+      <g:shipping>
+        <g:country>TR</g:country>
+        <g:service>Kurye</g:service>
+        <g:price>0 TRY</g:price>
+      </g:shipping>
+    </item>
+`).join('')}
+  </channel>
+</rss>`;
+
+  document.getElementById('xmlPreview').innerHTML = `
+    <h3>✅ XML Feed Hazır</h3>
+    <p>Bu XML'i <code>product-feed.xml</code> olarak kaydedin ve Google Merchant Center'a ekleyin:</p>
+    <textarea class="xml-preview" style="width: 100%; min-height: 200px;" readonly>${xml}</textarea>
+    <br><br>
+    <button class="btn" onclick="downloadXML()">XML İndir</button>
+    <button class="btn" onclick="copyXML()">Kopyala</button>
+  `;
+
+  window.currentXML = xml;
+  log(`XML oluşturuldu: ${productsData.length} ürün`, 'success');
+};
+
+window.downloadXML = function() {
+  const blob = new Blob([window.currentXML], { type: 'application/xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'product-feed.xml';
+  a.click();
+  log('XML dosyası indirildi', 'success');
+};
+
+window.copyXML = function() {
+  navigator.clipboard.writeText(window.currentXML);
+  log('XML panoya kopyalandı', 'success');
+  alert('XML kopyalandı! Şimdi site/product-feed.xml dosyasına yapıştırın.');
+};
+
+window.syncToMerchantAPI = async function() {
+  if (productsData.length === 0) {
+    log('Önce ürünleri yükleyin!', 'error');
+    return;
+  }
+
+  const syncBtn = document.getElementById('syncBtn');
+  syncBtn.disabled = true;
+  syncBtn.textContent = 'Yükleniyor...';
+  
+  const statusDiv = document.getElementById('syncStatus');
+  statusDiv.innerHTML = '<div style="color: #d97706;">⏳ Google Shopping\'e yükleniyor...</div>';
+
+  log('Content API ile senkronizasyon başlatılıyor...');
+
+  try {
+    // Production URL'i kullan (Vercel deploy edilmiş olmalı)
+    const apiUrl = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+      ? 'https://www.imzaistanbul.com/api/merchant-sync-endpoint' // Production
+      : '/api/merchant-sync-endpoint'; // Relative (deployed)
+    
+    log(`API URL: ${apiUrl}`);
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        products: productsData
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      log(`✅ ${result.count} ürün başarıyla yüklendi`, 'success');
+      statusDiv.innerHTML = `
+        <div class="status success">
+          ✅ ${result.count} ürün Google Shopping'de yayında!
+        </div>
+        <p style="margin-top: 10px;">
+          <a href="https://merchants.google.com/mc/products/list" target="_blank" class="btn">
+            Merchant Center'da Görüntüle
+          </a>
+        </p>
+      `;
+    } else {
+      throw new Error(result.error || 'API hatası');
+    }
+  } catch (error) {
+    log(`❌ API hatası: ${error.message}`, 'error');
+    statusDiv.innerHTML = `
+      <div class="status error">
+        ❌ API hatası: ${error.message}
+      </div>
+      <p style="margin-top: 10px; color: #666;">
+        Manuel XML yükleme kullanabilirsiniz.
+      </p>
+    `;
+  } finally {
+    syncBtn.disabled = false;
+    syncBtn.textContent = 'Google Shopping\'e Yükle';
+  }
+};
+</script>
+</body>
+</html>
