@@ -93,6 +93,36 @@
     <loc>https://www.imzaistanbul.com/umraniye-e-imza.html</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-08-11</lastmod>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/kadikoy-e-imza.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/besiktas-e-imza.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/sisli-e-imza.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/maltepe-e-imza.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.imzaistanbul.com/pendik-e-imza.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-08-12</lastmod>
   </url>
 </urlset>

@@ -21,3 +21,11 @@ Thumbs.db
 .env
 .env.local
 .vercel
+
+
+# Google Service Account Keys
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+site/trim-saga-*.json
