@@ -8,6 +8,82 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-315P2FGR91');
+
+  // 🔥 DYNAMIC KEYWORD INSERTION - Google Ads'ten gelen kelimeyi algıla
+  (function() {
+    // URL parametresinden keyword al
+    const urlParams = new URLSearchParams(window.location.search);
+    let keyword = urlParams.get('keyword') || urlParams.get('ilce') || '';
+    
+    // İlçe mapping (Google Ads'ten gelebilecek formatlar)
+    const ilceMap = {
+      'umraniye': 'Ümraniye',
+      'ümraniye': 'Ümraniye',
+      'kadikoy': 'Kadıköy',
+      'kadıköy': 'Kadıköy',
+      'besiktas': 'Beşiktaş',
+      'beşiktaş': 'Beşiktaş',
+      'sisli': 'Şişli',
+      'şişli': 'Şişli',
+      'maltepe': 'Maltepe',
+      'pendik': 'Pendik',
+      'atasehir': 'Ataşehir',
+      'ataşehir': 'Ataşehir',
+      'kartal': 'Kartal',
+      'bakirkoy': 'Bakırköy',
+      'bakırköy': 'Bakırköy',
+      'beylikduzu': 'Beylikdüzü',
+      'beylikdüzü': 'Beylikdüzü'
+      // ... diğer ilçeler
+    };
+    
+    if (keyword) {
+      // Keyword'ü temizle ve formatla
+      keyword = keyword.toLowerCase().replace(/\+/g, ' ').trim();
+      
+      // Eğer ilçe mapinde varsa doğru formatı al
+      const ilce = ilceMap[keyword.replace(' e-imza', '').replace(' e imza', '')] || 
+                   keyword.charAt(0).toUpperCase() + keyword.slice(1);
+      
+      // Sayfa yüklendiğinde değiştir
+      document.addEventListener('DOMContentLoaded', function() {
+        // H1'i değiştir
+        const h1 = document.querySelector('h1');
+        if (h1 && ilce) {
+          h1.innerHTML = ilce + ' E-İmza<br><span class="grad-text">Aynı Gün Kurye Teslimat</span>';
+        }
+        
+        // Title'ı değiştir
+        if (ilce) {
+          document.title = ilce + ' E-İmza - Aynı Gün Teslimat | 850 TL | İmza İstanbul';
+        }
+        
+        // Meta description'ı değiştir
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && ilce) {
+          metaDesc.setAttribute('content', ilce + ' e-imza aynı gün kurye teslimatı. ' + ilce + '\'nin tüm mahallelerine 2-4 saat içinde teslimat. 850 TL\'den başlayan fiyatlar.');
+        }
+        
+        // Eyebrow text'i değiştir
+        const eyebrow = document.querySelector('.eyebrow');
+        if (eyebrow && ilce) {
+          eyebrow.innerHTML = '<span class="dot"></span> ' + ilce.toUpperCase() + ' / İSTANBUL - AYNI GÜN TESLİMAT';
+        }
+        
+        // Hero lead paragrafını değiştir
+        const heroLead = document.querySelector('.hero-lead');
+        if (heroLead && ilce) {
+          heroLead.textContent = ilce + ' e-imza başvurusu için hemen online başvuru yapın. ' + ilce + '\'nin tüm mahallelerine aynı gün kurye ile teslimat. Nitelikli elektronik imza 850 TL\'den başlayan fiyatlarla.';
+        }
+        
+        // WhatsApp linklerini güncelle
+        document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+          const baseUrl = 'https://wa.me/905453863407?text=';
+          link.href = baseUrl + encodeURIComponent(ilce + ' e-imza başvurusu');
+        });
+      });
+    }
+  })();
 </script>
 
 <!-- Google Ads Conversion Tracking -->
