@@ -10,6 +10,60 @@
   gtag('config', 'G-315P2FGR91');
 </script>
 
+<!-- Google Ads Conversion Tracking -->
+<script>
+  // WhatsApp tıklama takibi
+  function trackWhatsAppClick() {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'whatsapp_click', {
+        'event_category': 'contact',
+        'event_label': 'WhatsApp Button',
+        'value': 1
+      });
+    }
+  }
+  
+  // Telefon tıklama takibi
+  function trackPhoneClick() {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'phone_click', {
+        'event_category': 'contact',
+        'event_label': 'Phone Button',
+        'value': 1
+      });
+    }
+  }
+  
+  // Sayfa yüklendiğinde tüm linklere takip ekle
+  document.addEventListener('DOMContentLoaded', function() {
+    // WhatsApp linkleri
+    var waLinks = document.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp"], .btn-whatsapp');
+    waLinks.forEach(function(link) {
+      link.addEventListener('click', trackWhatsAppClick);
+    });
+    
+    // Telefon linkleri
+    var phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+    phoneLinks.forEach(function(link) {
+      link.addEventListener('click', trackPhoneClick);
+    });
+    
+    // Form gönderimi takibi (sipariş formu varsa)
+    var forms = document.querySelectorAll('form[data-conversion="true"]');
+    forms.forEach(function(form) {
+      form.addEventListener('submit', function() {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'form_submit', {
+            'event_category': 'conversion',
+            'event_label': 'Order Form',
+            'value': 850
+          });
+        }
+      });
+    });
+  });
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
 <title>E-İmza Başvurusu ve Aynı Gün Kurye Teslimatı | İmza İstanbul</title>
