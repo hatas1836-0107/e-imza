@@ -52,7 +52,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(jpg|jpeg|png|gif|svg|webp|ico))",
+      "source": "/:path*.(jpg|jpeg|png|gif|svg|webp|ico)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css))",
+      "source": "/:path*.(js|css)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -133,9 +133,6 @@
     { "source": "/gungoren-e-imza", "destination": "/gungoren-e-imza.html" },
     { "source": "/bayrampasa-e-imza", "destination": "/bayrampasa-e-imza.html" },
     { "source": "/adalar-e-imza", "destination": "/adalar-e-imza.html" }
-  ],
-  "redirects": [
-    { "source": "/:path*.html", "destination": "/:path*", "permanent": true }
   ],
   "cleanUrls": true,
   "trailingSlash": false
