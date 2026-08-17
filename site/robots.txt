@@ -7,19 +7,60 @@ Disallow: /*.html.backup$
 Disallow: /*.html.broken$
 Disallow: /test-*.html
 Disallow: /init-products.html
+Disallow: /*?*keyword=
+Disallow: /*?*ilce=
+Disallow: /api/
+Disallow: /.vercel/
+Disallow: /.firebase/
+
+# Allow important resources
+Allow: /assets/
+Allow: /logo.png
+Allow: /*.css
+Allow: /*.js
 
 # Crawl-delay
-Crawl-delay: 1
+Crawl-delay: 0.5
 
-# Sitemap
+# Sitemaps
 Sitemap: https://www.imzaistanbul.com/sitemap.xml
+Sitemap: https://www.imzaistanbul.com/google-ads-pages.xml
 
 # Specific search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /assets/img/
+Allow: /logo.png
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 0.5
 
 User-agent: Slurp
 Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
